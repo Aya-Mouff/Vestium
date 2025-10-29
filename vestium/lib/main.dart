@@ -1,20 +1,22 @@
 import 'package:flutter/material.dart';
+import './app_router.dart';
 
 void main() {
-  runApp(const MainApp());
+  final _appRouter = AppRouter();
+  runApp(MyApp(appRouter: _appRouter));
 }
 
-class MainApp extends StatelessWidget {
-  const MainApp({super.key});
+class MyApp extends StatelessWidget {
+  final AppRouter appRouter;
+  const MyApp({super.key, required this.appRouter});
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: Scaffold(
-        body: Center(
-          child: Text('Hello World!'),
-        ),
-      ),
+    return MaterialApp.router(
+      debugShowCheckedModeBanner: false,
+      routerDelegate: appRouter.delegate(),
+      routeInformationParser: appRouter.defaultRouteParser(),
+      title: 'Vestium',
     );
   }
 }
