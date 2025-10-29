@@ -17,3 +17,25 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+
+  assets:
+    - assets/images/
+    - assets/fonts/
+
+  fonts:
+    - family: CormorantGaramond
+      fonts:
+        - asset: assets/fonts/CormorantGaramond/CormorantGaramond-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/CormorantGaramond/CormorantGaramond-Italic.ttf
+          style: italic
+
+    - family: Inter
+      fonts:
+        - asset: assets/fonts/Inter/Inter-ExtraLight.ttf
+          weight: 200
+
+    - family: AlexBrush
+      fonts:
+        - asset: assets/fonts/AlexBrush/AlexBrush-Regular.ttf
+          weight: 400

@@ -1,0 +1,296 @@
+{
+  "users": [
+    {
+      "id": "1",
+      "username": "fashion_lover",
+      "email": "sarah@email.com",
+      "password": "password123",
+      "fullName": "Sarah Johnson",
+      "bio": "Fashion enthusiast | Love creating new outfits",
+      "profileImage": "https://example.com/profiles/sarah.jpg",
+      "followers": ["2", "3"],
+      "following": ["2", "4"],
+      "followersCount": 2,
+      "followingCount": 2,
+      "createdAt": "2024-01-15T10:30:00Z",
+      "customClothingCategories": ["Tops", "Bottoms", "Dresses", "Outerwear", "Shoes", "Accessories"],
+      "customOutfitCategories": ["Casual", "Formal", "Streetwear", "Work", "Evening", "Vacation"]
+    },
+    {
+      "id": "2",
+      "username": "style_guru",
+      "email": "mike@email.com",
+      "password": "mike2024",
+      "fullName": "Mike Chen",
+      "bio": "Street style photographer",
+      "profileImage": "https://example.com/profiles/mike.jpg",
+      "followers": ["1", "3", "4"],
+      "following": ["1"],
+      "followersCount": 3,
+      "followingCount": 1,
+      "createdAt": "2024-01-10T14:20:00Z",
+      "customClothingCategories": ["Tops", "Bottoms", "Jackets", "Headwear", "Footwear"],
+      "customOutfitCategories": ["Urban", "Casual", "Smart Casual", "Minimalist"]
+    },
+    {
+      "id": "3",
+      "username": "trend_setter",
+      "email": "emma@email.com",
+      "password": "emma_fashion",
+      "fullName": "Emma Davis",
+      "bio": "Minimalist fashion | Sustainable clothing",
+      "profileImage": "https://example.com/profiles/emma.jpg",
+      "followers": ["1", "2"],
+      "following": ["1", "2", "4"],
+      "followersCount": 2,
+      "followingCount": 3,
+      "createdAt": "2024-02-01T09:15:00Z",
+      "customClothingCategories": ["Tops", "Bottoms", "Dresses", "Shoes", "Accessories", "Activewear"],
+      "customOutfitCategories": ["Minimalist", "Casual", "Work", "Sustainable"]
+    },
+    {
+      "id": "4",
+      "username": "urban_style",
+      "email": "alex@email.com",
+      "password": "alex_urban",
+      "fullName": "Alex Rodriguez",
+      "bio": "Urban fashion lover",
+      "profileImage": "https://example.com/profiles/alex.jpg",
+      "followers": ["1", "3"],
+      "following": ["1", "2"],
+      "followersCount": 2,
+      "followingCount": 2,
+      "createdAt": "2024-01-20T16:45:00Z",
+      "customClothingCategories": ["Tops", "Bottoms", "Outerwear", "Sneakers", "Headwear"],
+      "customOutfitCategories": ["Streetwear", "Urban", "Casual", "Night Out"]
+    }
+  ],
+  
+  "clothingItems": [
+    {
+      "id": "1",
+      "userId": "1",
+      "name": "White Cotton T-Shirt",
+      "description": "Basic white t-shirt perfect for layering",
+      "season": "all",
+      "category": "Tops",
+      "imageUrl": "https://example.com/clothing/white_tshirt.png",
+      "createdAt": "2024-03-01T08:00:00Z"
+    },
+    {
+      "id": "2",
+      "userId": "1",
+      "name": "Slim Fit Blue Jeans",
+      "description": "Comfortable jeans for everyday wear",
+      "season": "all",
+      "category": "Bottoms",
+      "imageUrl": "https://example.com/clothing/blue_jeans.png",
+      "createdAt": "2024-03-01T08:05:00Z"
+    },
+    {
+      "id": "3",
+      "userId": "1",
+      "name": "Black Formal Blazer",
+      "description": "Elegant blazer for professional settings",
+      "season": ["fall", "winter", "spring"],
+      "category": "Outerwear",
+      "imageUrl": "https://example.com/clothing/black_blazer.png",
+      "createdAt": "2024-03-02T10:30:00Z"
+    },
+    {
+      "id": "4",
+      "userId": "2",
+      "name": "Vintage Graphic Tee",
+      "description": "Cool vintage band t-shirt",
+      "season": ["spring", "summer"],
+      "category": "Tops",
+      "imageUrl": "https://example.com/clothing/graphic_tee.png",
+      "createdAt": "2024-03-03T11:20:00Z"
+    },
+    {
+      "id": "5",
+      "userId": "2",
+      "name": "Green Cargo Pants",
+      "description": "Utility pants with multiple pockets",
+      "season": ["fall", "spring"],
+      "category": "Bottoms",
+      "imageUrl": "https://example.com/clothing/cargo_pants.png",
+      "createdAt": "2024-03-03T11:25:00Z"
+    },
+    {
+      "id": "6",
+      "userId": "3",
+      "name": "Floral Summer Dress",
+      "description": "Light and flowy dress for warm days",
+      "season": ["spring", "summer"],
+      "category": "Dresses",
+      "imageUrl": "https://example.com/clothing/floral_dress.png",
+      "createdAt": "2024-03-04T14:20:00Z"
+    }
+  ],
+  
+  "outfits": [
+    {
+      "id": "1",
+      "userId": "1",
+      "name": "Weekend Casual Look",
+      "description": "Perfect for Saturday brunches and casual outings",
+      "season": "all",
+      "category": "Casual",
+      "createdAt": "2024-03-05T14:30:00Z",
+      "items": ["1", "2"],
+      "imageUrl": "https://example.com/outfits/casual_outfit.jpg"
+    },
+    {
+      "id": "2",
+      "userId": "1",
+      "name": "Business Professional",
+      "description": "Sharp look for important meetings and presentations",
+      "season": ["fall", "winter", "spring"],
+      "category": "Formal",
+      "createdAt": "2024-03-06T09:15:00Z",
+      "items": ["1", "2", "3"],
+      "imageUrl": "https://example.com/outfits/business_outfit.jpg"
+    },
+    {
+      "id": "3",
+      "userId": "2",
+      "name": "Urban Street Style",
+      "description": "Edgy look for city exploration and concerts",
+      "season": ["spring", "fall"],
+      "category": "Urban",
+      "createdAt": "2024-03-04T16:45:00Z",
+      "items": ["4", "5"],
+      "imageUrl": "https://example.com/outfits/street_outfit.jpg"
+    },
+    {
+      "id": "4",
+      "userId": "3",
+      "name": "Summer Garden Party",
+      "description": "Fresh and feminine look for outdoor events",
+      "season": ["spring", "summer"],
+      "category": "Evening",
+      "createdAt": "2024-03-07T11:20:00Z",
+      "items": ["6"],
+      "imageUrl": "https://example.com/outfits/summer_outfit.jpg"
+    }
+  ],
+  
+  "posts": [
+    {
+      "id": "1",
+      "userId": "1",
+      "outfitId": "1",
+      "caption": "Loving this casual look for Saturday! ☕ #casualstyle #weekendvibes",
+      "imageUrl": "https://example.com/posts/casual_post.jpg",
+      "createdAt": "2024-03-05T15:00:00Z",
+      "likes": ["2", "3", "4"],
+      "comments": [
+        {
+          "id": "1",
+          "userId": "2",
+          "text": "Love this combo! 👌",
+          "createdAt": "2024-03-05T15:30:00Z"
+        },
+        {
+          "id": "2",
+          "userId": "3",
+          "text": "Where did you get those jeans?",
+          "createdAt": "2024-03-05T16:15:00Z"
+        }
+      ],
+      "likesCount": 3,
+      "commentsCount": 2
+    },
+    {
+      "id": "2",
+      "userId": "2",
+      "outfitId": "3",
+      "caption": "Urban exploration fit 🏙️ #streetwear #urbanstyle",
+      "imageUrl": "https://example.com/posts/street_post.jpg",
+      "createdAt": "2024-03-04T17:20:00Z",
+      "likes": ["1", "3"],
+      "comments": [
+        {
+          "id": "3",
+          "userId": "1",
+          "text": "Great style! The cargo pants are fire! 🔥",
+          "createdAt": "2024-03-04T18:00:00Z"
+        }
+      ],
+      "likesCount": 2,
+      "commentsCount": 1
+    },
+    {
+      "id": "3",
+      "userId": "3",
+      "outfitId": "4",
+      "caption": "Perfect for garden parties and summer events 🌸 #summerstyle #dress",
+      "imageUrl": "https://example.com/posts/summer_post.jpg",
+      "createdAt": "2024-03-07T12:00:00Z",
+      "likes": ["1", "2", "4"],
+      "comments": [
+        {
+          "id": "4",
+          "userId": "1",
+          "text": "This dress is beautiful! 😍",
+          "createdAt": "2024-03-07T13:30:00Z"
+        }
+      ],
+      "likesCount": 3,
+      "commentsCount": 1
+    }
+  ],
+  
+  "notifications": [
+    {
+      "id": "1",
+      "userId": "1",
+      "type": "like",
+      "sourceUserId": "2",
+      "sourcePostId": "1",
+      "message": "style_guru liked your post",
+      "isRead": false,
+      "createdAt": "2024-03-05T15:30:00Z"
+    },
+    {
+      "id": "2",
+      "userId": "1",
+      "type": "comment",
+      "sourceUserId": "3",
+      "sourcePostId": "1",
+      "message": "trend_setter commented on your post",
+      "isRead": false,
+      "createdAt": "2024-03-05T16:15:00Z"
+    },
+    {
+      "id": "3",
+      "userId": "1",
+      "type": "follow",
+      "sourceUserId": "4",
+      "message": "urban_style started following you",
+      "isRead": true,
+      "createdAt": "2024-03-04T12:20:00Z"
+    },
+    {
+      "id": "4",
+      "userId": "2",
+      "type": "like",
+      "sourceUserId": "1",
+      "sourcePostId": "2",
+      "message": "fashion_lover liked your post",
+      "isRead": false,
+      "createdAt": "2024-03-04T18:00:00Z"
+    },
+    {
+      "id": "5",
+      "userId": "3",
+      "type": "like",
+      "sourceUserId": "1",
+      "sourcePostId": "3",
+      "message": "fashion_lover liked your post",
+      "isRead": false,
+      "createdAt": "2024-03-07T13:30:00Z"
+    }
+  ]
+}
