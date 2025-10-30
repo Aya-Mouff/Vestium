@@ -21,6 +21,12 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const HomeScreen(),
       );
     },
+    MyPostsRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const MyPostsScreen(),
+      );
+    },
     SplashRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -40,6 +46,20 @@ class HomeRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'HomeRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [MyPostsScreen]
+class MyPostsRoute extends PageRouteInfo<void> {
+  const MyPostsRoute({List<PageRouteInfo>? children})
+      : super(
+          MyPostsRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'MyPostsRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }

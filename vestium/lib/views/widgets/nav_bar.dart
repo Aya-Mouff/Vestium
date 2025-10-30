@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:auto_route/auto_route.dart';
 
 class CustomNavBar extends StatelessWidget {
   final String currentPage;
@@ -19,7 +20,7 @@ class CustomNavBar extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         border: Border.all(
-          color: const Color(0xFF795548),
+          color: const Color(0xC0795548),
           width: 0.25,
         ),
         borderRadius: BorderRadius.circular(16),
@@ -37,17 +38,17 @@ class CustomNavBar extends StatelessWidget {
           IconButton(
             icon: Icon(
               Icons.home,
-              color: currentPage == 'home' ? Colors.black: Color(0xFF795548),// change icon color
+              color: currentPage == 'home' ? Colors.black: Color(0xC0795548),// change icon color
               size: 24,
             ),
             onPressed: () {
-              // Auto route to home
+              context.router.pushNamed('/home');
             },
           ),
           IconButton(
            icon: Icon(
               Icons.search,
-              color: currentPage == 'search' ? Colors.black: Color(0xFF795548),// change icon color
+              color: currentPage == 'search' ? Colors.black: Color(0xC0795548),// change icon color
               size: 24,
             ),
             onPressed: () {
@@ -64,7 +65,7 @@ class CustomNavBar extends StatelessWidget {
             child: IconButton(
               icon: Icon(
                 Icons.add_box_outlined,
-                color: currentPage == 'add' ? Colors.black: Color(0xFF795548),// change icon color
+                color: currentPage == 'add' ? Colors.black: Color(0xC0795548),// change icon color
                 size: 24,
               ),
               onPressed: () {
@@ -75,21 +76,21 @@ class CustomNavBar extends StatelessWidget {
           IconButton(
            icon: Icon(
               Icons.checkroom,
-              color: currentPage == 'wardrobe' ? Colors.black: Color(0xFF795548),// change icon color
+              color: currentPage == 'wardrobe' ? Colors.black: Color(0xC0795548),// change icon color
               size: 24,
             ),
             onPressed: () {
-              // Auto route to favorites
+              // Auto route to wardrobe
             },
           ),
           IconButton(
             icon: Icon(
               Icons.person_outline,
-              color: currentPage == 'profile' ? Colors.black: Color(0xFF795548),// change icon color
+              color: currentPage == 'profile' ? Colors.black: Color(0xC0795548),// change icon color
               size: 24,
             ),
             onPressed: () {
-              // Auto route to profile
+              // context.router.pushNamed('/my_posts');
             },
           ),
         ],
