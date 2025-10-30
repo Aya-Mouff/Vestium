@@ -35,22 +35,20 @@ class CustomNavBar extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           IconButton(
-            icon: Image.asset(
-              'assets/images/icons/Home Icon.png',
-              color: currentPage == 'home' ? Colors.black: Color(0xFF795548),
-              width: 24,
-              height: 24,
+            icon: Icon(
+              Icons.home,
+              color: currentPage == 'home' ? Colors.black: Color(0xFF795548),// change icon color
+              size: 24,
             ),
             onPressed: () {
               // Auto route to home
             },
           ),
           IconButton(
-            icon: Image.asset(
-              'assets/images/icons/Search Icon.png',
-              color: currentPage == 'search' ? Colors.black: Color(0xFF795548),
-              width: 24,
-              height: 24,
+           icon: Icon(
+              Icons.search,
+              color: currentPage == 'search' ? Colors.black: Color(0xFF795548),// change icon color
+              size: 24,
             ),
             onPressed: () {
               // Auto route to search
@@ -64,11 +62,10 @@ class CustomNavBar extends StatelessWidget {
               shape: BoxShape.circle,
             ),
             child: IconButton(
-              icon: Image.asset(
-                'assets/images/icons/Add Icon.png',
-                width: 24,
-                height: 24,
-                color: currentPage == 'add' ? Colors.black: Color(0xFF795548),
+              icon: Icon(
+                Icons.add_box_outlined,
+                color: currentPage == 'add' ? Colors.black: Color(0xFF795548),// change icon color
+                size: 24,
               ),
               onPressed: () {
                 // Auto route to create post
@@ -76,22 +73,20 @@ class CustomNavBar extends StatelessWidget {
             ),
           ),
           IconButton(
-            icon: Image.asset(
-              'assets/images/icons/Wardrobe Icon.png',
-              color: currentPage == 'wardrobe' ? Colors.black: Color(0xFF795548),
-              width: 24,
-              height: 24,
+           icon: Icon(
+              Icons.checkroom,
+              color: currentPage == 'wardrobe' ? Colors.black: Color(0xFF795548),// change icon color
+              size: 24,
             ),
             onPressed: () {
               // Auto route to favorites
             },
           ),
           IconButton(
-            icon: Image.asset(
-              'assets/images/icons/Profile Icon.png',
-              color: currentPage == 'profile' ? Colors.black: Color(0xFF795548),
-              width: 24,
-              height: 24,
+            icon: Icon(
+              Icons.person_outline,
+              color: currentPage == 'profile' ? Colors.black: Color(0xFF795548),// change icon color
+              size: 24,
             ),
             onPressed: () {
               // Auto route to profile

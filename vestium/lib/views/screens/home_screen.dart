@@ -13,18 +13,27 @@ class HomeScreen extends StatelessWidget {
       'profileImage': 'assets/images/dummyData/profile-pic-women.jpg',
       'postImage': 'assets/images/dummyData/casual-weekend-outfit.jpg',
       'caption': 'Summer vibes 🌸',
-      'likes': 234,
-      'comments': 12,
+      "likesCount": 3,
+      "commentsCount": 2
     },
     {
       'id': '2',
-      'username': 'style_maven',
+      'username': 'style_guru',
       'profileImage': 'assets/images/dummyData/profile-pic-men.png',
-      'postImage': 'assets/images/dummyData/urban-outfit-streetstyle-outfit.jpg',
+      'postImage': "assets/images/dummyData/urban-outfit-streetstyle-outfit.jpg",
       'caption': 'Urban exploration fit 🏙️',
-      'likes': 156,
-      'comments': 8,
+      "likesCount": 2,
+      "commentsCount": 1
     },
+    {
+      "id": "3",
+      "username": "trend_setter",
+      "profileImage": "assets/images/dummyData/profile-pic-women.jpg",
+      "caption": "Perfect for garden parties and summer events 🌸 #summerstyle #dress",
+      'postImage': "assets/images/dummyData/summer-garden-party-post.jpg",
+      "likesCount": 3,
+      "commentsCount": 1
+    }
   ];
 
   @override
