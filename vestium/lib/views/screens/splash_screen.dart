@@ -2,14 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:auto_route/auto_route.dart';
 
 @RoutePage()
-class SplashScreen extends StatefulWidget {
+class SplashScreen extends StatelessWidget {
   const SplashScreen({super.key});
 
-  @override
-  State<SplashScreen> createState() => _SplashScreenState();
-}
-
-class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -88,7 +83,7 @@ class _SplashScreenState extends State<SplashScreen> {
                         // Navigate to sign up
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Color(0xFF795548),
+                        backgroundColor: const Color(0xFF795548),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(16),
                         ),
@@ -115,14 +110,13 @@ class _SplashScreenState extends State<SplashScreen> {
                     height: 55,
                     child: ElevatedButton(
                       onPressed: () {
-                        // Navigate as guest
+                        context.router.pushNamed('/home');
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Color(0x1FD5CCC8),
-                        // foregroundColor: Color(0x06D5CCC8),
+                        backgroundColor: const Color(0x1FD5CCC8),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(16),
-                          side: BorderSide(
+                          side: const BorderSide(
                             color: Color(0xFFF5ECE7),
                             width: 0.5,
                           ),
