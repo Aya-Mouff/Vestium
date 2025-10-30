@@ -3,36 +3,27 @@ import 'package:auto_route/auto_route.dart';
 import '../widgets/nav_bar.dart';
 
 @RoutePage()
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+class PostsDetailsScreen extends StatelessWidget {
+  const PostsDetailsScreen({super.key});
 
-  final List<Map<String, dynamic>> posts = const [
+  final List<Map<String, dynamic>> myPosts = const [
     {
-      'id': '1',
-      'username': 'fashionista_jane',
+      "id": "3",
+      "username": "trend_setter",
       'profileImage': 'assets/images/dummyData/profile-pic-women.jpg',
       'postImage': 'assets/images/dummyData/casual-weekend-outfit.jpg',
       'caption': 'Summer vibes 🌸',
-      "likesCount": 3,
-      "commentsCount": 2
-    },
-    {
-      'id': '2',
-      'username': 'style_guru',
-      'profileImage': 'assets/images/dummyData/profile-pic-men.png',
-      'postImage': "assets/images/dummyData/urban-outfit-streetstyle-outfit.jpg",
-      'caption': 'Urban exploration fit 🏙️',
-      "likesCount": 2,
-      "commentsCount": 1
+      "likesCount": 234,
+      "commentsCount": 12
     },
     {
       "id": "3",
       "username": "trend_setter",
-      "profileImage": "assets/images/dummyData/profile-pic-women.jpg",
-      "caption": "Perfect for garden parties and summer events 🌸 #summerstyle #dress",
-      'postImage': "assets/images/dummyData/summer-garden-party-post.jpg",
-      "likesCount": 3,
-      "commentsCount": 1
+      'profileImage': 'assets/images/dummyData/profile-pic-women.jpg',
+      'postImage': "assets/images/dummyData/urban-outfit-streetstyle-outfit.jpg",
+      'caption': 'Urban exploration fit 🏙️',
+      "likesCount": 189,
+      "commentsCount": 8
     }
   ];
 
@@ -40,44 +31,35 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF5ECE7),
-      extendBody: true, // This makes the body extend behind the nav bar
+      extendBody: true,
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
-        leading: Padding(
-          padding: const EdgeInsets.all(0.0),
-          child: Image.asset(
-            'assets/images/logos/logo.png',
-            width: 100,         
-            height: 100, 
-          ),  
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.black87),
+          onPressed: () {
+            context.router.pop();
+          },
         ),
         title: const Text(
-          'Vestium',
+          'Posts',
           style: TextStyle(
-            fontFamily: 'AlexBrush',
-            fontSize: 25,
-            fontWeight: FontWeight.w400,
+            fontFamily: 'CormorantGaramond',
+            fontSize: 20,
+            fontWeight: FontWeight.w600,
             color: Colors.black87,
-            letterSpacing: 0.5,
           ),
         ),
         centerTitle: true,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.favorite_border, color: Colors.black87),
-            onPressed: () {},
-          ),
-        ],
       ),
       body: ListView.builder(
-        itemCount: posts.length,
+        itemCount: myPosts.length,
         itemBuilder: (context, index) {
-          final post = posts[index];
+          final post = myPosts[index];
           return _buildPostCard(post, context);
         },
       ),
-      bottomNavigationBar: const CustomNavBar(currentPage: 'home'),
+      bottomNavigationBar: const CustomNavBar(currentPage: 'profile'),
     );
   }
 
@@ -89,10 +71,10 @@ class HomeScreen extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.5), // Shadow color
-            spreadRadius: 2, // How much the shadow spreads
-            blurRadius: 5,   // How soft the shadow is
-            offset: Offset(3, 3), // Horizontal and vertical shadow position
+            color: Colors.grey.withOpacity(0.5),
+            spreadRadius: 2,
+            blurRadius: 5,
+            offset: const Offset(3, 3),
           ),
         ],
       ),
@@ -109,20 +91,14 @@ class HomeScreen extends StatelessWidget {
                   backgroundImage: AssetImage(post['profileImage']),
                 ),
                 const SizedBox(width: 12),
-                TextButton(
-                  onPressed: (){
-                    // context.router.pushNamed('/posts_details');
-                  }, 
-                  child: Text(
-                    post['username'],
-                    style: const TextStyle(
-                      fontFamily: 'CormorantGaramond',
-                      fontWeight: FontWeight.bold,
-                      fontSize: 14,
-                    ),
+                Text(
+                  post['username'],
+                  style: const TextStyle(
+                    fontFamily: 'CormorantGaramond',
+                    fontWeight: FontWeight.bold,
+                    fontSize: 14,
                   ),
                 ),
-                
               ],
             ),
           ),
@@ -147,15 +123,16 @@ class HomeScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Like and comment icons
+                // Like, comment icons and delete button
                 Row(
                   children: [
                     IconButton(
-                      icon: const Icon(Icons.favorite_border, size: 24),
+                      icon: const Icon(Icons.favorite, size: 24, color: Colors.red),
                       onPressed: () {},
                       padding: EdgeInsets.zero,
                       constraints: const BoxConstraints(),
                     ),
+                    const SizedBox(width: 8),
                     IconButton(
                       icon: const Icon(Icons.mode_comment_outlined, size: 24),
                       onPressed: () {},
@@ -165,10 +142,11 @@ class HomeScreen extends StatelessWidget {
                   ],
                 ),
 
+                const SizedBox(height: 8),
 
                 // Likes count
                 Text(
-                  '${post['likes']} likes',
+                  '${post['likesCount']} likes',
                   style: const TextStyle(
                     fontFamily: 'Inter',
                     fontWeight: FontWeight.w600,
@@ -208,7 +186,7 @@ class HomeScreen extends StatelessWidget {
 
                 // View comments
                 Text(
-                  'View all ${post['comments']} comments',
+                  'View all ${post['commentsCount']} comments',
                   style: TextStyle(
                     fontFamily: 'Inter',
                     fontSize: 13,
