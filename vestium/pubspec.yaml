@@ -25,6 +25,7 @@ flutter:
     - assets/images/logos/
     - assets/images/backgrounds/
     - assets/images/dummyData/
+    - assets/images/icons/
     - assets/fonts/
 
   fonts:
