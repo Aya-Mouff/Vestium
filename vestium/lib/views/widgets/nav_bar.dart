@@ -90,7 +90,7 @@ class CustomNavBar extends StatelessWidget {
               size: 24,
             ),
             onPressed: () {
-              context.router.pushNamed('/my-profile');
+              context.router.pushNamed('/my_profile');
             },
           ),
         ],

@@ -76,9 +76,16 @@ abstract class _$AppRouter extends RootStackRouter {
       );
     },
     PostsDetailsRoute.name: (routeData) {
+      final pathParams = routeData.inheritedPathParams;
+      final args = routeData.argsAs<PostsDetailsRouteArgs>(
+          orElse: () =>
+              PostsDetailsRouteArgs(postId: pathParams.getString('postId')));
       return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: const PostsDetailsScreen(),
+        child: PostsDetailsScreen(
+          key: args.key,
+          postId: args.postId,
+        ),
       );
     },
     ResetPasswordRoute.name: (routeData) {
@@ -103,6 +110,16 @@ abstract class _$AppRouter extends RootStackRouter {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: const SplashScreen(),
+      );
+    },
+    UserProfileRoute.name: (routeData) {
+      final args = routeData.argsAs<UserProfileRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: UserProfileScreen(
+          key: args.key,
+          userId: args.userId,
+        ),
       );
     },
   };
@@ -280,16 +297,41 @@ class NotificationsRoute extends PageRouteInfo<void> {
 
 /// generated route for
 /// [PostsDetailsScreen]
-class PostsDetailsRoute extends PageRouteInfo<void> {
-  const PostsDetailsRoute({List<PageRouteInfo>? children})
-      : super(
+class PostsDetailsRoute extends PageRouteInfo<PostsDetailsRouteArgs> {
+  PostsDetailsRoute({
+    Key? key,
+    required String postId,
+    List<PageRouteInfo>? children,
+  }) : super(
           PostsDetailsRoute.name,
+          args: PostsDetailsRouteArgs(
+            key: key,
+            postId: postId,
+          ),
+          rawPathParams: {'postId': postId},
           initialChildren: children,
         );
 
   static const String name = 'PostsDetailsRoute';
 
-  static const PageInfo<void> page = PageInfo<void>(name);
+  static const PageInfo<PostsDetailsRouteArgs> page =
+      PageInfo<PostsDetailsRouteArgs>(name);
+}
+
+class PostsDetailsRouteArgs {
+  const PostsDetailsRouteArgs({
+    this.key,
+    required this.postId,
+  });
+
+  final Key? key;
+
+  final String postId;
+
+  @override
+  String toString() {
+    return 'PostsDetailsRouteArgs{key: $key, postId: $postId}';
+  }
 }
 
 /// generated route for
@@ -346,4 +388,42 @@ class SplashRoute extends PageRouteInfo<void> {
   static const String name = 'SplashRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [UserProfileScreen]
+class UserProfileRoute extends PageRouteInfo<UserProfileRouteArgs> {
+  UserProfileRoute({
+    Key? key,
+    required String userId,
+    List<PageRouteInfo>? children,
+  }) : super(
+          UserProfileRoute.name,
+          args: UserProfileRouteArgs(
+            key: key,
+            userId: userId,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'UserProfileRoute';
+
+  static const PageInfo<UserProfileRouteArgs> page =
+      PageInfo<UserProfileRouteArgs>(name);
+}
+
+class UserProfileRouteArgs {
+  const UserProfileRouteArgs({
+    this.key,
+    required this.userId,
+  });
+
+  final Key? key;
+
+  final String userId;
+
+  @override
+  String toString() {
+    return 'UserProfileRouteArgs{key: $key, userId: $userId}';
+  }
 }
