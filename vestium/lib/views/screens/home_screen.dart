@@ -57,7 +57,10 @@ class _HomeScreenState extends State<HomeScreen> {
         actions: [
           IconButton(
             icon: const Icon(Icons.favorite_border, color: Colors.black87),
-            onPressed: () {},
+            onPressed: () {
+            context.router.pushNamed('/notifications');
+
+            },
           ),
         ],
       ),
@@ -150,7 +153,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     IconButton(
                       icon: const Icon(Icons.mode_comment_outlined, size: 24),
-                      onPressed: () {},
+                      onPressed: () {
+                        context.router.pushNamed('/comments/${post['id']}');
+                      },
                       padding: EdgeInsets.zero,
                       constraints: const BoxConstraints(),
                     ),
@@ -200,12 +205,17 @@ class _HomeScreenState extends State<HomeScreen> {
                 const SizedBox(height: 8),
 
                 // View comments
-                Text(
-                  'View all ${post['commentsCount']} comments',
-                  style: TextStyle(
-                    fontFamily: 'Inter',
-                    fontSize: 13,
-                    color: Colors.grey.shade600,
+                GestureDetector(
+                  onTap: () {
+                    context.router.pushNamed('/comments/${post['id']}');
+                  },
+                  child: Text(
+                    'View all ${post['commentsCount']} comments',
+                    style: TextStyle(
+                      fontFamily: 'Inter',
+                      fontSize: 13,
+                      color: Colors.grey.shade600,
+                    ),
                   ),
                 ),
               ],

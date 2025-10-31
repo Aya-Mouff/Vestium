@@ -15,6 +15,19 @@ abstract class _$AppRouter extends RootStackRouter {
 
   @override
   final Map<String, PageFactory> pagesMap = {
+    CommentsRoute.name: (routeData) {
+      final pathParams = routeData.inheritedPathParams;
+      final args = routeData.argsAs<CommentsRouteArgs>(
+          orElse: () =>
+              CommentsRouteArgs(postId: pathParams.getString('postId')));
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: CommentsScreen(
+          key: args.key,
+          postId: args.postId,
+        ),
+      );
+    },
     HomeRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -25,6 +38,12 @@ abstract class _$AppRouter extends RootStackRouter {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: const MyPostsScreen(),
+      );
+    },
+    NotificationsRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const NotificationsScreen(),
       );
     },
     PostsDetailsRoute.name: (routeData) {
@@ -40,6 +59,45 @@ abstract class _$AppRouter extends RootStackRouter {
       );
     },
   };
+}
+
+/// generated route for
+/// [CommentsScreen]
+class CommentsRoute extends PageRouteInfo<CommentsRouteArgs> {
+  CommentsRoute({
+    Key? key,
+    required String postId,
+    List<PageRouteInfo>? children,
+  }) : super(
+          CommentsRoute.name,
+          args: CommentsRouteArgs(
+            key: key,
+            postId: postId,
+          ),
+          rawPathParams: {'postId': postId},
+          initialChildren: children,
+        );
+
+  static const String name = 'CommentsRoute';
+
+  static const PageInfo<CommentsRouteArgs> page =
+      PageInfo<CommentsRouteArgs>(name);
+}
+
+class CommentsRouteArgs {
+  const CommentsRouteArgs({
+    this.key,
+    required this.postId,
+  });
+
+  final Key? key;
+
+  final String postId;
+
+  @override
+  String toString() {
+    return 'CommentsRouteArgs{key: $key, postId: $postId}';
+  }
 }
 
 /// generated route for
@@ -66,6 +124,20 @@ class MyPostsRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'MyPostsRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [NotificationsScreen]
+class NotificationsRoute extends PageRouteInfo<void> {
+  const NotificationsRoute({List<PageRouteInfo>? children})
+      : super(
+          NotificationsRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'NotificationsRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }
