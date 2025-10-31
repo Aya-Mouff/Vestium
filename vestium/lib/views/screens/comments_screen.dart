@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:auto_route/auto_route.dart';
 import '../../data/dummy/dummy-data-loader.dart';
+import '../../app_router.dart';
 
 @RoutePage()
 class CommentsScreen extends StatefulWidget {
@@ -251,8 +252,10 @@ class _CommentsScreenState extends State<CommentsScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // Username
-                      Text(
+                      TextButton(onPressed: (){
+                        context.router.push(UserProfileRoute(userId: comment['userId']));
+                      }, 
+                      child:Text(
                         username,
                         style: const TextStyle(
                           fontFamily: 'CormorantGaramond',
@@ -261,6 +264,7 @@ class _CommentsScreenState extends State<CommentsScreen> {
                           color: Colors.black87,
                         ),
                       ),
+                    ),
                       const SizedBox(height: 4),
 
                       // Comment text
@@ -309,89 +313,4 @@ class _CommentsScreenState extends State<CommentsScreen> {
       ),
     );
   }
-
-
-//   Widget _buildCommentItem(Map<String, dynamic> comment) {
-//     final user = usersMap?[comment['userId']];
-//     final username = user?['username'] ?? 'unknown_user';
-//     final profileImage = user?['profileImage'] ?? 'assets/images/dummyData/profile-pic-women.jpg';
-
-//     return Container(
-//       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-//       padding: const EdgeInsets.all(16),
-//       decoration: BoxDecoration(
-//         color: Colors.white,
-//         borderRadius: BorderRadius.circular(12),
-//         boxShadow: [
-//           BoxShadow(
-//             color: Colors.grey.withOpacity(0.15),
-//             spreadRadius: 1,
-//             blurRadius: 4,
-//             offset: const Offset(0, 2),
-//           ),
-//         ],
-//       ),
-//       child: Column(
-//         crossAxisAlignment: CrossAxisAlignment.start,
-//         children: [
-//           // User info
-//           Row(
-//             children: [
-//               CircleAvatar(
-//                 radius: 16,
-//                 backgroundImage: AssetImage(profileImage),
-//               ),
-//               const SizedBox(width: 10),
-//               Text(
-//                 username,
-//                 style: const TextStyle(
-//                   fontFamily: 'Inter',
-//                   fontWeight: FontWeight.w600,
-//                   fontSize: 14,
-//                   color: Colors.black87,
-//                 ),
-//               ),
-//             ],
-//           ),
-//           const SizedBox(height: 10),
-          
-//           // Comment text
-//           Text(
-//             comment['text'],
-//             style: const TextStyle(
-//               fontFamily: 'Inter',
-//               fontSize: 14,
-//               color: Colors.black87,
-//               height: 1.4,
-//             ),
-//           ),
-//           const SizedBox(height: 10),
-          
-//           // Reply and time
-//           Row(
-//             children: [
-//               Text(
-//                 'Reply',
-//                 style: TextStyle(
-//                   fontFamily: 'Inter',
-//                   fontSize: 12,
-//                   color: Colors.grey.shade600,
-//                   fontWeight: FontWeight.w500,
-//                 ),
-//               ),
-//               const SizedBox(width: 16),
-//               Text(
-//                 _getTimeAgo(comment['createdAt']),
-//                 style: TextStyle(
-//                   fontFamily: 'Inter',
-//                   fontSize: 12,
-//                   color: Colors.grey.shade500,
-//                 ),
-//               ),
-//             ],
-//           ),
-//         ],
-//       ),
-//     );
-//   }
 }

@@ -5,7 +5,8 @@ import '../../data/dummy/dummy-data-loader.dart';
 
 @RoutePage()
 class PostsDetailsScreen extends StatefulWidget {
-  const PostsDetailsScreen({super.key});
+  final String postId;
+  const PostsDetailsScreen({super.key, @PathParam('postId') required this.postId,});
 
   @override
   State<PostsDetailsScreen> createState() => _PostsDetailsScreenState();
@@ -25,7 +26,7 @@ class _PostsDetailsScreenState extends State<PostsDetailsScreen> {
     setState(() {
       // Filter posts for a specific user (e.g., userId '3' for trend_setter)
       myPosts = data['posts']
-        .where((post) => post['userId'] == '3') 
+        .where((post) => post['userId'] == widget.postId) 
         .toList();
     });
   }
@@ -64,7 +65,7 @@ class _PostsDetailsScreenState extends State<PostsDetailsScreen> {
                 return _buildPostCard(post, context);
               },
             ),
-      bottomNavigationBar: const CustomNavBar(currentPage: 'profile'),
+      bottomNavigationBar: const CustomNavBar(currentPage: 'home'),
     );
   }
 
@@ -140,7 +141,9 @@ class _PostsDetailsScreenState extends State<PostsDetailsScreen> {
                     const SizedBox(width: 8),
                     IconButton(
                       icon: const Icon(Icons.mode_comment_outlined, size: 24),
-                      onPressed: () {},
+                      onPressed: () {
+                        context.router.pushNamed('/comments/${post['id']}');
+                      },
                       padding: EdgeInsets.zero,
                       constraints: const BoxConstraints(),
                     ),
