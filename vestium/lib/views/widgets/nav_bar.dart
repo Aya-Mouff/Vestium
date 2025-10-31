@@ -64,7 +64,7 @@ class CustomNavBar extends StatelessWidget {
             ),
             child: IconButton(
               icon: Icon(
-                Icons.add_box_outlined,
+                Icons.add,
                 color: currentPage == 'add' ? Colors.black: Color(0xC0795548),// change icon color
                 size: 24,
               ),
@@ -90,7 +90,7 @@ class CustomNavBar extends StatelessWidget {
               size: 24,
             ),
             onPressed: () {
-              // context.router.pushNamed('/my_posts');
+              context.router.pushNamed('/my-profile');
             },
           ),
         ],
