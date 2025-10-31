@@ -5,7 +5,8 @@ import '../../data/dummy/dummy-data-loader.dart';
 
 @RoutePage()
 class MyPostsScreen extends StatefulWidget {
-  const MyPostsScreen({super.key});
+  final String postId;
+  const MyPostsScreen({super.key, @PathParam('postId') required this.postId,});
 
   @override
   State<MyPostsScreen> createState() => _MyPostsScreenState();
@@ -24,7 +25,7 @@ class _MyPostsScreenState extends State<MyPostsScreen> {
     final data = await DummyDataLoader.loadDummyData();
     setState(() {
       myPosts = data['posts']
-        .where((post) => post['userId'] == '1') 
+        .where((post) => post['id'] == widget.postId) 
         .toList();
     });
   }
@@ -231,7 +232,9 @@ class _MyPostsScreenState extends State<MyPostsScreen> {
                     const SizedBox(width: 8),
                     IconButton(
                       icon: const Icon(Icons.mode_comment_outlined, size: 24),
-                      onPressed: () {},
+                      onPressed: () {
+                        context.router.pushNamed('/comments/${post['id']}');
+                      },
                     ),
                     const Spacer(),
                     IconButton(

@@ -35,9 +35,22 @@ abstract class _$AppRouter extends RootStackRouter {
       );
     },
     MyPostsRoute.name: (routeData) {
+      final pathParams = routeData.inheritedPathParams;
+      final args = routeData.argsAs<MyPostsRouteArgs>(
+          orElse: () =>
+              MyPostsRouteArgs(postId: pathParams.getString('postId')));
       return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: const MyPostsScreen(),
+        child: MyPostsScreen(
+          key: args.key,
+          postId: args.postId,
+        ),
+      );
+    },
+    MyProfileRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const MyProfileScreen(),
       );
     },
     NotificationsRoute.name: (routeData) {
@@ -116,14 +129,53 @@ class HomeRoute extends PageRouteInfo<void> {
 
 /// generated route for
 /// [MyPostsScreen]
-class MyPostsRoute extends PageRouteInfo<void> {
-  const MyPostsRoute({List<PageRouteInfo>? children})
-      : super(
+class MyPostsRoute extends PageRouteInfo<MyPostsRouteArgs> {
+  MyPostsRoute({
+    Key? key,
+    required String postId,
+    List<PageRouteInfo>? children,
+  }) : super(
           MyPostsRoute.name,
+          args: MyPostsRouteArgs(
+            key: key,
+            postId: postId,
+          ),
+          rawPathParams: {'postId': postId},
           initialChildren: children,
         );
 
   static const String name = 'MyPostsRoute';
+
+  static const PageInfo<MyPostsRouteArgs> page =
+      PageInfo<MyPostsRouteArgs>(name);
+}
+
+class MyPostsRouteArgs {
+  const MyPostsRouteArgs({
+    this.key,
+    required this.postId,
+  });
+
+  final Key? key;
+
+  final String postId;
+
+  @override
+  String toString() {
+    return 'MyPostsRouteArgs{key: $key, postId: $postId}';
+  }
+}
+
+/// generated route for
+/// [MyProfileScreen]
+class MyProfileRoute extends PageRouteInfo<void> {
+  const MyProfileRoute({List<PageRouteInfo>? children})
+      : super(
+          MyProfileRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'MyProfileRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }
