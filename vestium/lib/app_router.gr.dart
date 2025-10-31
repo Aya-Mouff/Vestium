@@ -15,10 +15,26 @@ abstract class _$AppRouter extends RootStackRouter {
 
   @override
   final Map<String, PageFactory> pagesMap = {
+    CheckEmailRoute.name: (routeData) {
+      final args = routeData.argsAs<CheckEmailRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: CheckEmailScreen(
+          key: args.key,
+          email: args.email,
+        ),
+      );
+    },
     HomeRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: const HomeScreen(),
+      );
+    },
+    LogInRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const LogInScreen(),
       );
     },
     MyPostsRoute.name: (routeData) {
@@ -33,6 +49,18 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const PostsDetailsScreen(),
       );
     },
+    ResetPasswordRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const ResetPasswordScreen(),
+      );
+    },
+    SignUpRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const SignUpScreen(),
+      );
+    },
     SplashRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -40,6 +68,44 @@ abstract class _$AppRouter extends RootStackRouter {
       );
     },
   };
+}
+
+/// generated route for
+/// [CheckEmailScreen]
+class CheckEmailRoute extends PageRouteInfo<CheckEmailRouteArgs> {
+  CheckEmailRoute({
+    Key? key,
+    required String email,
+    List<PageRouteInfo>? children,
+  }) : super(
+          CheckEmailRoute.name,
+          args: CheckEmailRouteArgs(
+            key: key,
+            email: email,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'CheckEmailRoute';
+
+  static const PageInfo<CheckEmailRouteArgs> page =
+      PageInfo<CheckEmailRouteArgs>(name);
+}
+
+class CheckEmailRouteArgs {
+  const CheckEmailRouteArgs({
+    this.key,
+    required this.email,
+  });
+
+  final Key? key;
+
+  final String email;
+
+  @override
+  String toString() {
+    return 'CheckEmailRouteArgs{key: $key, email: $email}';
+  }
 }
 
 /// generated route for
@@ -52,6 +118,20 @@ class HomeRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'HomeRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [LogInScreen]
+class LogInRoute extends PageRouteInfo<void> {
+  const LogInRoute({List<PageRouteInfo>? children})
+      : super(
+          LogInRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'LogInRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }
@@ -80,6 +160,34 @@ class PostsDetailsRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'PostsDetailsRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [ResetPasswordScreen]
+class ResetPasswordRoute extends PageRouteInfo<void> {
+  const ResetPasswordRoute({List<PageRouteInfo>? children})
+      : super(
+          ResetPasswordRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'ResetPasswordRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [SignUpScreen]
+class SignUpRoute extends PageRouteInfo<void> {
+  const SignUpRoute({List<PageRouteInfo>? children})
+      : super(
+          SignUpRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'SignUpRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }
