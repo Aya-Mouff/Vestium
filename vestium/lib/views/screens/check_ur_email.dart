@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:auto_route/auto_route.dart';
+import 'package:vestium/app_router.dart';
 
 @RoutePage()
 class CheckEmailScreen extends StatelessWidget {
   final String email;
 
-  const CheckEmailScreen({
-    Key? key,
-    required this.email,
-  }) : super(key: key);
+  const CheckEmailScreen({Key? key, required this.email}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -20,33 +18,23 @@ class CheckEmailScreen extends StatelessWidget {
           child: Column(
             children: [
               const SizedBox(height: 90),
-              // Logo
-              Image.asset(
-                'assets/images/logos/logo.png',
+
+              const SizedBox(height: 120),
+              Container(
                 width: 80,
                 height: 80,
-                fit: BoxFit.contain,
-              ),
-              const SizedBox(height: 32),
-              // Email Icon
-              Container(
-                width: 64,
-                height: 64,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: const Color(0xFFF0EBE6),
-                  border: Border.all(
-                    color: const Color(0xFFD7CCC8),
-                    width: 2,
-                  ),
+                  color: const Color(0xFFE8DDD8),
                 ),
                 child: const Icon(
-                  Icons.mail_outline,
-                  color: Color(0xFF6B5344),
-                  size: 32,
+                  Icons.check_circle_outline,
+                  color: Color(0xFF8B6F47),
+                  size: 48,
                 ),
               ),
-              const SizedBox(height: 32),
+              const SizedBox(height: 40),
+
               // Title
               const Text(
                 'Check Your Email',
@@ -69,9 +57,7 @@ class CheckEmailScreen extends StatelessWidget {
                     color: Color(0xFF6B5344),
                   ),
                   children: [
-                    const TextSpan(
-                      text: 'We sent a password reset link to ',
-                    ),
+                    const TextSpan(text: 'We sent a password reset link to '),
                     TextSpan(
                       text: email,
                       style: const TextStyle(
@@ -83,14 +69,31 @@ class CheckEmailScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 32),
-            
+
               const SizedBox(height: 32),
-              // Back to Sign In Button
+
+              GestureDetector(
+                onTap: () {
+                  context.pushRoute(ResetPasswordRoute());
+                },
+                child: const Text(
+                  'Try Another Email',
+                  style: TextStyle(
+                    fontFamily: 'inter',
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                    color: Color(0xFF6B5344),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 24),
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () {
-                    context.router.maybePop();
+                    context.pushRoute(LogInRoute());
+                   // context.pushRoute(SetNewPasswordRoute());
+
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF6B5344),
@@ -100,9 +103,9 @@ class CheckEmailScreen extends StatelessWidget {
                     ),
                   ),
                   child: const Text(
-                    'Back to Sign In',
+                    'Back to Login',
                     style: TextStyle(
-                      fontFamily: 'CormorantGaramond',
+                      fontFamily: 'inter',
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
                       color: Colors.white,
@@ -110,6 +113,7 @@ class CheckEmailScreen extends StatelessWidget {
                   ),
                 ),
               ),
+              const SizedBox(height: 60),
               const SizedBox(height: 24),
               // Resend Link
               GestureDetector(
@@ -144,10 +148,7 @@ class _InstructionItem extends StatelessWidget {
   final String number;
   final String text;
 
-  const _InstructionItem({
-    required this.number,
-    required this.text,
-  });
+  const _InstructionItem({required this.number, required this.text});
 
   @override
   Widget build(BuildContext context) {

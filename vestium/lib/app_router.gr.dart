@@ -55,6 +55,12 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const ResetPasswordScreen(),
       );
     },
+    // SetNewPassword.name: (routeData) {
+    //   return AutoRoutePage<dynamic>(
+    //     routeData: routeData,
+    //     child: const SetNewPassword(),
+    //   );
+    // },
     SignUpRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -174,6 +180,20 @@ class ResetPasswordRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'ResetPasswordRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [SetNewPassword]
+class SetNewPassword extends PageRouteInfo<void> {
+  const SetNewPassword({List<PageRouteInfo>? children})
+      : super(
+          SetNewPassword.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'SetNewPassword';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }

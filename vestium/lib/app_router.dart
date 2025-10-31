@@ -9,6 +9,7 @@ import './views/screens/my_posts_screen.dart';
 import './views/screens/posts_details_screen.dart';
 import 'views/screens/login_screen.dart';
 import './views/screens/reset_password.dart';
+import './views/screens/set_new_password.dart';
 
 part 'app_router.gr.dart';
 
@@ -23,6 +24,7 @@ class AppRouter extends _$AppRouter {
         AutoRoute(page: SignUpRoute.page , path:'/sign_up'),
         AutoRoute(page: LogInRoute.page , path: '/log_in'),
         AutoRoute(page: ResetPasswordRoute.page , path: '/reset_password' ),
-        AutoRoute(page: CheckEmailRoute.page , path: '/check_email')
+        AutoRoute(page: CheckEmailRoute.page , path: '/check_email'),
+       // AutoRoute(page: SetNewPasswordRoute.page )
       ];
 }
