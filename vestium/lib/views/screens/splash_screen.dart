@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:auto_route/auto_route.dart';
+import 'package:vestium/app_router.dart';
+import 'login_screen.dart';
 
 @RoutePage()
 class SplashScreen extends StatelessWidget {
@@ -13,7 +15,9 @@ class SplashScreen extends StatelessWidget {
         height: double.infinity,
         decoration: const BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('assets/images/backgrounds/fabric background.png'),
+            image: AssetImage(
+              'assets/images/backgrounds/fabric background.png',
+            ),
             fit: BoxFit.cover,
           ),
         ),
@@ -35,16 +39,16 @@ class SplashScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   const Spacer(flex: 2),
-                  
+
                   // Logo and Title
                   Image.asset(
                     'assets/images/logos/Logo and name.png',
                     width: 200,
                     height: 200,
                   ),
-                  
+
                   const SizedBox(height: 5),
-                  
+
                   // Subtitle
                   const Text(
                     'Your personal virtual wardrobe.',
@@ -53,13 +57,13 @@ class SplashScreen extends StatelessWidget {
                       fontSize: 14,
                       fontWeight: FontWeight.w300,
                       letterSpacing: 0.5,
-                      fontFamily: 'Inter'
+                      fontFamily: 'Inter',
                     ),
                     textAlign: TextAlign.center,
                   ),
-                  
+
                   const SizedBox(height: 8),
-                  
+
                   const Text(
                     'Organize your style, create outfits, and\nshare your fashion journey.',
                     style: TextStyle(
@@ -67,20 +71,20 @@ class SplashScreen extends StatelessWidget {
                       fontSize: 14,
                       fontWeight: FontWeight.w300,
                       letterSpacing: 0.3,
-                      fontFamily: 'Inter'
+                      fontFamily: 'Inter',
                     ),
                     textAlign: TextAlign.center,
                   ),
-                  
+
                   const Spacer(flex: 2),
-                  
+
                   // Sign Up Button
                   SizedBox(
                     width: double.infinity,
                     height: 55,
                     child: ElevatedButton(
                       onPressed: () {
-                        // Navigate to sign up
+                        context.pushRoute(const SignUpRoute());
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFF795548),
@@ -96,14 +100,14 @@ class SplashScreen extends StatelessWidget {
                           fontWeight: FontWeight.w400,
                           letterSpacing: 1,
                           color: Color(0xFFF5ECE7),
-                          fontFamily: 'Inter'
+                          fontFamily: 'Inter',
                         ),
                       ),
                     ),
                   ),
-                  
+
                   const SizedBox(height: 15),
-                  
+
                   // Continue as Guest Button
                   SizedBox(
                     width: double.infinity,
@@ -130,18 +134,18 @@ class SplashScreen extends StatelessWidget {
                           fontWeight: FontWeight.w400,
                           letterSpacing: 1,
                           color: Color(0xFFF5ECE7),
-                          fontFamily: 'Inter'
+                          fontFamily: 'Inter',
                         ),
                       ),
                     ),
                   ),
-                  
+
                   const SizedBox(height: 10),
-                  
+
                   // Already have an account
                   TextButton(
                     onPressed: () {
-                      // Navigate to login
+                      context.pushRoute(LogInRoute());
                     },
                     child: const Text(
                       'Already have an account?',
@@ -150,11 +154,11 @@ class SplashScreen extends StatelessWidget {
                         fontSize: 14,
                         fontWeight: FontWeight.w300,
                         decorationColor: Colors.white,
-                        fontFamily: 'Inter'
+                        fontFamily: 'Inter',
                       ),
-                    ),
+                     ),
                   ),
-                  
+
                   const SizedBox(height: 40),
                 ],
               ),
