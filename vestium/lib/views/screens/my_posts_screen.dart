@@ -1,31 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:auto_route/auto_route.dart';
 import '../widgets/nav_bar.dart';
+import '../../data/dummy/dummy-data-loader.dart';
 
 @RoutePage()
-class MyPostsScreen extends StatelessWidget {
+class MyPostsScreen extends StatefulWidget {
   const MyPostsScreen({super.key});
 
-  final List<Map<String, dynamic>> myPosts = const [
-    {
-      'id': '1',
-      'username': 'fashionista_jane',
-      'profileImage': 'assets/images/dummyData/profile-pic-women.jpg',
-      'postImage': 'assets/images/dummyData/casual-weekend-outfit.jpg',
-      'caption': 'Summer vibes 🌸',
-      "likesCount": 234,
-      "commentsCount": 12
-    },
-    {
-      'id': '1',
-      'username': 'fashionista_jane',
-      'profileImage': 'assets/images/dummyData/profile-pic-women.jpg',
-      'postImage': "assets/images/dummyData/urban-outfit-streetstyle-outfit.jpg",
-      'caption': 'Urban exploration fit 🏙️',
-      "likesCount": 189,
-      "commentsCount": 8
-    }
-  ];
+  @override
+  State<MyPostsScreen> createState() => _MyPostsScreenState();
+}
+
+class _MyPostsScreenState extends State<MyPostsScreen> {
+  List<dynamic> myPosts = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _loadMyPosts();
+  }
+
+  Future<void> _loadMyPosts() async {
+    final data = await DummyDataLoader.loadDummyData();
+    setState(() {
+      myPosts = data['posts']
+        .where((post) => post['userId'] == '1') 
+        .toList();
+    });
+  }
 
   void _showDeleteDialog(BuildContext context, Map<String, dynamic> post) {
     showDialog(
@@ -134,9 +136,7 @@ class MyPostsScreen extends StatelessWidget {
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.black87),
-          onPressed: () {
-            context.router.pop();
-          },
+          onPressed: () => context.router.pop(),
         ),
         title: const Text(
           'Posts',
@@ -149,13 +149,15 @@ class MyPostsScreen extends StatelessWidget {
         ),
         centerTitle: true,
       ),
-      body: ListView.builder(
-        itemCount: myPosts.length,
-        itemBuilder: (context, index) {
-          final post = myPosts[index];
-          return _buildPostCard(post, context);
-        },
-      ),
+      body: myPosts.isEmpty
+          ? const Center(child: CircularProgressIndicator())
+          : ListView.builder(
+              itemCount: myPosts.length,
+              itemBuilder: (context, index) {
+                final post = myPosts[index];
+                return _buildPostCard(post, context);
+              },
+            ),
       bottomNavigationBar: const CustomNavBar(currentPage: 'profile'),
     );
   }
@@ -207,51 +209,38 @@ class MyPostsScreen extends StatelessWidget {
               topRight: Radius.circular(0),
             ),
             child: Image.asset(
-              post['postImage'],
+              post['imageUrl'],
               width: double.infinity,
               height: 400,
               fit: BoxFit.cover,
             ),
           ),
 
-          // Action buttons and stats
+          // Post details
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Like, comment icons and delete button
                 Row(
                   children: [
                     IconButton(
                       icon: const Icon(Icons.favorite, size: 24, color: Colors.red),
                       onPressed: () {},
-                      padding: EdgeInsets.zero,
-                      constraints: const BoxConstraints(),
                     ),
                     const SizedBox(width: 8),
                     IconButton(
                       icon: const Icon(Icons.mode_comment_outlined, size: 24),
                       onPressed: () {},
-                      padding: EdgeInsets.zero,
-                      constraints: const BoxConstraints(),
                     ),
                     const Spacer(),
-                    // 
                     IconButton(
                       icon: const Icon(Icons.delete_outline, size: 24, color: Colors.red),
-                      onPressed: () {
-                        _showDeleteDialog(context, post);
-                      },
-                      padding: EdgeInsets.zero,
-                      constraints: const BoxConstraints(),
+                      onPressed: () => _showDeleteDialog(context, post),
                     ),
                   ],
                 ),
-
                 const SizedBox(height: 8),
-
-                // Likes count
                 Text(
                   '${post['likesCount']} likes',
                   style: const TextStyle(
@@ -260,10 +249,7 @@ class MyPostsScreen extends StatelessWidget {
                     fontSize: 13,
                   ),
                 ),
-
                 const SizedBox(height: 4),
-
-                // Caption
                 RichText(
                   text: TextSpan(
                     children: [
@@ -288,10 +274,7 @@ class MyPostsScreen extends StatelessWidget {
                     ],
                   ),
                 ),
-
                 const SizedBox(height: 8),
-
-                // View comments
                 Text(
                   'View all ${post['commentsCount']} comments',
                   style: TextStyle(

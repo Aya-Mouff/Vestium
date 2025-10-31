@@ -1,46 +1,37 @@
 import 'package:flutter/material.dart';
 import 'package:auto_route/auto_route.dart';
 import '../widgets/nav_bar.dart';
-
+import '../../data/dummy/dummy-data-loader.dart';
+ 
 @RoutePage()
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
-  final List<Map<String, dynamic>> posts = const [
-    {
-      'id': '1',
-      'username': 'fashionista_jane',
-      'profileImage': 'assets/images/dummyData/profile-pic-women.jpg',
-      'postImage': 'assets/images/dummyData/casual-weekend-outfit.jpg',
-      'caption': 'Summer vibes 🌸',
-      "likesCount": 3,
-      "commentsCount": 2
-    },
-    {
-      'id': '2',
-      'username': 'style_guru',
-      'profileImage': 'assets/images/dummyData/profile-pic-men.png',
-      'postImage': "assets/images/dummyData/urban-outfit-streetstyle-outfit.jpg",
-      'caption': 'Urban exploration fit 🏙️',
-      "likesCount": 2,
-      "commentsCount": 1
-    },
-    {
-      "id": "3",
-      "username": "trend_setter",
-      "profileImage": "assets/images/dummyData/profile-pic-women.jpg",
-      "caption": "Perfect for garden parties and summer events 🌸 #summerstyle #dress",
-      'postImage': "assets/images/dummyData/summer-garden-party-post.jpg",
-      "likesCount": 3,
-      "commentsCount": 1
-    }
-  ];
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  List<dynamic> posts = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _loadPosts();
+  }
+
+  Future<void> _loadPosts() async {
+    final data = await DummyDataLoader.loadDummyData();
+    setState(() {
+      posts = data['posts'];
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF5ECE7),
-      extendBody: true, // This makes the body extend behind the nav bar
+      extendBody: true,
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
@@ -70,13 +61,15 @@ class HomeScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: ListView.builder(
-        itemCount: posts.length,
-        itemBuilder: (context, index) {
-          final post = posts[index];
-          return _buildPostCard(post, context);
-        },
-      ),
+      body: posts.isEmpty
+          ? const Center(child: CircularProgressIndicator())
+          : ListView.builder(
+              itemCount: posts.length,
+              itemBuilder: (context, index) {
+                final post = posts[index];
+                return _buildPostCard(post, context);
+              },
+            ),
       bottomNavigationBar: const CustomNavBar(currentPage: 'home'),
     );
   }
@@ -89,10 +82,10 @@ class HomeScreen extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.5), // Shadow color
-            spreadRadius: 2, // How much the shadow spreads
-            blurRadius: 5,   // How soft the shadow is
-            offset: Offset(3, 3), // Horizontal and vertical shadow position
+            color: Colors.grey.withOpacity(0.5),
+            spreadRadius: 2,
+            blurRadius: 5,
+            offset: const Offset(3, 3),
           ),
         ],
       ),
@@ -110,7 +103,7 @@ class HomeScreen extends StatelessWidget {
                 ),
                 const SizedBox(width: 12),
                 TextButton(
-                  onPressed: (){
+                  onPressed: () {
                     // context.router.pushNamed('/posts_details');
                   }, 
                   child: Text(
@@ -122,7 +115,6 @@ class HomeScreen extends StatelessWidget {
                     ),
                   ),
                 ),
-                
               ],
             ),
           ),
@@ -134,7 +126,7 @@ class HomeScreen extends StatelessWidget {
               topRight: Radius.circular(0),
             ),
             child: Image.asset(
-              post['postImage'],
+              post['imageUrl'],
               width: double.infinity,
               height: 400,
               fit: BoxFit.cover,
@@ -165,10 +157,11 @@ class HomeScreen extends StatelessWidget {
                   ],
                 ),
 
+                const SizedBox(height: 8),
 
                 // Likes count
                 Text(
-                  '${post['likes']} likes',
+                  '${post['likesCount']} likes',
                   style: const TextStyle(
                     fontFamily: 'Inter',
                     fontWeight: FontWeight.w600,
@@ -208,7 +201,7 @@ class HomeScreen extends StatelessWidget {
 
                 // View comments
                 Text(
-                  'View all ${post['comments']} comments',
+                  'View all ${post['commentsCount']} comments',
                   style: TextStyle(
                     fontFamily: 'Inter',
                     fontSize: 13,

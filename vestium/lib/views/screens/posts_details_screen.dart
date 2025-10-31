@@ -1,31 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:auto_route/auto_route.dart';
 import '../widgets/nav_bar.dart';
+import '../../data/dummy/dummy-data-loader.dart';
 
 @RoutePage()
-class PostsDetailsScreen extends StatelessWidget {
+class PostsDetailsScreen extends StatefulWidget {
   const PostsDetailsScreen({super.key});
 
-  final List<Map<String, dynamic>> myPosts = const [
-    {
-      "id": "3",
-      "username": "trend_setter",
-      'profileImage': 'assets/images/dummyData/profile-pic-women.jpg',
-      'postImage': 'assets/images/dummyData/casual-weekend-outfit.jpg',
-      'caption': 'Summer vibes 🌸',
-      "likesCount": 234,
-      "commentsCount": 12
-    },
-    {
-      "id": "3",
-      "username": "trend_setter",
-      'profileImage': 'assets/images/dummyData/profile-pic-women.jpg',
-      'postImage': "assets/images/dummyData/urban-outfit-streetstyle-outfit.jpg",
-      'caption': 'Urban exploration fit 🏙️',
-      "likesCount": 189,
-      "commentsCount": 8
-    }
-  ];
+  @override
+  State<PostsDetailsScreen> createState() => _PostsDetailsScreenState();
+}
+
+class _PostsDetailsScreenState extends State<PostsDetailsScreen> {
+  List<dynamic> myPosts = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _loadMyPosts();
+  }
+
+  Future<void> _loadMyPosts() async {
+    final data = await DummyDataLoader.loadDummyData();
+    setState(() {
+      // Filter posts for a specific user (e.g., userId '3' for trend_setter)
+      myPosts = data['posts']
+        .where((post) => post['userId'] == '3') 
+        .toList();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -52,13 +55,15 @@ class PostsDetailsScreen extends StatelessWidget {
         ),
         centerTitle: true,
       ),
-      body: ListView.builder(
-        itemCount: myPosts.length,
-        itemBuilder: (context, index) {
-          final post = myPosts[index];
-          return _buildPostCard(post, context);
-        },
-      ),
+      body: myPosts.isEmpty
+          ? const Center(child: CircularProgressIndicator())
+          : ListView.builder(
+              itemCount: myPosts.length,
+              itemBuilder: (context, index) {
+                final post = myPosts[index];
+                return _buildPostCard(post, context);
+              },
+            ),
       bottomNavigationBar: const CustomNavBar(currentPage: 'profile'),
     );
   }
@@ -110,7 +115,7 @@ class PostsDetailsScreen extends StatelessWidget {
               topRight: Radius.circular(0),
             ),
             child: Image.asset(
-              post['postImage'],
+              post['imageUrl'],
               width: double.infinity,
               height: 400,
               fit: BoxFit.cover,
@@ -123,7 +128,7 @@ class PostsDetailsScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Like, comment icons and delete button
+                // Like, comment icons
                 Row(
                   children: [
                     IconButton(

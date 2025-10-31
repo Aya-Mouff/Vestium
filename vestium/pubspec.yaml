@@ -27,6 +27,7 @@ flutter:
     - assets/images/dummyData/
     - assets/images/icons/
     - assets/fonts/
+    - assets/data/
 
   fonts:
     - family: CormorantGaramond

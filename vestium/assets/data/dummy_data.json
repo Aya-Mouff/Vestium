@@ -108,6 +108,8 @@
     {
       "id": "1",
       "userId": "1",
+      "username": "fashion_lover",
+      "profileImage": "assets/images/dummyData/profile-pic-women.jpg",
       "name": "White Cotton T-Shirt",
       "description": "Basic white t-shirt perfect for layering",
       "season": "all",
@@ -118,6 +120,8 @@
     {
       "id": "2",
       "userId": "1",
+      "username": "fashion_lover",
+      "profileImage": "assets/images/dummyData/profile-pic-women.jpg",
       "name": "Slim Fit Blue Jeans",
       "description": "Comfortable jeans for everyday wear",
       "season": "all",
@@ -128,6 +132,8 @@
     {
       "id": "3",
       "userId": "1",
+      "username": "fashion_lover",
+      "profileImage": "assets/images/dummyData/profile-pic-women.jpg",
       "name": "Black Formal Blazer",
       "description": "Elegant blazer for professional settings",
       "season": ["fall", "winter", "spring"],
@@ -137,7 +143,9 @@
     },
     {
       "id": "4",
-      "userId": "2",
+      "userId": "1",
+      "username": "fashion_lover",
+      "profileImage": "assets/images/dummyData/profile-pic-women.jpg",
       "name": "Vintage Graphic Tee",
       "description": "Cool vintage band t-shirt",
       "season": ["spring", "summer"],
@@ -147,7 +155,9 @@
     },
     {
       "id": "5",
-      "userId": "2",
+      "userId": "1",
+      "username": "fashion_lover",
+      "profileImage": "assets/images/dummyData/profile-pic-women.jpg",
       "name": "Green Cargo Pants",
       "description": "Utility pants with multiple pockets",
       "season": ["fall", "spring"],
@@ -157,7 +167,9 @@
     },
     {
       "id": "6",
-      "userId": "3",
+      "userId": "1",
+      "username": "fashion_lover",
+      "profileImage": "assets/images/dummyData/profile-pic-women.jpg",
       "name": "Floral Summer Dress",
       "description": "Light and flowy dress for warm days",
       "season": ["spring", "summer"],
@@ -171,6 +183,8 @@
     {
       "id": "1",
       "userId": "1",
+      "username": "fashion_lover",
+      "profileImage": "assets/images/dummyData/profile-pic-women.jpg",
       "name": "Weekend Casual Look",
       "description": "Perfect for Saturday brunches and casual outings",
       "season": "all",
@@ -182,6 +196,8 @@
     {
       "id": "2",
       "userId": "1",
+      "username": "fashion_lover",
+      "profileImage": "assets/images/dummyData/profile-pic-women.jpg",
       "name": "Business Professional",
       "description": "Sharp look for important meetings and presentations",
       "season": ["fall", "winter", "spring"],
@@ -192,7 +208,9 @@
     },
     {
       "id": "3",
-      "userId": "2",
+      "userId": "1",
+      "username": "fashion_lover",
+      "profileImage": "assets/images/dummyData/profile-pic-women.jpg",
       "name": "Urban Street Style",
       "description": "Edgy look for city exploration and concerts",
       "season": ["spring", "fall"],
@@ -200,17 +218,6 @@
       "createdAt": "2024-03-04T16:45:00Z",
       "items": ["4", "5"],
       "imageUrl": "assets/images/dummyData/urban-outfit-streetstyle-outfit.jpg"
-    },
-    {
-      "id": "4",
-      "userId": "3",
-      "name": "Summer Garden Party",
-      "description": "Fresh and feminine look for outdoor events",
-      "season": ["spring", "summer"],
-      "category": "Evening",
-      "createdAt": "2024-03-07T11:20:00Z",
-      "items": ["6"],
-      "imageUrl": "assets/images/dummyData/summer-garden-party-outfit.jpg"
     }
   ],
 
@@ -218,6 +225,8 @@
     {
       "id": "1",
       "userId": "1",
+      "username": "fashion_lover",
+      "profileImage": "assets/images/dummyData/profile-pic-women.jpg",
       "outfitId": "1",
       "caption": "Loving this casual look for Saturday! ☕ #casualstyle #weekendvibes",
       "imageUrl": "assets/images/dummyData/casual-weekend-outfit.jpg",
@@ -243,6 +252,8 @@
     {
       "id": "2",
       "userId": "2",
+      "username": "style_guru",
+      "profileImage": "assets/images/dummyData/profile-pic-men.png",
       "outfitId": "3",
       "caption": "Urban exploration fit 🏙️ #streetwear #urbanstyle",
       "imageUrl": "assets/images/dummyData/urban-outfit-streetstyle-outfit.jpg",
@@ -262,6 +273,8 @@
     {
       "id": "3",
       "userId": "3",
+      "username": "trend_setter",
+      "profileImage": "assets/images/dummyData/profile-pic-women.jpg",
       "outfitId": "4",
       "caption": "Perfect for garden parties and summer events 🌸 #summerstyle #dress",
       "imageUrl": "assets/images/dummyData/summer-garden-party-post.jpg",
@@ -284,8 +297,12 @@
     {
       "id": "1",
       "userId": "1",
+      "username": "fashion_lover",
+      "profileImage": "assets/images/dummyData/profile-pic-women.jpg",
       "type": "like",
       "sourceUserId": "2",
+      "sourceUsername": "style_guru",
+      "sourceProfileImage": "assets/images/dummyData/profile-pic-men.png",
       "sourcePostId": "1",
       "message": "style_guru liked your post",
       "isRead": false,
@@ -294,8 +311,12 @@
     {
       "id": "2",
       "userId": "1",
+      "username": "fashion_lover",
+      "profileImage": "assets/images/dummyData/profile-pic-women.jpg",
       "type": "comment",
       "sourceUserId": "3",
+      "sourceUsername": "trend_setter",
+      "sourceProfileImage": "assets/images/dummyData/profile-pic-women.jpg",
       "sourcePostId": "1",
       "message": "trend_setter commented on your post",
       "isRead": false,
@@ -304,31 +325,15 @@
     {
       "id": "3",
       "userId": "1",
+      "username": "fashion_lover",
+      "profileImage": "assets/images/dummyData/profile-pic-women.jpg",
       "type": "follow",
-      "sourceUserId": "4",
+      "sourceUserId": "3",
+      "sourceUsername": "trend_setter",
+      "sourceProfileImage": "assets/images/dummyData/profile-pic-women.jpg",
       "message": "urban_style started following you",
       "isRead": true,
       "createdAt": "2024-03-04T12:20:00Z"
-    },
-    {
-      "id": "4",
-      "userId": "2",
-      "type": "like",
-      "sourceUserId": "1",
-      "sourcePostId": "2",
-      "message": "fashion_lover liked your post",
-      "isRead": false,
-      "createdAt": "2024-03-04T18:00:00Z"
-    },
-    {
-      "id": "5",
-      "userId": "3",
-      "type": "like",
-      "sourceUserId": "1",
-      "sourcePostId": "3",
-      "message": "fashion_lover liked your post",
-      "isRead": false,
-      "createdAt": "2024-03-07T13:30:00Z"
     }
   ]
 }
