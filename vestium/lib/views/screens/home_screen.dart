@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:auto_route/auto_route.dart';
 import '../widgets/nav_bar.dart';
 import '../../data/dummy/dummy-data-loader.dart';
- 
+import '../../app_router.dart';
+
 @RoutePage()
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -39,9 +40,9 @@ class _HomeScreenState extends State<HomeScreen> {
           padding: const EdgeInsets.all(0.0),
           child: Image.asset(
             'assets/images/logos/logo.png',
-            width: 100,         
-            height: 100, 
-          ),  
+            width: 100,
+            height: 100,
+          ),
         ),
         title: const Text(
           'Vestium',
@@ -99,15 +100,22 @@ class _HomeScreenState extends State<HomeScreen> {
             padding: const EdgeInsets.all(16.0),
             child: Row(
               children: [
-                CircleAvatar(
-                  radius: 18,
-                  backgroundImage: AssetImage(post['profileImage']),
+                // Clickable profile picture
+                GestureDetector(
+                  onTap: () {
+                    context.router.push(UserProfileRoute(userId: post['userId'].toString()));
+                  },
+                  child: CircleAvatar(
+                    radius: 18,
+                    backgroundImage: AssetImage(post['profileImage']),
+                  ),
                 ),
                 const SizedBox(width: 12),
+                // Clickable username
                 TextButton(
                   onPressed: () {
-                    // context.router.pushNamed('/posts_details');
-                  }, 
+                    context.router.push(UserProfileRoute(userId: post['userId'].toString()));
+                  },
                   child: Text(
                     post['username'],
                     style: const TextStyle(
