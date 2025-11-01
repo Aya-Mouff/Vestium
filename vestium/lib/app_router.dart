@@ -18,7 +18,20 @@ import './views/screens/set_new_password.dart';
 import './views/screens/my_profile.dart';
 import './views/screens/user_profile_screen.dart';
 import './views/screens/help_center.dart';
+import './views/screens/onboarding_screen1.dart';
+import './views/screens/onboarding_screen2.dart';
+import './views/screens/onboarding_screen3.dart';
+import './views/screens/manage_categories_screen1.dart';
+import './views/screens/manage_categories_screen2.dart';
+import './views/screens/setting_screen1.dart';
+import './views/screens/searching_screen1.dart';
+import './views/screens/followers_screen.dart';
+import './views/screens/following_screen.dart';
+import './views/screens/new_post_screen.dart';
+import './views/screens/selected_outfit_screen.dart';
+import './views/screens/wardrobe_screen.dart';
 part 'app_router.gr.dart';
+
 
 @AutoRouterConfig(replaceInRouteName: 'Screen,Route')
 class AppRouter extends _$AppRouter {
@@ -44,6 +57,19 @@ class AppRouter extends _$AppRouter {
         AutoRoute(page: UserProfileRoute.page, path: '/user_profile/:userId'),
         AutoRoute(page: AccountManagerRoute.page , path: '/account_manager'),
         AutoRoute(page: HelpCenterRoute.page , path: '/help_center'),
-        AutoRoute(page: OutfitCreatorRoute.page , path: '/create_outfit')
+        AutoRoute(page: OutfitCreatorRoute.page , path: '/create_outfit'),
+        AutoRoute(page: CommentsRoute.page, path: '/comments/:postId'),
+        AutoRoute(page: OnboardingRoute.page, path: '/onboarding1'),
+        AutoRoute(page: OnboardingRoute2.page, path: '/onboarding2'),
+        AutoRoute(page: OnboardingRoute3.page, path: '/onboarding3'),
+        AutoRoute(page: ManageCategoriesRoute.page, path: '/manage_categories1'),
+        AutoRoute(page: ManageCategoriesRoute2.page, path: '/manage_categories2'),
+        AutoRoute(page: SettingsRoute1.page, path: '/settings1'),
+        AutoRoute(page: SearchRoute.page, path: '/search1'),
+        AutoRoute(page: FollowersRoute.page, path: '/followers1'),
+        AutoRoute(page: FollowingRoute.page, path: '/following1'),
+        AutoRoute(page: NewPostRoute.page, path: '/newpost'),
+        AutoRoute(page: SelectOutfitRoute.page, path: '/selectoutfit'),
+        AutoRoute(page: WardrobeRoute.page, path: '/wardrobe1'),
       ];
 }
