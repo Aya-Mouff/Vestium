@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:vestium/app_router.dart';
 @RoutePage()
 class AccountManagerScreen extends StatelessWidget {
-  const AccountManagerScreen({Key? key}) : super(key: key);
+  const AccountManagerScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

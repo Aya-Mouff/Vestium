@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:vestium/app_router.dart';
-import 'package:vestium/views/screens/reset_password.dart' hide ResetPasswordPage;
 @RoutePage()
 class LogInScreen extends StatefulWidget {
-  const LogInScreen({Key? key}) : super(key: key);
+  const LogInScreen({super.key});
 
   @override
   State<LogInScreen> createState() => _LogInScreenState();
@@ -28,6 +27,8 @@ class _LogInScreenState extends State<LogInScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Signed in successfully!')),
       );
+
+      context.pushRoute(const CameraAccessRoute());
     }
   }
 

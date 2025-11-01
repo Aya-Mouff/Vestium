@@ -21,6 +21,12 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const AccountManagerScreen(),
       );
     },
+    CameraAccessRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const CameraAccessScreen(),
+      );
+    },
     CheckEmailRoute.name: (routeData) {
       final args = routeData.argsAs<CheckEmailRouteArgs>();
       return AutoRoutePage<dynamic>(
@@ -44,6 +50,29 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    EditItemRoute.name: (routeData) {
+      final args = routeData.argsAs<EditItemRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: EditItemScreen(
+          key: args.key,
+          imagePath: args.imagePath,
+        ),
+      );
+    },
+    EditOutfitRoute.name: (routeData) {
+      final pathParams = routeData.inheritedPathParams;
+      final args = routeData.argsAs<EditOutfitRouteArgs>(
+          orElse: () =>
+              EditOutfitRouteArgs(outfitId: pathParams.getString('outfitId')));
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: EditOutfitScreen(
+          key: args.key,
+          outfitId: args.outfitId,
+        ),
+      );
+    },
     FollowersRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -56,6 +85,12 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const FollowingScreen(),
       );
     },
+    GalleryAccessRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const GalleryAccessScreen(),
+      );
+    },
     HelpCenterRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -66,6 +101,16 @@ abstract class _$AppRouter extends RootStackRouter {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: const HomeScreen(),
+      );
+    },
+    ItemDetailsRoute.name: (routeData) {
+      final args = routeData.argsAs<ItemDetailsRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: ItemDetailsScreen(
+          key: args.key,
+          imagePath: args.imagePath,
+        ),
       );
     },
     LogInRoute.name: (routeData) {
@@ -141,6 +186,29 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const OutfitCreatorScreen(),
       );
     },
+    OutfitDetailsRoute.name: (routeData) {
+      final pathParams = routeData.inheritedPathParams;
+      final args = routeData.argsAs<OutfitDetailsRouteArgs>(
+          orElse: () => OutfitDetailsRouteArgs(
+              outfitId: pathParams.getString('outfitId')));
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: OutfitDetailsScreen(
+          key: args.key,
+          outfitId: args.outfitId,
+        ),
+      );
+    },
+    PhotoPreviewRoute.name: (routeData) {
+      final args = routeData.argsAs<PhotoPreviewRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: PhotoPreviewScreen(
+          key: args.key,
+          imagePath: args.imagePath,
+        ),
+      );
+    },
     PostsDetailsRoute.name: (routeData) {
       final pathParams = routeData.inheritedPathParams;
       final args = routeData.argsAs<PostsDetailsRouteArgs>(
@@ -172,10 +240,10 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const SelectOutfitScreen(),
       );
     },
-    SetNewPassword.name: (routeData) {
+    SetNewPasswordRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: const SetNewPassword(),
+        child: const SetNewPasswordScreen(),
       );
     },
     SettingsRoute1.name: (routeData) {
@@ -194,6 +262,12 @@ abstract class _$AppRouter extends RootStackRouter {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: const SplashScreen(),
+      );
+    },
+    TakePicRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const TakePicScreen(),
       );
     },
     UserProfileRoute.name: (routeData) {
@@ -225,6 +299,20 @@ class AccountManagerRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'AccountManagerRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [CameraAccessScreen]
+class CameraAccessRoute extends PageRouteInfo<void> {
+  const CameraAccessRoute({List<PageRouteInfo>? children})
+      : super(
+          CameraAccessRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'CameraAccessRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }
@@ -307,6 +395,83 @@ class CommentsRouteArgs {
 }
 
 /// generated route for
+/// [EditItemScreen]
+class EditItemRoute extends PageRouteInfo<EditItemRouteArgs> {
+  EditItemRoute({
+    Key? key,
+    required String imagePath,
+    List<PageRouteInfo>? children,
+  }) : super(
+          EditItemRoute.name,
+          args: EditItemRouteArgs(
+            key: key,
+            imagePath: imagePath,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'EditItemRoute';
+
+  static const PageInfo<EditItemRouteArgs> page =
+      PageInfo<EditItemRouteArgs>(name);
+}
+
+class EditItemRouteArgs {
+  const EditItemRouteArgs({
+    this.key,
+    required this.imagePath,
+  });
+
+  final Key? key;
+
+  final String imagePath;
+
+  @override
+  String toString() {
+    return 'EditItemRouteArgs{key: $key, imagePath: $imagePath}';
+  }
+}
+
+/// generated route for
+/// [EditOutfitScreen]
+class EditOutfitRoute extends PageRouteInfo<EditOutfitRouteArgs> {
+  EditOutfitRoute({
+    Key? key,
+    required String outfitId,
+    List<PageRouteInfo>? children,
+  }) : super(
+          EditOutfitRoute.name,
+          args: EditOutfitRouteArgs(
+            key: key,
+            outfitId: outfitId,
+          ),
+          rawPathParams: {'outfitId': outfitId},
+          initialChildren: children,
+        );
+
+  static const String name = 'EditOutfitRoute';
+
+  static const PageInfo<EditOutfitRouteArgs> page =
+      PageInfo<EditOutfitRouteArgs>(name);
+}
+
+class EditOutfitRouteArgs {
+  const EditOutfitRouteArgs({
+    this.key,
+    required this.outfitId,
+  });
+
+  final Key? key;
+
+  final String outfitId;
+
+  @override
+  String toString() {
+    return 'EditOutfitRouteArgs{key: $key, outfitId: $outfitId}';
+  }
+}
+
+/// generated route for
 /// [FollowersScreen]
 class FollowersRoute extends PageRouteInfo<void> {
   const FollowersRoute({List<PageRouteInfo>? children})
@@ -330,6 +495,20 @@ class FollowingRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'FollowingRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [GalleryAccessScreen]
+class GalleryAccessRoute extends PageRouteInfo<void> {
+  const GalleryAccessRoute({List<PageRouteInfo>? children})
+      : super(
+          GalleryAccessRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'GalleryAccessRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }
@@ -360,6 +539,44 @@ class HomeRoute extends PageRouteInfo<void> {
   static const String name = 'HomeRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [ItemDetailsScreen]
+class ItemDetailsRoute extends PageRouteInfo<ItemDetailsRouteArgs> {
+  ItemDetailsRoute({
+    Key? key,
+    required String imagePath,
+    List<PageRouteInfo>? children,
+  }) : super(
+          ItemDetailsRoute.name,
+          args: ItemDetailsRouteArgs(
+            key: key,
+            imagePath: imagePath,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'ItemDetailsRoute';
+
+  static const PageInfo<ItemDetailsRouteArgs> page =
+      PageInfo<ItemDetailsRouteArgs>(name);
+}
+
+class ItemDetailsRouteArgs {
+  const ItemDetailsRouteArgs({
+    this.key,
+    required this.imagePath,
+  });
+
+  final Key? key;
+
+  final String imagePath;
+
+  @override
+  String toString() {
+    return 'ItemDetailsRouteArgs{key: $key, imagePath: $imagePath}';
+  }
 }
 
 /// generated route for
@@ -542,6 +759,83 @@ class OutfitCreatorRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
+/// [OutfitDetailsScreen]
+class OutfitDetailsRoute extends PageRouteInfo<OutfitDetailsRouteArgs> {
+  OutfitDetailsRoute({
+    Key? key,
+    required String outfitId,
+    List<PageRouteInfo>? children,
+  }) : super(
+          OutfitDetailsRoute.name,
+          args: OutfitDetailsRouteArgs(
+            key: key,
+            outfitId: outfitId,
+          ),
+          rawPathParams: {'outfitId': outfitId},
+          initialChildren: children,
+        );
+
+  static const String name = 'OutfitDetailsRoute';
+
+  static const PageInfo<OutfitDetailsRouteArgs> page =
+      PageInfo<OutfitDetailsRouteArgs>(name);
+}
+
+class OutfitDetailsRouteArgs {
+  const OutfitDetailsRouteArgs({
+    this.key,
+    required this.outfitId,
+  });
+
+  final Key? key;
+
+  final String outfitId;
+
+  @override
+  String toString() {
+    return 'OutfitDetailsRouteArgs{key: $key, outfitId: $outfitId}';
+  }
+}
+
+/// generated route for
+/// [PhotoPreviewScreen]
+class PhotoPreviewRoute extends PageRouteInfo<PhotoPreviewRouteArgs> {
+  PhotoPreviewRoute({
+    Key? key,
+    required String imagePath,
+    List<PageRouteInfo>? children,
+  }) : super(
+          PhotoPreviewRoute.name,
+          args: PhotoPreviewRouteArgs(
+            key: key,
+            imagePath: imagePath,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'PhotoPreviewRoute';
+
+  static const PageInfo<PhotoPreviewRouteArgs> page =
+      PageInfo<PhotoPreviewRouteArgs>(name);
+}
+
+class PhotoPreviewRouteArgs {
+  const PhotoPreviewRouteArgs({
+    this.key,
+    required this.imagePath,
+  });
+
+  final Key? key;
+
+  final String imagePath;
+
+  @override
+  String toString() {
+    return 'PhotoPreviewRouteArgs{key: $key, imagePath: $imagePath}';
+  }
+}
+
+/// generated route for
 /// [PostsDetailsScreen]
 class PostsDetailsRoute extends PageRouteInfo<PostsDetailsRouteArgs> {
   PostsDetailsRoute({
@@ -623,15 +917,15 @@ class SelectOutfitRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
-/// [SetNewPassword]
-class SetNewPassword extends PageRouteInfo<void> {
-  const SetNewPassword({List<PageRouteInfo>? children})
+/// [SetNewPasswordScreen]
+class SetNewPasswordRoute extends PageRouteInfo<void> {
+  const SetNewPasswordRoute({List<PageRouteInfo>? children})
       : super(
-          SetNewPassword.name,
+          SetNewPasswordRoute.name,
           initialChildren: children,
         );
 
-  static const String name = 'SetNewPassword';
+  static const String name = 'SetNewPasswordRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }
@@ -674,6 +968,20 @@ class SplashRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'SplashRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [TakePicScreen]
+class TakePicRoute extends PageRouteInfo<void> {
+  const TakePicRoute({List<PageRouteInfo>? children})
+      : super(
+          TakePicRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'TakePicRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }

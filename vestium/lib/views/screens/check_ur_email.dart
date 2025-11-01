@@ -6,7 +6,7 @@ import 'package:vestium/app_router.dart';
 class CheckEmailScreen extends StatelessWidget {
   final String email;
 
-  const CheckEmailScreen({Key? key, required this.email}) : super(key: key);
+  const CheckEmailScreen({super.key, required this.email});
 
   @override
   Widget build(BuildContext context) {

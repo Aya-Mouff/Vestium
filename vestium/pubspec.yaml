@@ -1,6 +1,6 @@
 name: vestium
 description: "A new Flutter project."
-publish_to: 'none'
+publish_to: "none"
 version: 0.1.0
 
 environment:
@@ -10,6 +10,11 @@ dependencies:
   flutter:
     sdk: flutter
   auto_route: ^7.8.4
+  permission_handler: ^11.0.1
+  camera: ^0.11.0+1
+  path: ^1.8.3
+  path_provider: ^2.1.2
+  flutter_launcher_icons: ^0.10.0
 
 dev_dependencies:
   flutter_test:
@@ -46,3 +51,9 @@ flutter:
       fonts:
         - asset: assets/fonts/AlexBrush/AlexBrush-Regular.ttf
           weight: 400
+
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/images/logos/logo.png"
+

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:vestium/app_router.dart';
-import 'login_screen.dart';
 
 @RoutePage()
 class SplashScreen extends StatelessWidget {

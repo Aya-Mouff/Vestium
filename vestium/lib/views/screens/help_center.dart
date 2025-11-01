@@ -2,7 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 @RoutePage()
 class HelpCenterScreen extends StatefulWidget {
-  const HelpCenterScreen({Key? key}) : super(key: key);
+  const HelpCenterScreen({super.key});
 
   @override
   State<HelpCenterScreen> createState() => _HelpCenterScreenState();
@@ -177,9 +177,9 @@ class FAQItemWidget extends StatefulWidget {
   final FAQItem faqItem;
 
   const FAQItemWidget({
-    Key? key,
+    super.key,
     required this.faqItem,
-  }) : super(key: key);
+  });
 
   @override
   State<FAQItemWidget> createState() => _FAQItemWidgetState();
