@@ -87,6 +87,12 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const NotificationsScreen(),
       );
     },
+    OutfitCreatorRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const OutfitCreatorScreen(),
+      );
+    },
     PostsDetailsRoute.name: (routeData) {
       final pathParams = routeData.inheritedPathParams;
       final args = routeData.argsAs<PostsDetailsRouteArgs>(
@@ -333,6 +339,20 @@ class NotificationsRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'NotificationsRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [OutfitCreatorScreen]
+class OutfitCreatorRoute extends PageRouteInfo<void> {
+  const OutfitCreatorRoute({List<PageRouteInfo>? children})
+      : super(
+          OutfitCreatorRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'OutfitCreatorRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }

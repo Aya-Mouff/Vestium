@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:auto_route/auto_route.dart';
+import 'package:vestium/app_router.dart';
 
 class CustomNavBar extends StatelessWidget {
   final String currentPage;
@@ -13,16 +14,10 @@ class CustomNavBar extends StatelessWidget {
         right: 16,
         bottom: 20, // Space from bottom of screen
       ),
-      padding: const EdgeInsets.symmetric(
-        vertical: 10,
-        horizontal: 10,
-      ),
+      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
       decoration: BoxDecoration(
         color: Colors.white,
-        border: Border.all(
-          color: const Color(0xC0795548),
-          width: 0.25,
-        ),
+        border: Border.all(color: const Color(0xC0795548), width: 0.25),
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
@@ -38,7 +33,9 @@ class CustomNavBar extends StatelessWidget {
           IconButton(
             icon: Icon(
               Icons.home,
-              color: currentPage == 'home' ? Colors.black: Color(0xC0795548),// change icon color
+              color: currentPage == 'home'
+                  ? Colors.black
+                  : Color(0xC0795548), // change icon color
               size: 24,
             ),
             onPressed: () {
@@ -46,9 +43,11 @@ class CustomNavBar extends StatelessWidget {
             },
           ),
           IconButton(
-           icon: Icon(
+            icon: Icon(
               Icons.search,
-              color: currentPage == 'search' ? Colors.black: Color(0xC0795548),// change icon color
+              color: currentPage == 'search'
+                  ? Colors.black
+                  : Color(0xC0795548), // change icon color
               size: 24,
             ),
             onPressed: () {
@@ -65,18 +64,22 @@ class CustomNavBar extends StatelessWidget {
             child: IconButton(
               icon: Icon(
                 Icons.add,
-                color: currentPage == 'add' ? Colors.black: Color(0xC0795548),// change icon color
+                color: currentPage == 'add'
+                    ? Colors.black
+                    : Color(0xC0795548), // change icon color
                 size: 24,
               ),
               onPressed: () {
-                // Auto route to create post
+                context.pushRoute(OutfitCreatorRoute());
               },
             ),
           ),
           IconButton(
-           icon: Icon(
+            icon: Icon(
               Icons.checkroom,
-              color: currentPage == 'wardrobe' ? Colors.black: Color(0xC0795548),// change icon color
+              color: currentPage == 'wardrobe'
+                  ? Colors.black
+                  : Color(0xC0795548), // change icon color
               size: 24,
             ),
             onPressed: () {
@@ -86,7 +89,9 @@ class CustomNavBar extends StatelessWidget {
           IconButton(
             icon: Icon(
               Icons.person_outline,
-              color: currentPage == 'profile' ? Colors.black: Color(0xC0795548),// change icon color
+              color: currentPage == 'profile'
+                  ? Colors.black
+                  : Color(0xC0795548), // change icon color
               size: 24,
             ),
             onPressed: () {

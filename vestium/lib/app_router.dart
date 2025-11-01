@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:vestium/views/screens/account_manager.dart';
 import 'package:vestium/views/screens/check_ur_email.dart';
+import 'package:vestium/views/screens/create_outfit.dart';
 import 'package:vestium/views/screens/reset_password.dart';
 import 'package:vestium/views/screens/singup_screen.dart';
 import './views/screens/splash_screen.dart';
@@ -42,6 +43,7 @@ class AppRouter extends _$AppRouter {
         AutoRoute(page: MyProfileRoute.page, path: '/my_profile'),
         AutoRoute(page: UserProfileRoute.page, path: '/user_profile/:userId'),
         AutoRoute(page: AccountManagerRoute.page , path: '/account_manager'),
-        AutoRoute(page: HelpCenterRoute.page , path: '/help_center')
+        AutoRoute(page: HelpCenterRoute.page , path: '/help_center'),
+        AutoRoute(page: OutfitCreatorRoute.page , path: '/create_outfit')
       ];
 }
