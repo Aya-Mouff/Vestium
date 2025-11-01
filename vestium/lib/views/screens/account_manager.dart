@@ -1,13 +1,13 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-@routePage
+@RoutePage()
 class AccountManagerScreen extends StatelessWidget {
   const AccountManagerScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F0ED),
+      backgroundColor: const Color(0xFFF5ECE7),
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
@@ -20,6 +20,7 @@ class AccountManagerScreen extends StatelessWidget {
         title: const Text(
           'Account Manager',
           style: TextStyle(
+            fontFamily: 'CormorantGaramond',
             color: Color(0xFF2C2C2C),
             fontSize: 18,
             fontWeight: FontWeight.w600,
@@ -27,6 +28,7 @@ class AccountManagerScreen extends StatelessWidget {
         ),
         centerTitle: true,
       ),
+      
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -41,7 +43,7 @@ class AccountManagerScreen extends StatelessWidget {
               title: 'Change Email',
               subtitle: 'Update your email address',
               onTap: () {
-                print('Change Email tapped');
+                 _showChangeEmailDialog(context);
               },
             ),
 
@@ -54,7 +56,7 @@ class AccountManagerScreen extends StatelessWidget {
               title: 'Change Password',
               subtitle: 'Update your password',
               onTap: () {
-                print('Change Password tapped');
+                _showChangePasswordDialog(context);
               },
             ),
 
@@ -67,7 +69,7 @@ class AccountManagerScreen extends StatelessWidget {
               title: 'Change Full Name',
               subtitle: 'Update your display name',
               onTap: () {
-                print('Change Full Name tapped');
+                _showChangeFullNameDialog(context);
               },
             ),
 
@@ -79,6 +81,7 @@ class AccountManagerScreen extends StatelessWidget {
               child: Text(
                 'DANGER ZONE',
                 style: TextStyle(
+                  fontFamily: 'CormorantGaramond',
                   fontSize: 12,
                   fontWeight: FontWeight.w600,
                   color: Colors.grey[600],
@@ -97,8 +100,8 @@ class AccountManagerScreen extends StatelessWidget {
               subtitle: 'Permanently delete your account',
               subtitleColor: const Color(0xFFD32F2F).withOpacity(0.7),
               onTap: () {
-                print('Delete Account tapped');
-                _showDeleteConfirmationDialog(context);
+                 _showDeleteAccountDialog(context);
+                 // _showDeleteConfirmationDialog(context);
               },
             ),
           ],
@@ -132,6 +135,7 @@ class AccountManagerScreen extends StatelessWidget {
             ),
           ],
         ),
+    
         child: Row(
           children: [
             Container(
@@ -155,6 +159,7 @@ class AccountManagerScreen extends StatelessWidget {
                   Text(
                     title,
                     style: TextStyle(
+                      fontFamily: 'CormorantGaramond',
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
                       color: titleColor ?? const Color(0xFF2C2C2C),
@@ -164,6 +169,7 @@ class AccountManagerScreen extends StatelessWidget {
                   Text(
                     subtitle,
                     style: TextStyle(
+                      fontFamily: 'inter',
                       fontSize: 13,
                       color: subtitleColor ?? Colors.grey[600],
                     ),
@@ -182,55 +188,693 @@ class AccountManagerScreen extends StatelessWidget {
     );
   }
 
-  void _showDeleteConfirmationDialog(BuildContext context) {
+  
+  void _showChangeEmailDialog(BuildContext context) {
+    final newEmailController = TextEditingController();
+    final passwordController = TextEditingController();
+    bool obscurePassword = true;
+
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return Dialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.all(24.0),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Text(
+                        'Change Email',
+                        style: TextStyle(
+                          fontFamily: 'CormorantGaramond',
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600,
+                          color: Color(0xFF2C2C2C),
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      const Text(
+                        'Enter your new email and confirm with your password',
+                        style: TextStyle(
+                          fontFamily: 'inter',
+                          fontSize: 14,
+                          color: Color(0xFF666666),
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(height: 24),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            'New Email',
+                            style: TextStyle(
+                              fontFamily: 'CormorantGaramond',
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                              color: Color(0xFF2C2C2C),
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          TextField(
+                            controller: newEmailController,
+                            decoration: InputDecoration(
+                              hintText: 'newemail@example.com',
+                              filled: true,
+                              fillColor: const Color(0xFFF0EBE6),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12),
+                                borderSide: const BorderSide(
+                                  color: Color(0xFFA1887F),
+                                  width: 1.5,
+                                ),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12),
+                                borderSide: const BorderSide(
+                                  color: Color(0xFFA1887F),
+                                  width: 1.5,
+                                ),
+                              ),
+                              contentPadding: const EdgeInsets.symmetric(
+                                horizontal: 16,
+                                vertical: 14,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 16),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            'Current Password',
+                            style: TextStyle(
+                              fontFamily: 'CormorantGaramond',
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                              color: Color(0xFF2C2C2C),
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          TextField(
+                            controller: passwordController,
+                            obscureText: obscurePassword,
+                            decoration: InputDecoration(
+                              hintText: '••••••••',
+                              filled: true,
+                              fillColor: const Color(0xFFF0EBE6),
+                              suffixIcon: IconButton(
+                                icon: Icon(
+                                  obscurePassword
+                                      ? Icons.visibility_off
+                                      : Icons.visibility,
+                                  color: const Color(0xFFA1887F),
+                                ),
+                                onPressed: () {
+                                  setState(() {
+                                    obscurePassword = !obscurePassword;
+                                  });
+                                },
+                              ),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12),
+                                borderSide: const BorderSide(
+                                  color: Color(0xFFA1887F),
+                                  width: 1.5,
+                                ),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12),
+                                borderSide: const BorderSide(
+                                  color: Color(0xFFA1887F),
+                                  width: 1.5,
+                                ),
+                              ),
+                              contentPadding: const EdgeInsets.symmetric(
+                                horizontal: 16,
+                                vertical: 14,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 24),
+                      SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('Email updated successfully'),
+                              ),
+                            );
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFF6B5344),
+                            padding: const EdgeInsets.symmetric(vertical: 14),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                          ),
+                          child: const Text(
+                            'Change Email',
+                            style: TextStyle(
+                              fontFamily: 'CormorantGaramond',
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      SizedBox(
+                        width: double.infinity,
+                        child: TextButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          child: const Text(
+                            'Cancel',
+                            style: TextStyle(
+                              fontFamily: 'CormorantGaramond',
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                              color: Color(0xFF2C2C2C),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  void _showChangePasswordDialog(BuildContext context) {
+    final currentPasswordController = TextEditingController();
+    final newPasswordController = TextEditingController();
+    final confirmPasswordController = TextEditingController();
+    bool obscureCurrentPassword = true;
+    bool obscureNewPassword = true;
+    bool obscureConfirmPassword = true;
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return Dialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.all(24.0),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Text(
+                        'Change Password',
+                        style: TextStyle(
+                          fontFamily: 'CormorantGaramond',
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600,
+                          color: Color(0xFF2C2C2C),
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      const Text(
+                        'Enter your current password and new password',
+                        style: TextStyle(
+                          fontFamily: 'inter',
+                          fontSize: 14,
+                          color: Color(0xFF666666),
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(height: 24),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            'Current Password',
+                            style: TextStyle(
+                              fontFamily: 'CormorantGaramond',
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                              color: Color(0xFF2C2C2C),
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          TextField(
+                            controller: currentPasswordController,
+                            obscureText: obscureCurrentPassword,
+                            decoration: InputDecoration(
+                              hintText: '••••••••',
+                              filled: true,
+                              fillColor: const Color(0xFFF0EBE6),
+                              suffixIcon: IconButton(
+                                icon: Icon(
+                                  obscureCurrentPassword
+                                      ? Icons.visibility_off
+                                      : Icons.visibility,
+                                  color: const Color(0xFFA1887F),
+                                ),
+                                onPressed: () {
+                                  setState(() {
+                                    obscureCurrentPassword =
+                                        !obscureCurrentPassword;
+                                  });
+                                },
+                              ),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12),
+                                borderSide: const BorderSide(
+                                  color: Color(0xFFA1887F),
+                                  width: 1.5,
+                                ),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12),
+                                borderSide: const BorderSide(
+                                  color: Color(0xFFA1887F),
+                                  width: 1.5,
+                                ),
+                              ),
+                              contentPadding: const EdgeInsets.symmetric(
+                                horizontal: 16,
+                                vertical: 14,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 16),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            'New Password',
+                            style: TextStyle(
+                              fontFamily: 'CormorantGaramond',
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                              color: Color(0xFF2C2C2C),
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          TextField(
+                            controller: newPasswordController,
+                            obscureText: obscureNewPassword,
+                            decoration: InputDecoration(
+                              hintText: '••••••••',
+                              filled: true,
+                              fillColor: const Color(0xFFF0EBE6),
+                              suffixIcon: IconButton(
+                                icon: Icon(
+                                  obscureNewPassword
+                                      ? Icons.visibility_off
+                                      : Icons.visibility,
+                                  color: const Color(0xFFA1887F),
+                                ),
+                                onPressed: () {
+                                  setState(() {
+                                    obscureNewPassword = !obscureNewPassword;
+                                  });
+                                },
+                              ),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12),
+                                borderSide: const BorderSide(
+                                  color: Color(0xFFA1887F),
+                                  width: 1.5,
+                                ),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12),
+                                borderSide: const BorderSide(
+                                  color: Color(0xFFA1887F),
+                                  width: 1.5,
+                                ),
+                              ),
+                              contentPadding: const EdgeInsets.symmetric(
+                                horizontal: 16,
+                                vertical: 14,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 16),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            'Confirm Password',
+                            style: TextStyle(
+                              fontFamily: 'CormorantGaramond',
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                              color: Color(0xFF2C2C2C),
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          TextField(
+                            controller: confirmPasswordController,
+                            obscureText: obscureConfirmPassword,
+                            decoration: InputDecoration(
+                              hintText: '••••••••',
+                              filled: true,
+                              fillColor: const Color(0xFFF0EBE6),
+                              suffixIcon: IconButton(
+                                icon: Icon(
+                                  obscureConfirmPassword
+                                      ? Icons.visibility_off
+                                      : Icons.visibility,
+                                  color: const Color(0xFFA1887F),
+                                ),
+                                onPressed: () {
+                                  setState(() {
+                                    obscureConfirmPassword =
+                                        !obscureConfirmPassword;
+                                  });
+                                },
+                              ),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12),
+                                borderSide: const BorderSide(
+                                  color: Color(0xFFA1887F),
+                                  width: 1.5,
+                                ),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12),
+                                borderSide: const BorderSide(
+                                  color: Color(0xFFA1887F),
+                                  width: 1.5,
+                                ),
+                              ),
+                              contentPadding: const EdgeInsets.symmetric(
+                                horizontal: 16,
+                                vertical: 14,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 24),
+                      SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('Password updated successfully'),
+                              ),
+                            );
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFF6B5344),
+                            padding: const EdgeInsets.symmetric(vertical: 14),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                          ),
+                          child: const Text(
+                            'Change Password',
+                            style: TextStyle(
+                              fontFamily: 'CormorantGaramond',
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      SizedBox(
+                        width: double.infinity,
+                        child: TextButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          child: const Text(
+                            'Cancel',
+                            style: TextStyle(
+                              fontFamily: 'CormorantGaramond',
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                              color: Color(0xFF2C2C2C),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  void _showChangeFullNameDialog(BuildContext context) {
+    final fullNameController = TextEditingController();
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
           ),
-          title: const Text(
-            'Delete Account',
-            style: TextStyle(
-              fontWeight: FontWeight.w600,
-              color: Color(0xFFD32F2F),
+          child: Padding(
+            padding: const EdgeInsets.all(24.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Text(
+                  'Change Full Name',
+                  style: TextStyle(
+                    fontFamily: 'CormorantGaramond',
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600,
+                    color: Color(0xFF2C2C2C),
+                  ),
+                ),
+                const SizedBox(height: 8),
+                const Text(
+                  'Enter your new display name',
+                  style: TextStyle(
+                    fontFamily: 'inter',
+                    fontSize: 14,
+                    color: Color(0xFF666666),
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 24),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Full Name',
+                      style: TextStyle(
+                        fontFamily: 'CormorantGaramond',
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                        color: Color(0xFF2C2C2C),
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    TextField(
+                      controller: fullNameController,
+                      decoration: InputDecoration(
+                        hintText: 'Your name',
+                        filled: true,
+                        fillColor: const Color(0xFFF0EBE6),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: const BorderSide(
+                            color: Color(0xFFA1887F),
+                            width: 1.5,
+                          ),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: const BorderSide(
+                            color: Color(0xFFA1887F),
+                            width: 1.5,
+                          ),
+                        ),
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 14,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 24),
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Full name updated successfully'),
+                        ),
+                      );
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF6B5344),
+                      padding: const EdgeInsets.symmetric(vertical: 14),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                    child: const Text(
+                      'Save',
+                      style: TextStyle(
+                        fontFamily: 'CormorantGaramond',
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 12),
+                SizedBox(
+                  width: double.infinity,
+                  child: TextButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: const Text(
+                      'Cancel',
+                      style: TextStyle(
+                        fontFamily: 'CormorantGaramond',
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: Color(0xFF2C2C2C),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
-          content: const Text(
-            'Are you sure you want to permanently delete your account? This action cannot be undone.',
-            style: TextStyle(fontSize: 15),
+        );
+      },
+    );
+  }
+
+  void _showDeleteAccountDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
           ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: Text(
-                'Cancel',
-                style: TextStyle(
-                  color: Colors.grey[700],
-                  fontWeight: FontWeight.w600,
+          child: Padding(
+            padding: const EdgeInsets.all(24.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Text(
+                  'Delete Account',
+                  style: TextStyle(
+                    fontFamily: 'CormorantGaramond',
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600,
+                    color: Color(0xFFD32F2F),
+                  ),
                 ),
-              ),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-                // Add delete account logic here
-                print('Account deleted');
-              },
-              child: const Text(
-                'Delete',
-                style: TextStyle(
-                  color: Color(0xFFD32F2F),
-                  fontWeight: FontWeight.w600,
+                const SizedBox(height: 16),
+                const Text(
+                  'Are you sure you want to permanently delete your account? This action cannot be undone.',
+                  style: TextStyle(
+                    fontFamily: 'inter',
+                    fontSize: 14,
+                    color: Color(0xFF666666),
+                  ),
+                  textAlign: TextAlign.center,
                 ),
-              ),
+                const SizedBox(height: 24),
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Account deleted successfully'),
+                        ),
+                      );
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFFD32F2F),
+                      padding: const EdgeInsets.symmetric(vertical: 14),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                    child: const Text(
+                      'Delete Account',
+                      style: TextStyle(
+                        fontFamily: 'CormorantGaramond',
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 12),
+                SizedBox(
+                  width: double.infinity,
+                  child: TextButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: const Text(
+                      'Cancel',
+                      style: TextStyle(
+                        fontFamily: 'CormorantGaramond',
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: Color(0xFF2C2C2C),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
-          ],
+          ),
         );
       },
     );
   }
 }
+
+

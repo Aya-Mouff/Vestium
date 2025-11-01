@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:vestium/views/screens/account_manager.dart';
 import 'package:vestium/views/screens/check_ur_email.dart';
 import 'package:vestium/views/screens/reset_password.dart';
 import 'package:vestium/views/screens/singup_screen.dart';
@@ -38,8 +39,8 @@ class AppRouter extends _$AppRouter {
         AutoRoute(page: ResetPasswordRoute.page , path: '/reset_password' ),
         AutoRoute(page: CheckEmailRoute.page , path: '/check_email'),
        // AutoRoute(page: SetNewPasswordRoute.page )
-
         AutoRoute(page: MyProfileRoute.page, path: '/my_profile'),
         AutoRoute(page: UserProfileRoute.page, path: '/user_profile/:userId'),
+        AutoRoute(page: AccountManagerRoute.page , path: '/account_manager')
       ];
 }
