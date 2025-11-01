@@ -5,6 +5,14 @@ import 'package:vestium/views/screens/check_ur_email.dart';
 import 'package:vestium/views/screens/create_outfit.dart';
 import 'package:vestium/views/screens/reset_password.dart';
 import 'package:vestium/views/screens/singup_screen.dart';
+import 'package:vestium/views/screens/outfit_details_screen.dart';
+import 'package:vestium/views/screens/camera_permisssion_screen.dart';
+import 'package:vestium/views/screens/gallery_permissison_screen.dart';
+import 'package:vestium/views/screens/take_pic_screen.dart';
+import 'package:vestium/views/screens/photo_preview_screen.dart';
+import 'package:vestium/views/screens/edit_item_screen.dart';
+import 'package:vestium/views/screens/item_details_screen.dart';
+import 'package:vestium/views/screens/edit_outfit_screen.dart';
 import './views/screens/splash_screen.dart';
 import './views/screens/home_screen.dart';
 import './views/screens/my_posts_screen.dart';
@@ -13,9 +21,6 @@ import './views/screens/notifications_screen.dart';
 import './views/screens/comments_screen.dart';
 import 'views/screens/my_profile.dart';
 import 'views/screens/login_screen.dart';
-import './views/screens/reset_password.dart';
-import './views/screens/set_new_password.dart';
-import './views/screens/my_profile.dart';
 import './views/screens/user_profile_screen.dart';
 import './views/screens/help_center.dart';
 import './views/screens/onboarding_screen1.dart';
@@ -30,8 +35,9 @@ import './views/screens/following_screen.dart';
 import './views/screens/new_post_screen.dart';
 import './views/screens/selected_outfit_screen.dart';
 import './views/screens/wardrobe_screen.dart';
-part 'app_router.gr.dart';
+import 'views/screens/set_new_password_screen.dart';
 
+part 'app_router.gr.dart';
 
 @AutoRouterConfig(replaceInRouteName: 'Screen,Route')
 class AppRouter extends _$AppRouter {
@@ -43,22 +49,27 @@ class AppRouter extends _$AppRouter {
         AutoRoute(page: PostsDetailsRoute.page, path: '/posts_details/:postId'),
         AutoRoute(page: NotificationsRoute.page, path: '/notifications'),
         AutoRoute(page: CommentsRoute.page, path: '/comments/:postId'),
-
         AutoRoute(page: MyProfileRoute.page, path: '/my-profile'),
-
         AutoRoute(page: MyPostsRoute.page, path: '/my_posts'),
         AutoRoute(page: PostsDetailsRoute.page, path: '/posts_details'),
-        AutoRoute(page: SignUpRoute.page , path:'/sign_up'),
-        AutoRoute(page: LogInRoute.page , path: '/log_in'),
-        AutoRoute(page: ResetPasswordRoute.page , path: '/reset_password' ),
-        AutoRoute(page: CheckEmailRoute.page , path: '/check_email'),
-       // AutoRoute(page: SetNewPasswordRoute.page )
+        AutoRoute(page: SignUpRoute.page, path: '/sign_up'),
+        AutoRoute(page: LogInRoute.page, path: '/log_in'),
+        AutoRoute(page: ResetPasswordRoute.page, path: '/reset_password'),
+        AutoRoute(page: CheckEmailRoute.page, path: '/check_email'),
+        AutoRoute(page: SetNewPasswordRoute.page, path: '/set_new_password'),
         AutoRoute(page: MyProfileRoute.page, path: '/my_profile'),
         AutoRoute(page: UserProfileRoute.page, path: '/user_profile/:userId'),
-        AutoRoute(page: AccountManagerRoute.page , path: '/account_manager'),
-        AutoRoute(page: HelpCenterRoute.page , path: '/help_center'),
-        AutoRoute(page: OutfitCreatorRoute.page , path: '/create_outfit'),
-        AutoRoute(page: CommentsRoute.page, path: '/comments/:postId'),
+        AutoRoute(page: AccountManagerRoute.page, path: '/account_manager'),
+        AutoRoute(page: HelpCenterRoute.page, path: '/help_center'),
+        AutoRoute(page: OutfitCreatorRoute.page, path: '/create_outfit'),
+        AutoRoute(page: OutfitDetailsRoute.page, path: '/outfit-details/:outfitId'),
+        AutoRoute(page: CameraAccessRoute.page),
+        AutoRoute(page: TakePicRoute.page),
+        AutoRoute(page: GalleryAccessRoute.page),
+        AutoRoute(page: PhotoPreviewRoute.page),
+        AutoRoute(page: EditItemRoute.page),
+        AutoRoute(page: ItemDetailsRoute.page),
+        AutoRoute(page: EditOutfitRoute.page, path: '/edit-outfit/:outfitId'),
         AutoRoute(page: OnboardingRoute.page, path: '/onboarding1'),
         AutoRoute(page: OnboardingRoute2.page, path: '/onboarding2'),
         AutoRoute(page: OnboardingRoute3.page, path: '/onboarding3'),

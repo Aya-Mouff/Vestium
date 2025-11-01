@@ -109,19 +109,14 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
   }
 
   Widget _buildNotificationItem(Map<String, dynamic> notification) {
-    final isRead = notification['isRead'] ?? false;
+    // final isRead = notification['isRead'] ?? false;
     final type = notification['type'];
-    
+
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
       decoration: BoxDecoration(
         color: const Color(0xFFF5ECE7),
-        border: Border(
-          bottom: BorderSide(
-            color: Color(0x30795548),
-            width: 1,
-          ),
-        ),
+        border: Border(bottom: BorderSide(color: Color(0x30795548), width: 1)),
       ),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -134,8 +129,8 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                 CircleAvatar(
                   radius: 24,
                   backgroundImage: AssetImage(
-                    notification['sourceProfileImage'] ?? 
-                    'assets/images/dummyData/profile-pic-women.jpg'
+                    notification['sourceProfileImage'] ??
+                        'assets/images/dummyData/profile-pic-women.jpg',
                   ),
                 ),
                 Positioned(
@@ -159,7 +154,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
               ],
             ),
             const SizedBox(width: 12),
-            
+
             // Notification text and time
             Expanded(
               child: Column(
@@ -201,7 +196,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                 ],
               ),
             ),
-            
+
             // Post thumbnail (if applicable)
             if (notification['sourcePostId'] != null)
               Container(
@@ -217,9 +212,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                     _getPostImage(notification),
                     fit: BoxFit.cover,
                     errorBuilder: (context, error, stackTrace) {
-                      return Container(
-                        color: Colors.grey.shade300,
-                      );
+                      return Container(color: Colors.grey.shade300);
                     },
                   ),
                 ),

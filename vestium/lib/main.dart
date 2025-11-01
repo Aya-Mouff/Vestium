@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import './app_router.dart';
 
 void main() {
-  final _appRouter = AppRouter();
-  runApp(MyApp(appRouter: _appRouter));
+  final appRouter = AppRouter();
+  runApp(MyApp(appRouter: appRouter));
 }
 
 class MyApp extends StatelessWidget {

@@ -25,7 +25,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
   void initState() {
     super.initState();
     _loadUserData();
-  }
+  } 
 
   Future<void> _loadUserData() async {
     final data = await DummyDataLoader.loadDummyData();
@@ -78,6 +78,10 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
             .toList();
       }
     });
+  }
+
+  void _navigateToOutfitDetails(Map<String, dynamic> outfit) {
+    context.router.pushNamed('/outfit-details/${outfit['id']}');
   }
 
   @override
@@ -280,9 +284,12 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
       ),
       itemBuilder: (context, index) {
         final outfit = filteredOutfits[index];
-        return ClipRRect(
-          borderRadius: BorderRadius.circular(12),
-          child: Image.asset(outfit['imageUrl'], fit: BoxFit.cover),
+        return GestureDetector(
+          onTap: () => _navigateToOutfitDetails(outfit),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(12),
+            child: Image.asset(outfit['imageUrl'], fit: BoxFit.cover),
+          ),
         );
       },
     );
