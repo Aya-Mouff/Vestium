@@ -10,13 +10,13 @@ import './views/screens/my_posts_screen.dart';
 import './views/screens/posts_details_screen.dart';
 import './views/screens/notifications_screen.dart';
 import './views/screens/comments_screen.dart';
-
 import 'views/screens/my_profile.dart';
 import 'views/screens/login_screen.dart';
 import './views/screens/reset_password.dart';
 import './views/screens/set_new_password.dart';
 import './views/screens/my_profile.dart';
 import './views/screens/user_profile_screen.dart';
+import './views/screens/help_center.dart';
 part 'app_router.gr.dart';
 
 @AutoRouterConfig(replaceInRouteName: 'Screen,Route')
@@ -41,6 +41,7 @@ class AppRouter extends _$AppRouter {
        // AutoRoute(page: SetNewPasswordRoute.page )
         AutoRoute(page: MyProfileRoute.page, path: '/my_profile'),
         AutoRoute(page: UserProfileRoute.page, path: '/user_profile/:userId'),
-        AutoRoute(page: AccountManagerRoute.page , path: '/account_manager')
+        AutoRoute(page: AccountManagerRoute.page , path: '/account_manager'),
+        AutoRoute(page: HelpCenterRoute.page , path: '/help_center')
       ];
 }

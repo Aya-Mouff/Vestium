@@ -44,6 +44,12 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    HelpCenterRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const HelpCenterScreen(),
+      );
+    },
     HomeRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -220,6 +226,20 @@ class CommentsRouteArgs {
   String toString() {
     return 'CommentsRouteArgs{key: $key, postId: $postId}';
   }
+}
+
+/// generated route for
+/// [HelpCenterScreen]
+class HelpCenterRoute extends PageRouteInfo<void> {
+  const HelpCenterRoute({List<PageRouteInfo>? children})
+      : super(
+          HelpCenterRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'HelpCenterRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
 }
 
 /// generated route for

@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:vestium/app_router.dart';
 @RoutePage()
 class AccountManagerScreen extends StatelessWidget {
   const AccountManagerScreen({Key? key}) : super(key: key);
@@ -104,6 +105,46 @@ class AccountManagerScreen extends StatelessWidget {
                  // _showDeleteConfirmationDialog(context);
               },
             ),
+
+             // help center 
+            // Padding(
+            //   padding: const EdgeInsets.only(left: 4.0, bottom: 8.0),
+            //   child: Text(
+            //     'Help center',
+            //     style: TextStyle(
+            //       fontFamily: 'CormorantGaramond',
+            //       fontSize: 12,
+            //       fontWeight: FontWeight.w600,
+            //       color: Colors.grey[600],
+            //       letterSpacing: 0.5,
+            //     ),
+            //   ),
+            // ),
+            SizedBox(height: 50),
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Padding(
+                 padding: const EdgeInsets.only(left: 4.0, bottom: 8.0),
+                 child: GestureDetector(
+                      onTap: () {
+                         context.pushRoute(const HelpCenterRoute());
+              
+                        },
+                     child: Text(
+                        'Help center',
+                         style: TextStyle(
+                           fontFamily: 'CormorantGaramond',
+                           fontSize: 12,
+                           fontWeight: FontWeight.w600,
+                           color: Colors.grey[600],
+                           letterSpacing: 0.5,
+                           decoration: TextDecoration.underline, // optional for clickable look
+                           ),
+                       ),
+                    ),
+                ),
+            ),
+
           ],
         ),
       ),
@@ -185,6 +226,7 @@ class AccountManagerScreen extends StatelessWidget {
           ],
         ),
       ),
+      
     );
   }
 
