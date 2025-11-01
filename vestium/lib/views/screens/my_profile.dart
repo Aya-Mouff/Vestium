@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:auto_route/auto_route.dart';
+import 'package:vestium/app_router.dart';
 import '../widgets/nav_bar.dart';
 import '../../data/dummy/dummy-data-loader.dart';
 
@@ -34,16 +35,22 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
 
     // Get current user (you might want to get this from auth state instead of hardcoding)
     final current = users.firstWhere((u) => u['id'].toString() == '1');
-    
+
     // Get ONLY this user's outfits
-    final userOutfits = outfitsData.where((o) => o['userId'].toString() == '1').toList();
-    
+    final userOutfits = outfitsData
+        .where((o) => o['userId'].toString() == '1')
+        .toList();
+
     // Get ONLY this user's posts
-    final userPosts = postsData.where((p) => p['userId'].toString() == '1').toList();
+    final userPosts = postsData
+        .where((p) => p['userId'].toString() == '1')
+        .toList();
 
     // Extract categories from THIS USER'S outfits only
     final categoriesFromUserOutfits = userOutfits
-        .map<String>((outfit) => outfit['category']?.toString() ?? 'Uncategorized')
+        .map<String>(
+          (outfit) => outfit['category']?.toString() ?? 'Uncategorized',
+        )
         .toSet() // Remove duplicates
         .toList();
 
@@ -52,10 +59,10 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
       outfits = userOutfits;
       filteredOutfits = List.from(userOutfits);
       posts = userPosts;
-      
+
       // Use categories from user's actual outfits, fallback to user's custom categories if none
-      userOutfitCategories = categoriesFromUserOutfits.isNotEmpty 
-          ? categoriesFromUserOutfits 
+      userOutfitCategories = categoriesFromUserOutfits.isNotEmpty
+          ? categoriesFromUserOutfits
           : List<String>.from(current['customOutfitCategories'] ?? []);
     });
   }
@@ -66,7 +73,9 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
       if (category == 'All') {
         filteredOutfits = List.from(outfits);
       } else {
-        filteredOutfits = outfits.where((o) => o['category'] == category).toList();
+        filteredOutfits = outfits
+            .where((o) => o['category'] == category)
+            .toList();
       }
     });
   }
@@ -74,9 +83,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
   @override
   Widget build(BuildContext context) {
     if (currentUser == null) {
-      return const Scaffold(
-        body: Center(child: CircularProgressIndicator()),
-      );
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
 
     return Scaffold(
@@ -95,11 +102,21 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
             color: Colors.black87,
           ),
         ),
-        actions: const [
+        actions: [
           Padding(
-            padding: EdgeInsets.only(right: 16),
-            child: Icon(Icons.settings_outlined, color: Colors.black87),
+            padding: const EdgeInsets.only(right: 16),
+            child: IconButton(
+              icon: const Icon(Icons.settings_outlined, color: Colors.black87),
+              onPressed: () {
+                context.pushRoute(const AccountManagerRoute());
+              },
+            ),
           ),
+
+          // Padding(
+          //   padding: EdgeInsets.only(right: 16),
+          //   child: Icon(Icons.settings_outlined, color: Colors.black87),
+          // ),
         ],
       ),
 
@@ -147,8 +164,14 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   _buildStat('Outfits', outfits.length.toString()),
-                  _buildStat('Followers', currentUser!['followersCount'].toString()),
-                  _buildStat('Following', currentUser!['followingCount'].toString()),
+                  _buildStat(
+                    'Followers',
+                    currentUser!['followersCount'].toString(),
+                  ),
+                  _buildStat(
+                    'Following',
+                    currentUser!['followingCount'].toString(),
+                  ),
                 ],
               ),
             ),
@@ -236,9 +259,9 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
         height: 200,
         child: Center(
           child: Text(
-            selectedCategory == 'All' 
-              ? 'No outfits yet' 
-              : 'No outfits in $selectedCategory',
+            selectedCategory == 'All'
+                ? 'No outfits yet'
+                : 'No outfits in $selectedCategory',
             style: TextStyle(color: Colors.grey.shade600),
           ),
         ),
@@ -259,10 +282,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
         final outfit = filteredOutfits[index];
         return ClipRRect(
           borderRadius: BorderRadius.circular(12),
-          child: Image.asset(
-            outfit['imageUrl'],
-            fit: BoxFit.cover,
-          ),
+          child: Image.asset(outfit['imageUrl'], fit: BoxFit.cover),
         );
       },
     );
@@ -300,10 +320,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
           },
           child: ClipRRect(
             borderRadius: BorderRadius.circular(16),
-            child: Image.asset(
-              post['imageUrl'],
-              fit: BoxFit.cover,
-            ),
+            child: Image.asset(post['imageUrl'], fit: BoxFit.cover),
           ),
         );
       },
@@ -373,7 +390,8 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
         children: [
           _buildFilterChip('All', selectedCategory == 'All'),
           ...userOutfitCategories.map(
-            (category) => _buildFilterChip(category, selectedCategory == category),
+            (category) =>
+                _buildFilterChip(category, selectedCategory == category),
           ),
           _buildAddCategoryChip(),
         ],
@@ -406,9 +424,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
 
   Widget _buildAddCategoryChip() {
     return GestureDetector(
-      onTap: () {
-        
-      },
+      onTap: () {},
       child: Container(
         padding: const EdgeInsets.all(6),
         decoration: BoxDecoration(

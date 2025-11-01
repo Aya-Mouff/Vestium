@@ -15,7 +15,22 @@ abstract class _$AppRouter extends RootStackRouter {
 
   @override
   final Map<String, PageFactory> pagesMap = {
-<<<<<<< HEAD
+    AccountManagerRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const AccountManagerScreen(),
+      );
+    },
+    CheckEmailRoute.name: (routeData) {
+      final args = routeData.argsAs<CheckEmailRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: CheckEmailScreen(
+          key: args.key,
+          email: args.email,
+        ),
+      );
+    },
     CommentsRoute.name: (routeData) {
       final pathParams = routeData.inheritedPathParams;
       final args = routeData.argsAs<CommentsRouteArgs>(
@@ -26,15 +41,6 @@ abstract class _$AppRouter extends RootStackRouter {
         child: CommentsScreen(
           key: args.key,
           postId: args.postId,
-=======
-    CheckEmailRoute.name: (routeData) {
-      final args = routeData.argsAs<CheckEmailRouteArgs>();
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: CheckEmailScreen(
-          key: args.key,
-          email: args.email,
->>>>>>> feature/auth_screens
         ),
       );
     },
@@ -126,7 +132,58 @@ abstract class _$AppRouter extends RootStackRouter {
 }
 
 /// generated route for
-<<<<<<< HEAD
+/// [AccountManagerScreen]
+class AccountManagerRoute extends PageRouteInfo<void> {
+  const AccountManagerRoute({List<PageRouteInfo>? children})
+      : super(
+          AccountManagerRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'AccountManagerRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [CheckEmailScreen]
+class CheckEmailRoute extends PageRouteInfo<CheckEmailRouteArgs> {
+  CheckEmailRoute({
+    Key? key,
+    required String email,
+    List<PageRouteInfo>? children,
+  }) : super(
+          CheckEmailRoute.name,
+          args: CheckEmailRouteArgs(
+            key: key,
+            email: email,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'CheckEmailRoute';
+
+  static const PageInfo<CheckEmailRouteArgs> page =
+      PageInfo<CheckEmailRouteArgs>(name);
+}
+
+class CheckEmailRouteArgs {
+  const CheckEmailRouteArgs({
+    this.key,
+    required this.email,
+  });
+
+  final Key? key;
+
+  final String email;
+
+  @override
+  String toString() {
+    return 'CheckEmailRouteArgs{key: $key, email: $email}';
+  }
+}
+
+/// generated route for
 /// [CommentsScreen]
 class CommentsRoute extends PageRouteInfo<CommentsRouteArgs> {
   CommentsRoute({
@@ -153,50 +210,15 @@ class CommentsRouteArgs {
   const CommentsRouteArgs({
     this.key,
     required this.postId,
-=======
-/// [CheckEmailScreen]
-class CheckEmailRoute extends PageRouteInfo<CheckEmailRouteArgs> {
-  CheckEmailRoute({
-    Key? key,
-    required String email,
-    List<PageRouteInfo>? children,
-  }) : super(
-          CheckEmailRoute.name,
-          args: CheckEmailRouteArgs(
-            key: key,
-            email: email,
-          ),
-          initialChildren: children,
-        );
-
-  static const String name = 'CheckEmailRoute';
-
-  static const PageInfo<CheckEmailRouteArgs> page =
-      PageInfo<CheckEmailRouteArgs>(name);
-}
-
-class CheckEmailRouteArgs {
-  const CheckEmailRouteArgs({
-    this.key,
-    required this.email,
->>>>>>> feature/auth_screens
   });
 
   final Key? key;
 
-<<<<<<< HEAD
   final String postId;
 
   @override
   String toString() {
     return 'CommentsRouteArgs{key: $key, postId: $postId}';
-=======
-  final String email;
-
-  @override
-  String toString() {
-    return 'CheckEmailRouteArgs{key: $key, email: $email}';
->>>>>>> feature/auth_screens
   }
 }
 
