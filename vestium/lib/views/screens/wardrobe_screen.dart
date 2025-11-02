@@ -1,7 +1,6 @@
 // lib/wardrobe_screen.dart
 import 'package:flutter/material.dart';
 import 'package:auto_route/auto_route.dart';
-import '../../app_router.dart';
 import '../widgets/nav_bar.dart';
 
 @RoutePage()
