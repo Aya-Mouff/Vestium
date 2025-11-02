@@ -5,7 +5,7 @@ import 'onboarding_screen1.dart';
 
 @RoutePage()
 class OnboardingScreen2 extends StatelessWidget {
-  const OnboardingScreen2({Key? key}) : super(key: key);
+  const OnboardingScreen2({super.key});
 
   @override
   Widget build(BuildContext context) {

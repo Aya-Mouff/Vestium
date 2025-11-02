@@ -482,7 +482,7 @@ class _SettingsScreen1State extends State<SettingsScreen1> with TickerProviderSt
           child: Switch(
             value: value,
             onChanged: onChanged,
-            activeColor: const Color(0xFF795548),
+            activeThumbColor: const Color(0xFF795548),
             activeTrackColor: const Color(0xFF795548).withOpacity(0.5),
           ),
         ),

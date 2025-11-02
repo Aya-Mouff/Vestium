@@ -367,7 +367,7 @@ class _NewPostScreenState extends State<NewPostScreen> {
                           isPublic = value;
                         });
                       },
-                      activeColor: const Color(0xFF8B6B5C),
+                      activeThumbColor: const Color(0xFF8B6B5C),
                     ),
                   ],
                 ),

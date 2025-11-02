@@ -11,7 +11,7 @@ class Category {
 
 @RoutePage()
 class ManageCategoriesScreen extends StatefulWidget {
-  const ManageCategoriesScreen({Key? key}) : super(key: key);
+  const ManageCategoriesScreen({super.key});
 
   @override
   State<ManageCategoriesScreen> createState() => _ManageCategoriesScreenState();

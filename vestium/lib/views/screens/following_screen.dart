@@ -5,7 +5,7 @@ import '../../app_router.dart';
 @RoutePage()
 
 class FollowingScreen extends StatefulWidget {
-  const FollowingScreen({Key? key}) : super(key: key);
+  const FollowingScreen({super.key});
 
   @override
   State<FollowingScreen> createState() => _FollowingScreenState();
