@@ -1,8 +1,27 @@
 import 'package:flutter/material.dart';
+import 'dart:io';
+import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import './app_router.dart';
+import 'databases/db_helper.dart';
 
-void main() {
+Future<bool> init_my_app() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  if (Platform.isWindows || Platform.isLinux) {
+    sqfliteFfiInit();
+    databaseFactory = databaseFactoryFfi;
+  }
+
+  await DBHelper.getDatabase();
+
+  return true;
+}
+
+void main() async {
+  await init_my_app();
+
   final appRouter = AppRouter();
+
   runApp(MyApp(appRouter: appRouter));
 }
 
@@ -19,4 +38,4 @@ class MyApp extends StatelessWidget {
       title: 'Vestium',
     );
   }
-} 
+}
