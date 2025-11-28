@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:auto_route/auto_route.dart';
-import '../../../../app_router.dart';
 import 'post_header.dart';
 import 'post_actions.dart';
 
