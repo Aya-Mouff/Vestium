@@ -57,7 +57,7 @@ class HomeScreen extends StatelessWidget {
                   physics: const AlwaysScrollableScrollPhysics(),
                   itemCount: state.posts.length,
                   itemBuilder: (context, index) {
-                    return PostCard(post: state.posts[index]);
+                    return PostCard(post: state.posts[index], userId: userId);
                   },
                 ),
               );
@@ -66,7 +66,7 @@ class HomeScreen extends StatelessWidget {
           },
         ),
 
-        bottomNavigationBar: const CustomNavBar(currentPage: 'home'),
+        bottomNavigationBar: CustomNavBar(currentPage: 'home', userId: userId!),
       ),
     );
   }

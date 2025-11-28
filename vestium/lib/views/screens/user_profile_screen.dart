@@ -165,7 +165,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
           ],
         ),
       ),
-      bottomNavigationBar: const CustomNavBar(currentPage: 'home'),
+      bottomNavigationBar: const CustomNavBar(currentPage: 'home', userId: 1),
     );
   }
 

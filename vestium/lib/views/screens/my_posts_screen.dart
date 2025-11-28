@@ -159,7 +159,7 @@ class _MyPostsScreenState extends State<MyPostsScreen> {
                 return _buildPostCard(post, context);
               },
             ),
-      bottomNavigationBar: const CustomNavBar(currentPage: 'profile'),
+      bottomNavigationBar: const CustomNavBar(currentPage: 'profile', userId: 1),
     );
   }
 

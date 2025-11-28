@@ -8,7 +8,9 @@ import '../widgets/nav_bar.dart';
 ///  WardrobeScreen – pure front-end demo
 /// ---------------------------------------------------------------
 class WardrobeScreen extends StatefulWidget {
-  const WardrobeScreen({super.key});
+  final int userId;
+
+  const WardrobeScreen({super.key, required this.userId});
 
   @override
   State<WardrobeScreen> createState() => _WardrobeScreenState();
@@ -148,7 +150,7 @@ class _WardrobeScreenState extends State<WardrobeScreen> {
         onPressed: () => setState(() => selected = '+'),
         child: const Icon(Icons.add, color: Colors.white),
       ),
-       bottomNavigationBar: const CustomNavBar(currentPage: 'wardrobe'),
+       bottomNavigationBar: CustomNavBar(currentPage: 'wardrobe', userId: widget.userId),
     );
     
   }

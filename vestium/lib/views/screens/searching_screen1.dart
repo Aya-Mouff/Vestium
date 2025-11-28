@@ -5,7 +5,8 @@ import 'package:auto_route/auto_route.dart';
 
 @RoutePage()
 class SearchScreen extends StatefulWidget {
-  const SearchScreen({super.key});
+  final int userId;
+  const SearchScreen({super.key, required this.userId});
 
   @override
   State<SearchScreen> createState() => _SearchScreenState();
@@ -154,7 +155,7 @@ class _SearchScreenState extends State<SearchScreen> {
           ],
         ),
       ),
-          bottomNavigationBar: const CustomNavBar(currentPage: 'search'),
+          bottomNavigationBar: CustomNavBar(currentPage: 'search', userId: widget.userId),
 
     );
   }

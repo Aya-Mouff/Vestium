@@ -113,7 +113,7 @@ class SplashScreen extends StatelessWidget {
                     height: 55,
                     child: ElevatedButton(
                       onPressed: () {
-                        context.router.pushNamed('/home/-1');
+                        context.pushRoute(HomeRoute(userId: -1));
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0x1FD5CCC8),

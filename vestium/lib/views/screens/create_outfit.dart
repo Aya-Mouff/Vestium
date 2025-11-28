@@ -3,7 +3,10 @@ import 'package:flutter/material.dart';
 
 @RoutePage()
 class OutfitCreatorScreen extends StatefulWidget {
-  const OutfitCreatorScreen({super.key});
+  final int userId;
+
+  const OutfitCreatorScreen({super.key, required this.userId});
+
 
   @override
   State<OutfitCreatorScreen> createState() => _OutfitCreatorScreenState();
