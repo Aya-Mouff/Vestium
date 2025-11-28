@@ -15,6 +15,12 @@ abstract class _$AppRouter extends RootStackRouter {
 
   @override
   final Map<String, PageFactory> pagesMap = {
+    AccessDeniedRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const AccessDeniedScreen(),
+      );
+    },
     AccountManagerRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -300,6 +306,20 @@ abstract class _$AppRouter extends RootStackRouter {
       );
     },
   };
+}
+
+/// generated route for
+/// [AccessDeniedScreen]
+class AccessDeniedRoute extends PageRouteInfo<void> {
+  const AccessDeniedRoute({List<PageRouteInfo>? children})
+      : super(
+          AccessDeniedRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'AccessDeniedRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
 }
 
 /// generated route for
@@ -1053,7 +1073,7 @@ class TakePicRoute extends PageRouteInfo<void> {
 class UserProfileRoute extends PageRouteInfo<UserProfileRouteArgs> {
   UserProfileRoute({
     Key? key,
-    required String userId,
+    required int userId,
     List<PageRouteInfo>? children,
   }) : super(
           UserProfileRoute.name,
@@ -1078,7 +1098,7 @@ class UserProfileRouteArgs {
 
   final Key? key;
 
-  final String userId;
+  final int userId;
 
   @override
   String toString() {

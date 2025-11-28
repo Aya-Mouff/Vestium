@@ -17,7 +17,7 @@ import './views/screens/splash_screen.dart';
 import 'views/screens/home_screen/home_screen.dart';
 import './views/screens/my_posts_screen.dart';
 import './views/screens/posts_details_screen.dart';
-import './views/screens/notifications_screen.dart';
+import 'views/screens/notifications_screen/notifications_screen.dart';
 import './views/screens/comments_screen.dart';
 import 'views/screens/my_profile.dart';
 import 'views/screens/login_screen.dart';
@@ -36,7 +36,7 @@ import './views/screens/new_post_screen.dart';
 import './views/screens/selected_outfit_screen.dart';
 import './views/screens/wardrobe_screen.dart';
 import 'views/screens/set_new_password_screen.dart';
-
+import 'views/screens/access_denied.dart';
 part 'app_router.gr.dart';
 
 @AutoRouterConfig(replaceInRouteName: 'Screen,Route')

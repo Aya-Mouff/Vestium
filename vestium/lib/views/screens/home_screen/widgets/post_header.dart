@@ -16,7 +16,7 @@ class PostHeader extends StatelessWidget {
           GestureDetector(
             onTap: () {
               context.router.push(UserProfileRoute(
-                userId: post['userId'].toString(),
+                userId: post['userId'],
               ));
             },
             child: CircleAvatar(
@@ -28,7 +28,7 @@ class PostHeader extends StatelessWidget {
           TextButton(
             onPressed: () {
               context.router.push(UserProfileRoute(
-                userId: post['userId'].toString(),
+                userId: post['userId'],
               ));
             },
             child: Text(

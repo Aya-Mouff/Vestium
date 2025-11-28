@@ -5,7 +5,7 @@ import '../../data/dummy/dummy-data-loader.dart';
 
 @RoutePage()
 class UserProfileScreen extends StatefulWidget {
-  final String userId; // ID of the user whose profile we want to show
+  final int userId; // ID of the user whose profile we want to show
   const UserProfileScreen({super.key, required this.userId});
 
   @override
