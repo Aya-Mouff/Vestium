@@ -2,7 +2,6 @@
 import 'package:flutter/material.dart';
 import '../widgets/nav_bar.dart';
 import 'package:auto_route/auto_route.dart';
-import '../../app_router.dart';
 
 @RoutePage()
 class SearchScreen extends StatefulWidget {

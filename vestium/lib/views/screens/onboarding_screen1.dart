@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'onboarding_screen2.dart';
 import 'package:auto_route/auto_route.dart';
-import '../../app_router.dart';
 
 @RoutePage()
 class OnboardingScreen extends StatelessWidget {
