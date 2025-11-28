@@ -39,7 +39,7 @@ class NotificationsScreen extends StatelessWidget {
             return const SizedBox();
           },
         ),
-        bottomNavigationBar: const CustomNavBar(currentPage: 'home'),
+        bottomNavigationBar: CustomNavBar(currentPage: 'home', userId: userId!),
       ),
     );
   }

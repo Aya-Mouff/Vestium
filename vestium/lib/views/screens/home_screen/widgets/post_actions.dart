@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:auto_route/auto_route.dart';
+import '../../../../app_router.dart';
 
 class PostActions extends StatelessWidget {
   final Map<String, dynamic> post;
+  final int? userId;
 
-  const PostActions({super.key, required this.post});
+  const PostActions({super.key, required this.post, required this.userId});
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +25,9 @@ class PostActions extends StatelessWidget {
               IconButton(
                 icon: const Icon(Icons.mode_comment_outlined),
                 onPressed: () {
-                  context.router.pushNamed('/comments/${post['id']}');
+                  context.router.push(
+                    CommentsRoute(postId: int.parse(post['id']), userId: userId!),
+          );
                 },
                 padding: EdgeInsets.zero,
               ),

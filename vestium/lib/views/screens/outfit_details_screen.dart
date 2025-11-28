@@ -5,10 +5,12 @@ import '../../data/dummy/dummy-data-loader.dart';
 @RoutePage()
 class OutfitDetailsScreen extends StatefulWidget {
   final String outfitId;
+  final int userId;
 
   const OutfitDetailsScreen({
     super.key,
     @PathParam('outfitId') required this.outfitId,
+    @PathParam('userId') required this.userId,
   });
 
   @override

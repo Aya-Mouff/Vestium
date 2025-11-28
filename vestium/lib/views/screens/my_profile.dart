@@ -6,7 +6,8 @@ import '../../data/dummy/dummy-data-loader.dart';
 
 @RoutePage()
 class MyProfileScreen extends StatefulWidget {
-  const MyProfileScreen({super.key});
+  final int userId;
+  const MyProfileScreen({super.key, required this.userId});
 
   @override
   State<MyProfileScreen> createState() => _MyProfileScreenState();
@@ -252,7 +253,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
             )
           : null,
 
-      bottomNavigationBar: const CustomNavBar(currentPage: 'profile'),
+      bottomNavigationBar: CustomNavBar(currentPage: 'profile', userId: widget.userId),
     );
   }
 

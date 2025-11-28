@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:vestium/app_router.dart';
+import '../../app_router.dart';
 
 class CustomNavBar extends StatelessWidget {
   final String currentPage;
-  const CustomNavBar({super.key, required this.currentPage});
+  final int userId;
+
+  const CustomNavBar({super.key, required this.currentPage, required this.userId});
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +42,7 @@ class CustomNavBar extends StatelessWidget {
               size: 24,
             ),
             onPressed: () {
-              context.router.pushNamed('/home');
+              context.pushRoute(  HomeRoute(userId: userId));
             },
           ),
           IconButton(
@@ -51,10 +54,10 @@ class CustomNavBar extends StatelessWidget {
               size: 24,
             ),
             onPressed: () {
-              // Auto route to search
+              context.pushRoute(SearchRoute(userId: userId));
             },
           ),
-          Container(
+          Container( 
             width: 40,
             height: 40,
             decoration: const BoxDecoration(
@@ -70,7 +73,7 @@ class CustomNavBar extends StatelessWidget {
                 size: 24,
               ),
               onPressed: () {
-                context.pushRoute(OutfitCreatorRoute());
+                context.pushRoute(OutfitCreatorRoute(userId: userId));
               },
             ),
           ),
@@ -83,7 +86,7 @@ class CustomNavBar extends StatelessWidget {
               size: 24,
             ),
             onPressed: () {
-              // Auto route to wardrobe
+              context.pushRoute(WardrobeRoute(userId: userId));
             },
           ),
           IconButton(
@@ -95,7 +98,7 @@ class CustomNavBar extends StatelessWidget {
               size: 24,
             ),
             onPressed: () {
-              context.router.pushNamed('/my_profile');
+              context.pushRoute(MyProfileRoute(userId: userId));
             },
           ),
         ],

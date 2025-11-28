@@ -46,13 +46,16 @@ abstract class _$AppRouter extends RootStackRouter {
     CommentsRoute.name: (routeData) {
       final pathParams = routeData.inheritedPathParams;
       final args = routeData.argsAs<CommentsRouteArgs>(
-          orElse: () =>
-              CommentsRouteArgs(postId: pathParams.getString('postId')));
+          orElse: () => CommentsRouteArgs(
+                postId: pathParams.getInt('postId'),
+                userId: pathParams.getInt('userId'),
+              ));
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: CommentsScreen(
           key: args.key,
           postId: args.postId,
+          userId: args.userId,
         ),
       );
     },
@@ -157,9 +160,13 @@ abstract class _$AppRouter extends RootStackRouter {
       );
     },
     MyProfileRoute.name: (routeData) {
+      final args = routeData.argsAs<MyProfileRouteArgs>();
       return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: const MyProfileScreen(),
+        child: MyProfileScreen(
+          key: args.key,
+          userId: args.userId,
+        ),
       );
     },
     NewPostRoute.name: (routeData) {
@@ -200,21 +207,28 @@ abstract class _$AppRouter extends RootStackRouter {
       );
     },
     OutfitCreatorRoute.name: (routeData) {
+      final args = routeData.argsAs<OutfitCreatorRouteArgs>();
       return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: const OutfitCreatorScreen(),
+        child: OutfitCreatorScreen(
+          key: args.key,
+          userId: args.userId,
+        ),
       );
     },
     OutfitDetailsRoute.name: (routeData) {
       final pathParams = routeData.inheritedPathParams;
       final args = routeData.argsAs<OutfitDetailsRouteArgs>(
           orElse: () => OutfitDetailsRouteArgs(
-              outfitId: pathParams.getString('outfitId')));
+                outfitId: pathParams.getString('outfitId'),
+                userId: pathParams.getInt('userId'),
+              ));
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: OutfitDetailsScreen(
           key: args.key,
           outfitId: args.outfitId,
+          userId: args.userId,
         ),
       );
     },
@@ -248,9 +262,13 @@ abstract class _$AppRouter extends RootStackRouter {
       );
     },
     SearchRoute.name: (routeData) {
+      final args = routeData.argsAs<SearchRouteArgs>();
       return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: const SearchScreen(),
+        child: SearchScreen(
+          key: args.key,
+          userId: args.userId,
+        ),
       );
     },
     SelectOutfitRoute.name: (routeData) {
@@ -300,9 +318,13 @@ abstract class _$AppRouter extends RootStackRouter {
       );
     },
     WardrobeRoute.name: (routeData) {
+      final args = routeData.argsAs<WardrobeRouteArgs>();
       return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: const WardrobeScreen(),
+        child: WardrobeScreen(
+          key: args.key,
+          userId: args.userId,
+        ),
       );
     },
   };
@@ -393,15 +415,20 @@ class CheckEmailRouteArgs {
 class CommentsRoute extends PageRouteInfo<CommentsRouteArgs> {
   CommentsRoute({
     Key? key,
-    required String postId,
+    required int postId,
+    required int userId,
     List<PageRouteInfo>? children,
   }) : super(
           CommentsRoute.name,
           args: CommentsRouteArgs(
             key: key,
             postId: postId,
+            userId: userId,
           ),
-          rawPathParams: {'postId': postId},
+          rawPathParams: {
+            'postId': postId,
+            'userId': userId,
+          },
           initialChildren: children,
         );
 
@@ -415,15 +442,18 @@ class CommentsRouteArgs {
   const CommentsRouteArgs({
     this.key,
     required this.postId,
+    required this.userId,
   });
 
   final Key? key;
 
-  final String postId;
+  final int postId;
+
+  final int userId;
 
   @override
   String toString() {
-    return 'CommentsRouteArgs{key: $key, postId: $postId}';
+    return 'CommentsRouteArgs{key: $key, postId: $postId, userId: $userId}';
   }
 }
 
@@ -719,16 +749,40 @@ class MyPostsRouteArgs {
 
 /// generated route for
 /// [MyProfileScreen]
-class MyProfileRoute extends PageRouteInfo<void> {
-  const MyProfileRoute({List<PageRouteInfo>? children})
-      : super(
+class MyProfileRoute extends PageRouteInfo<MyProfileRouteArgs> {
+  MyProfileRoute({
+    Key? key,
+    required int userId,
+    List<PageRouteInfo>? children,
+  }) : super(
           MyProfileRoute.name,
+          args: MyProfileRouteArgs(
+            key: key,
+            userId: userId,
+          ),
           initialChildren: children,
         );
 
   static const String name = 'MyProfileRoute';
 
-  static const PageInfo<void> page = PageInfo<void>(name);
+  static const PageInfo<MyProfileRouteArgs> page =
+      PageInfo<MyProfileRouteArgs>(name);
+}
+
+class MyProfileRouteArgs {
+  const MyProfileRouteArgs({
+    this.key,
+    required this.userId,
+  });
+
+  final Key? key;
+
+  final int userId;
+
+  @override
+  String toString() {
+    return 'MyProfileRouteArgs{key: $key, userId: $userId}';
+  }
 }
 
 /// generated route for
@@ -828,16 +882,40 @@ class OnboardingRoute3 extends PageRouteInfo<void> {
 
 /// generated route for
 /// [OutfitCreatorScreen]
-class OutfitCreatorRoute extends PageRouteInfo<void> {
-  const OutfitCreatorRoute({List<PageRouteInfo>? children})
-      : super(
+class OutfitCreatorRoute extends PageRouteInfo<OutfitCreatorRouteArgs> {
+  OutfitCreatorRoute({
+    Key? key,
+    required int userId,
+    List<PageRouteInfo>? children,
+  }) : super(
           OutfitCreatorRoute.name,
+          args: OutfitCreatorRouteArgs(
+            key: key,
+            userId: userId,
+          ),
           initialChildren: children,
         );
 
   static const String name = 'OutfitCreatorRoute';
 
-  static const PageInfo<void> page = PageInfo<void>(name);
+  static const PageInfo<OutfitCreatorRouteArgs> page =
+      PageInfo<OutfitCreatorRouteArgs>(name);
+}
+
+class OutfitCreatorRouteArgs {
+  const OutfitCreatorRouteArgs({
+    this.key,
+    required this.userId,
+  });
+
+  final Key? key;
+
+  final int userId;
+
+  @override
+  String toString() {
+    return 'OutfitCreatorRouteArgs{key: $key, userId: $userId}';
+  }
 }
 
 /// generated route for
@@ -846,14 +924,19 @@ class OutfitDetailsRoute extends PageRouteInfo<OutfitDetailsRouteArgs> {
   OutfitDetailsRoute({
     Key? key,
     required String outfitId,
+    required int userId,
     List<PageRouteInfo>? children,
   }) : super(
           OutfitDetailsRoute.name,
           args: OutfitDetailsRouteArgs(
             key: key,
             outfitId: outfitId,
+            userId: userId,
           ),
-          rawPathParams: {'outfitId': outfitId},
+          rawPathParams: {
+            'outfitId': outfitId,
+            'userId': userId,
+          },
           initialChildren: children,
         );
 
@@ -867,15 +950,18 @@ class OutfitDetailsRouteArgs {
   const OutfitDetailsRouteArgs({
     this.key,
     required this.outfitId,
+    required this.userId,
   });
 
   final Key? key;
 
   final String outfitId;
 
+  final int userId;
+
   @override
   String toString() {
-    return 'OutfitDetailsRouteArgs{key: $key, outfitId: $outfitId}';
+    return 'OutfitDetailsRouteArgs{key: $key, outfitId: $outfitId, userId: $userId}';
   }
 }
 
@@ -972,16 +1058,39 @@ class ResetPasswordRoute extends PageRouteInfo<void> {
 
 /// generated route for
 /// [SearchScreen]
-class SearchRoute extends PageRouteInfo<void> {
-  const SearchRoute({List<PageRouteInfo>? children})
-      : super(
+class SearchRoute extends PageRouteInfo<SearchRouteArgs> {
+  SearchRoute({
+    Key? key,
+    required int userId,
+    List<PageRouteInfo>? children,
+  }) : super(
           SearchRoute.name,
+          args: SearchRouteArgs(
+            key: key,
+            userId: userId,
+          ),
           initialChildren: children,
         );
 
   static const String name = 'SearchRoute';
 
-  static const PageInfo<void> page = PageInfo<void>(name);
+  static const PageInfo<SearchRouteArgs> page = PageInfo<SearchRouteArgs>(name);
+}
+
+class SearchRouteArgs {
+  const SearchRouteArgs({
+    this.key,
+    required this.userId,
+  });
+
+  final Key? key;
+
+  final int userId;
+
+  @override
+  String toString() {
+    return 'SearchRouteArgs{key: $key, userId: $userId}';
+  }
 }
 
 /// generated route for
@@ -1108,14 +1217,38 @@ class UserProfileRouteArgs {
 
 /// generated route for
 /// [WardrobeScreen]
-class WardrobeRoute extends PageRouteInfo<void> {
-  const WardrobeRoute({List<PageRouteInfo>? children})
-      : super(
+class WardrobeRoute extends PageRouteInfo<WardrobeRouteArgs> {
+  WardrobeRoute({
+    Key? key,
+    required int userId,
+    List<PageRouteInfo>? children,
+  }) : super(
           WardrobeRoute.name,
+          args: WardrobeRouteArgs(
+            key: key,
+            userId: userId,
+          ),
           initialChildren: children,
         );
 
   static const String name = 'WardrobeRoute';
 
-  static const PageInfo<void> page = PageInfo<void>(name);
+  static const PageInfo<WardrobeRouteArgs> page =
+      PageInfo<WardrobeRouteArgs>(name);
+}
+
+class WardrobeRouteArgs {
+  const WardrobeRouteArgs({
+    this.key,
+    required this.userId,
+  });
+
+  final Key? key;
+
+  final int userId;
+
+  @override
+  String toString() {
+    return 'WardrobeRouteArgs{key: $key, userId: $userId}';
+  }
 }

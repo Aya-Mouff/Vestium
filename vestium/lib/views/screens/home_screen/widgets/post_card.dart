@@ -4,8 +4,9 @@ import 'post_actions.dart';
 
 class PostCard extends StatelessWidget {
   final Map<String, dynamic> post;
+  final int? userId;
 
-  const PostCard({super.key, required this.post});
+  const PostCard({super.key, required this.post, required this.userId});
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +39,7 @@ class PostCard extends StatelessWidget {
             ),
           ),
 
-          PostActions(post: post),
+          PostActions(post: post, userId: userId),
         ],
       ),
     );

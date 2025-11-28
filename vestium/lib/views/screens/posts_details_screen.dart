@@ -65,7 +65,7 @@ class _PostsDetailsScreenState extends State<PostsDetailsScreen> {
                 return _buildPostCard(post, context);
               },
             ),
-      bottomNavigationBar: const CustomNavBar(currentPage: 'home'),
+      bottomNavigationBar: const CustomNavBar(currentPage: 'home', userId: 1),
     );
   }
 

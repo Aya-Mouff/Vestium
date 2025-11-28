@@ -18,7 +18,7 @@ import 'views/screens/home_screen/home_screen.dart';
 import './views/screens/my_posts_screen.dart';
 import './views/screens/posts_details_screen.dart';
 import 'views/screens/notifications_screen/notifications_screen.dart';
-import './views/screens/comments_screen.dart';
+import 'views/screens/comments_screen/comments_screen.dart';
 import 'views/screens/my_profile.dart';
 import 'views/screens/login_screen.dart';
 import './views/screens/user_profile_screen.dart';
@@ -48,8 +48,7 @@ class AppRouter extends _$AppRouter {
         AutoRoute(page: MyPostsRoute.page, path: '/my_posts/:postId'),
         AutoRoute(page: PostsDetailsRoute.page, path: '/posts_details/:postId'),
         AutoRoute(page: NotificationsRoute.page, path: '/notifications/:userId'),
-        AutoRoute(page: CommentsRoute.page, path: '/comments/:postId'),
-        AutoRoute(page: MyProfileRoute.page, path: '/my-profile'),
+        AutoRoute(page: CommentsRoute.page, path: '/comments/:postId/:userId'),
         AutoRoute(page: MyPostsRoute.page, path: '/my_posts'),
         AutoRoute(page: PostsDetailsRoute.page, path: '/posts_details'),
         AutoRoute(page: SignUpRoute.page, path: '/sign_up'),
@@ -57,11 +56,11 @@ class AppRouter extends _$AppRouter {
         AutoRoute(page: ResetPasswordRoute.page, path: '/reset_password'),
         AutoRoute(page: CheckEmailRoute.page, path: '/check_email'),
         AutoRoute(page: SetNewPasswordRoute.page, path: '/set_new_password'),
-        AutoRoute(page: MyProfileRoute.page, path: '/my_profile'),
+        AutoRoute(page: MyProfileRoute.page, path: '/my_profile/:userId'),
         AutoRoute(page: UserProfileRoute.page, path: '/user_profile/:userId'),
         AutoRoute(page: AccountManagerRoute.page, path: '/account_manager'),
         AutoRoute(page: HelpCenterRoute.page, path: '/help_center'),
-        AutoRoute(page: OutfitCreatorRoute.page, path: '/create_outfit'),
+        AutoRoute(page: OutfitCreatorRoute.page, path: '/create_outfit/:userId'),
         AutoRoute(page: OutfitDetailsRoute.page, path: '/outfit-details/:outfitId'),
         AutoRoute(page: CameraAccessRoute.page),
         AutoRoute(page: TakePicRoute.page),
@@ -76,11 +75,11 @@ class AppRouter extends _$AppRouter {
         AutoRoute(page: ManageCategoriesRoute.page, path: '/manage_categories1'),
         AutoRoute(page: ManageCategoriesRoute2.page, path: '/manage_categories2'),
         AutoRoute(page: SettingsRoute1.page, path: '/settings1'),
-        AutoRoute(page: SearchRoute.page, path: '/search1'),
+        AutoRoute(page: SearchRoute.page, path: '/search1/:userId'),
         AutoRoute(page: FollowersRoute.page, path: '/followers1'),
         AutoRoute(page: FollowingRoute.page, path: '/following1'),
         AutoRoute(page: NewPostRoute.page, path: '/newpost'),
         AutoRoute(page: SelectOutfitRoute.page, path: '/selectoutfit'),
-        AutoRoute(page: WardrobeRoute.page, path: '/wardrobe1'),
+        AutoRoute(page: WardrobeRoute.page, path: '/wardrobe1/:userId'),
       ];
 }
