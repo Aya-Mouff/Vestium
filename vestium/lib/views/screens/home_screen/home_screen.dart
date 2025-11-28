@@ -39,34 +39,33 @@ class HomeScreen extends StatelessWidget {
             ), 
           ],
         ),
-        // body: BlocBuilder<HomeCubit, HomeState>(
-        //   builder: (context, state) {
-        //     if (state is HomeLoading) {
-        //       return const Center(child: CircularProgressIndicator());
-        //     }
+        body: BlocBuilder<HomeCubit, HomeState>(
+          builder: (context, state) {
+            if (state is HomeLoading) {
+              return const Center(child: CircularProgressIndicator());
+            }
 
-        //     if (state is HomeError) {
-        //       return Center(child: Text(state.message));
-        //     }
+            if (state is HomeError) {
+              return Center(child: Text(state.message));
+            }
 
-        //     if (state is HomeLoaded) {
-        //       return RefreshIndicator(
-        //         onRefresh: () async {
-        //           await context.read<HomeCubit>().loadPosts();
-        //         },
-        //         child: ListView.builder(
-        //           physics: const AlwaysScrollableScrollPhysics(),
-        //           itemCount: state.posts.length,
-        //           itemBuilder: (context, index) {
-        //             return PostCard(post: state.posts[index]);
-        //           },
-        //         ),
-        //       );
-        //     }
-        //     return const SizedBox();
-        //   },
-        // ),
-        body: const AccessDeniedScreen(),
+            if (state is HomeLoaded) {
+              return RefreshIndicator(
+                onRefresh: () async {
+                  await context.read<HomeCubit>().loadPosts();
+                },
+                child: ListView.builder(
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  itemCount: state.posts.length,
+                  itemBuilder: (context, index) {
+                    return PostCard(post: state.posts[index]);
+                  },
+                ),
+              );
+            }
+            return const SizedBox();
+          },
+        ),
 
         bottomNavigationBar: const CustomNavBar(currentPage: 'home'),
       ),
