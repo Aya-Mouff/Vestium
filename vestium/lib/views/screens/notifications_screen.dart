@@ -5,7 +5,9 @@ import '../../data/dummy/dummy-data-loader.dart';
 
 @RoutePage()
 class NotificationsScreen extends StatefulWidget {
-  const NotificationsScreen({super.key});
+  final int? userId;
+
+  const NotificationsScreen({super.key, @PathParam('userId') required this.userId});
 
   @override
   State<NotificationsScreen> createState() => _NotificationsScreenState();
