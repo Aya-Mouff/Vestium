@@ -98,9 +98,15 @@ abstract class _$AppRouter extends RootStackRouter {
       );
     },
     HomeRoute.name: (routeData) {
+      final pathParams = routeData.inheritedPathParams;
+      final args = routeData.argsAs<HomeRouteArgs>(
+          orElse: () => HomeRouteArgs(userId: pathParams.optInt('userId')));
       return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: const HomeScreen(),
+        child: HomeScreen(
+          key: args.key,
+          userId: args.userId,
+        ),
       );
     },
     ItemDetailsRoute.name: (routeData) {
@@ -157,9 +163,16 @@ abstract class _$AppRouter extends RootStackRouter {
       );
     },
     NotificationsRoute.name: (routeData) {
+      final pathParams = routeData.inheritedPathParams;
+      final args = routeData.argsAs<NotificationsRouteArgs>(
+          orElse: () =>
+              NotificationsRouteArgs(userId: pathParams.optInt('userId')));
       return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: const NotificationsScreen(),
+        child: NotificationsScreen(
+          key: args.key,
+          userId: args.userId,
+        ),
       );
     },
     OnboardingRoute.name: (routeData) {
@@ -529,16 +542,40 @@ class HelpCenterRoute extends PageRouteInfo<void> {
 
 /// generated route for
 /// [HomeScreen]
-class HomeRoute extends PageRouteInfo<void> {
-  const HomeRoute({List<PageRouteInfo>? children})
-      : super(
+class HomeRoute extends PageRouteInfo<HomeRouteArgs> {
+  HomeRoute({
+    Key? key,
+    required int? userId,
+    List<PageRouteInfo>? children,
+  }) : super(
           HomeRoute.name,
+          args: HomeRouteArgs(
+            key: key,
+            userId: userId,
+          ),
+          rawPathParams: {'userId': userId},
           initialChildren: children,
         );
 
   static const String name = 'HomeRoute';
 
-  static const PageInfo<void> page = PageInfo<void>(name);
+  static const PageInfo<HomeRouteArgs> page = PageInfo<HomeRouteArgs>(name);
+}
+
+class HomeRouteArgs {
+  const HomeRouteArgs({
+    this.key,
+    required this.userId,
+  });
+
+  final Key? key;
+
+  final int? userId;
+
+  @override
+  String toString() {
+    return 'HomeRouteArgs{key: $key, userId: $userId}';
+  }
 }
 
 /// generated route for
@@ -690,16 +727,41 @@ class NewPostRoute extends PageRouteInfo<void> {
 
 /// generated route for
 /// [NotificationsScreen]
-class NotificationsRoute extends PageRouteInfo<void> {
-  const NotificationsRoute({List<PageRouteInfo>? children})
-      : super(
+class NotificationsRoute extends PageRouteInfo<NotificationsRouteArgs> {
+  NotificationsRoute({
+    Key? key,
+    required int? userId,
+    List<PageRouteInfo>? children,
+  }) : super(
           NotificationsRoute.name,
+          args: NotificationsRouteArgs(
+            key: key,
+            userId: userId,
+          ),
+          rawPathParams: {'userId': userId},
           initialChildren: children,
         );
 
   static const String name = 'NotificationsRoute';
 
-  static const PageInfo<void> page = PageInfo<void>(name);
+  static const PageInfo<NotificationsRouteArgs> page =
+      PageInfo<NotificationsRouteArgs>(name);
+}
+
+class NotificationsRouteArgs {
+  const NotificationsRouteArgs({
+    this.key,
+    required this.userId,
+  });
+
+  final Key? key;
+
+  final int? userId;
+
+  @override
+  String toString() {
+    return 'NotificationsRouteArgs{key: $key, userId: $userId}';
+  }
 }
 
 /// generated route for
