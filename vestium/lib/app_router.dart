@@ -14,7 +14,7 @@ import 'package:vestium/views/screens/edit_item_screen.dart';
 import 'package:vestium/views/screens/item_details_screen.dart';
 import 'package:vestium/views/screens/edit_outfit_screen.dart';
 import './views/screens/splash_screen.dart';
-import './views/screens/home_screen.dart';
+import 'views/screens/home_screen/home_screen.dart';
 import './views/screens/my_posts_screen.dart';
 import './views/screens/posts_details_screen.dart';
 import './views/screens/notifications_screen.dart';
@@ -44,10 +44,10 @@ class AppRouter extends _$AppRouter {
   @override
   List<AutoRoute> get routes => [
         AutoRoute(page: SplashRoute.page, path: '/', initial: true),
-        AutoRoute(page: HomeRoute.page, path: '/home'),
+        AutoRoute(page: HomeRoute.page, path: '/home/:userId'),
         AutoRoute(page: MyPostsRoute.page, path: '/my_posts/:postId'),
         AutoRoute(page: PostsDetailsRoute.page, path: '/posts_details/:postId'),
-        AutoRoute(page: NotificationsRoute.page, path: '/notifications'),
+        AutoRoute(page: NotificationsRoute.page, path: '/notifications/:userId'),
         AutoRoute(page: CommentsRoute.page, path: '/comments/:postId'),
         AutoRoute(page: MyProfileRoute.page, path: '/my-profile'),
         AutoRoute(page: MyPostsRoute.page, path: '/my_posts'),
