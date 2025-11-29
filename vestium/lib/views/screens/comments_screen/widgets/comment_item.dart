@@ -5,11 +5,13 @@ import '../../../../app_router.dart';
 class CommentItem extends StatelessWidget {
   final Map<String, dynamic> comment;
   final Map<int, dynamic> usersMap;
+  final int currentUserId;
 
   const CommentItem({
     super.key,
     required this.comment,
     required this.usersMap,
+    required this.currentUserId,
   });
 
   String getTimeAgo(String createdAt) {
@@ -37,7 +39,7 @@ class CommentItem extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           GestureDetector(
-            onTap: () => context.router.push(UserProfileRoute(userId: uid)),
+            onTap: () => context.router.push(UserProfileRoute(userId: uid, currentUserId: currentUserId)),
             child: CircleAvatar(
               radius: 20,
               backgroundImage: AssetImage(profileImage),
@@ -59,7 +61,7 @@ class CommentItem extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       GestureDetector(
-                        onTap: () => context.router.push(UserProfileRoute(userId: uid)),
+                        onTap: () => context.router.push(UserProfileRoute(userId: uid, currentUserId: currentUserId)),
                         child: Text(
                           username,
                           style: const TextStyle(

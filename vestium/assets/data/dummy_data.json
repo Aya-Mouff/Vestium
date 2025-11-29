@@ -310,9 +310,9 @@
     },
     {
       "id": "2",
-      "userId": "1",
-      "username": "fashion_lover",
-      "profileImage": "assets/images/dummyData/profile-pic-women.jpg",
+      "userId": "2",
+      "username": "style_guru",
+      "profileImage": "assets/images/dummyData/profile-pic-men.png",
       "type": "comment",
       "sourceUserId": "3",
       "sourceUsername": "trend_setter",

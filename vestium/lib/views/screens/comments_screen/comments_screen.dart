@@ -69,6 +69,7 @@ class CommentsScreen extends StatelessWidget {
                               return CommentItem(
                                 comment: state.comments[index],
                                 usersMap: state.usersMap,
+                                currentUserId: state.userId,
                               );
                             },
                           ),

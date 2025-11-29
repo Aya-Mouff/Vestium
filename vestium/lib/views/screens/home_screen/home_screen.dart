@@ -57,7 +57,7 @@ class HomeScreen extends StatelessWidget {
                   physics: const AlwaysScrollableScrollPhysics(),
                   itemCount: state.posts.length,
                   itemBuilder: (context, index) {
-                    return PostCard(post: state.posts[index], userId: userId);
+                    return PostCard(post: state.posts[index], userId: state.posts[index]['userId'], currentUserId: userId!);
                   },
                 ),
               );

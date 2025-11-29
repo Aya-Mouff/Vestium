@@ -35,7 +35,7 @@ class NotificationsScreen extends StatelessWidget {
           builder: (context, state) {
             if (state is NotificationsLoading) return const Center(child: CircularProgressIndicator());
             if (state is NotificationsError) return Center(child: Text(state.message));
-            if (state is NotificationsLoaded) return NotificationsListWidget(notifications: state.notifications, cubit: context.read<NotificationsCubit>());
+            if (state is NotificationsLoaded) return NotificationsListWidget(notifications: state.notifications, cubit: context.read<NotificationsCubit>(), currentUserId: userId!);
             return const SizedBox();
           },
         ),

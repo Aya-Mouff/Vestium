@@ -16,7 +16,7 @@ import 'package:vestium/views/screens/edit_outfit_screen.dart';
 import './views/screens/splash_screen.dart';
 import 'views/screens/home_screen/home_screen.dart';
 import './views/screens/my_posts_screen.dart';
-import './views/screens/posts_details_screen.dart';
+import 'views/screens/posts_details_screen/posts_details_screen.dart';
 import 'views/screens/notifications_screen/notifications_screen.dart';
 import 'views/screens/comments_screen/comments_screen.dart';
 import 'views/screens/my_profile.dart';
@@ -46,18 +46,17 @@ class AppRouter extends _$AppRouter {
         AutoRoute(page: SplashRoute.page, path: '/', initial: true),
         AutoRoute(page: HomeRoute.page, path: '/home/:userId'),
         AutoRoute(page: MyPostsRoute.page, path: '/my_posts/:postId'),
-        AutoRoute(page: PostsDetailsRoute.page, path: '/posts_details/:postId'),
         AutoRoute(page: NotificationsRoute.page, path: '/notifications/:userId'),
         AutoRoute(page: CommentsRoute.page, path: '/comments/:postId/:userId'),
         AutoRoute(page: MyPostsRoute.page, path: '/my_posts'),
-        AutoRoute(page: PostsDetailsRoute.page, path: '/posts_details'),
+        AutoRoute(page: PostsDetailsRoute.page, path: '/posts_details/:postId/:userId/:currentUserId'),
         AutoRoute(page: SignUpRoute.page, path: '/sign_up'),
         AutoRoute(page: LogInRoute.page, path: '/log_in'),
         AutoRoute(page: ResetPasswordRoute.page, path: '/reset_password'),
         AutoRoute(page: CheckEmailRoute.page, path: '/check_email'),
         AutoRoute(page: SetNewPasswordRoute.page, path: '/set_new_password'),
         AutoRoute(page: MyProfileRoute.page, path: '/my_profile/:userId'),
-        AutoRoute(page: UserProfileRoute.page, path: '/user_profile/:userId'),
+        AutoRoute(page: UserProfileRoute.page, path: '/user_profile/:userId/:currentUserId'),
         AutoRoute(page: AccountManagerRoute.page, path: '/account_manager'),
         AutoRoute(page: HelpCenterRoute.page, path: '/help_center'),
         AutoRoute(page: OutfitCreatorRoute.page, path: '/create_outfit/:userId'),

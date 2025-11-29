@@ -4,8 +4,10 @@ import '../../../../app_router.dart';
 
 class PostHeader extends StatelessWidget {
   final Map<String, dynamic> post;
+  final int userId;
+  final int currentUserId;
 
-  const PostHeader({super.key, required this.post});
+  const PostHeader({super.key, required this.post, required this.userId, required this.currentUserId});
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +18,8 @@ class PostHeader extends StatelessWidget {
           GestureDetector(
             onTap: () {
               context.router.push(UserProfileRoute(
-                userId: post['userId'],
+                userId: userId,
+                currentUserId: currentUserId,
               ));
             },
             child: CircleAvatar(
@@ -28,7 +31,8 @@ class PostHeader extends StatelessWidget {
           TextButton(
             onPressed: () {
               context.router.push(UserProfileRoute(
-                userId: post['userId'],
+                userId: userId, // already int now
+                currentUserId: currentUserId,
               ));
             },
             child: Text(

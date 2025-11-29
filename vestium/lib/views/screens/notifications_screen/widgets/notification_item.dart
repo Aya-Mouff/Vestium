@@ -8,11 +8,13 @@ import '../../../../app_router.dart'; // Make sure your routes are imported
 class NotificationItemWidget extends StatelessWidget {
   final NotificationItemData item;
   final NotificationsCubit cubit;
+  final int currentUserId;
 
   const NotificationItemWidget({
     super.key,
     required this.item,
     required this.cubit,
+    required this.currentUserId,
   });
 
   @override
@@ -31,7 +33,7 @@ class NotificationItemWidget extends StatelessWidget {
             // Profile Image with gesture
             GestureDetector(
               onTap: () {
-                context.router.push(UserProfileRoute(userId: item.sourceUserId)); // Navigate to user profile
+                context.router.push(UserProfileRoute(userId: item.sourceUserId, currentUserId: currentUserId)); // Navigate to user profile
               },
               child: Stack(
                 children: [
@@ -74,7 +76,7 @@ class NotificationItemWidget extends StatelessWidget {
                               color: Colors.black),
                           recognizer: TapGestureRecognizer()
                             ..onTap = () {
-                              context.router.push(UserProfileRoute(userId: item.sourceUserId));
+                              context.router.push(UserProfileRoute(userId: item.sourceUserId, currentUserId: currentUserId));
                             },
                         ),
                         TextSpan(

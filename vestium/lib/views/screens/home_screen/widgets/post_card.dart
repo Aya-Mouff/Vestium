@@ -5,8 +5,9 @@ import 'post_actions.dart';
 class PostCard extends StatelessWidget {
   final Map<String, dynamic> post;
   final int? userId;
+  final int currentUserId;
 
-  const PostCard({super.key, required this.post, required this.userId});
+  const PostCard({super.key, required this.post, required this.userId, required this.currentUserId});
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +28,7 @@ class PostCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          PostHeader(post: post),
+          PostHeader(post: post, userId: userId!, currentUserId: currentUserId),
 
           ClipRRect(
             borderRadius: BorderRadius.circular(0),
@@ -39,7 +40,7 @@ class PostCard extends StatelessWidget {
             ),
           ),
 
-          PostActions(post: post, userId: userId),
+          PostActions(post: post, userId: userId, currentUserId: currentUserId, postIndex: post['id'] - 1),
         ],
       ),
     );

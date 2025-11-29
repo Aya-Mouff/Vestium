@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:vestium/app_router.dart';
-import '../../app_router.dart';
-
 class CustomNavBar extends StatelessWidget {
   final String currentPage;
   final int userId;

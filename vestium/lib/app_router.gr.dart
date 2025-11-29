@@ -243,14 +243,13 @@ abstract class _$AppRouter extends RootStackRouter {
       );
     },
     PostsDetailsRoute.name: (routeData) {
-      final pathParams = routeData.inheritedPathParams;
-      final args = routeData.argsAs<PostsDetailsRouteArgs>(
-          orElse: () =>
-              PostsDetailsRouteArgs(postId: pathParams.getString('postId')));
+      final args = routeData.argsAs<PostsDetailsRouteArgs>();
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: PostsDetailsScreen(
           key: args.key,
+          userId: args.userId,
+          currentUserId: args.currentUserId,
           postId: args.postId,
         ),
       );
@@ -314,6 +313,7 @@ abstract class _$AppRouter extends RootStackRouter {
         child: UserProfileScreen(
           key: args.key,
           userId: args.userId,
+          currentUserId: args.currentUserId,
         ),
       );
     },
@@ -1008,15 +1008,18 @@ class PhotoPreviewRouteArgs {
 class PostsDetailsRoute extends PageRouteInfo<PostsDetailsRouteArgs> {
   PostsDetailsRoute({
     Key? key,
-    required String postId,
+    required int userId,
+    required int currentUserId,
+    required int postId,
     List<PageRouteInfo>? children,
   }) : super(
           PostsDetailsRoute.name,
           args: PostsDetailsRouteArgs(
             key: key,
+            userId: userId,
+            currentUserId: currentUserId,
             postId: postId,
           ),
-          rawPathParams: {'postId': postId},
           initialChildren: children,
         );
 
@@ -1029,16 +1032,22 @@ class PostsDetailsRoute extends PageRouteInfo<PostsDetailsRouteArgs> {
 class PostsDetailsRouteArgs {
   const PostsDetailsRouteArgs({
     this.key,
+    required this.userId,
+    required this.currentUserId,
     required this.postId,
   });
 
   final Key? key;
 
-  final String postId;
+  final int userId;
+
+  final int currentUserId;
+
+  final int postId;
 
   @override
   String toString() {
-    return 'PostsDetailsRouteArgs{key: $key, postId: $postId}';
+    return 'PostsDetailsRouteArgs{key: $key, userId: $userId, currentUserId: $currentUserId, postId: $postId}';
   }
 }
 
@@ -1183,12 +1192,14 @@ class UserProfileRoute extends PageRouteInfo<UserProfileRouteArgs> {
   UserProfileRoute({
     Key? key,
     required int userId,
+    required int currentUserId,
     List<PageRouteInfo>? children,
   }) : super(
           UserProfileRoute.name,
           args: UserProfileRouteArgs(
             key: key,
             userId: userId,
+            currentUserId: currentUserId,
           ),
           initialChildren: children,
         );
@@ -1203,15 +1214,18 @@ class UserProfileRouteArgs {
   const UserProfileRouteArgs({
     this.key,
     required this.userId,
+    required this.currentUserId,
   });
 
   final Key? key;
 
   final int userId;
 
+  final int currentUserId;
+
   @override
   String toString() {
-    return 'UserProfileRouteArgs{key: $key, userId: $userId}';
+    return 'UserProfileRouteArgs{key: $key, userId: $userId, currentUserId: $currentUserId}';
   }
 }
 

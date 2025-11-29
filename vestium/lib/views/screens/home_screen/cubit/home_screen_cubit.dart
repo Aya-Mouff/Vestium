@@ -10,11 +10,46 @@ class HomeCubit extends Cubit<HomeState> {
   Future<void> loadPosts() async {
     try {
       emit(HomeLoading());
-      await Future.delayed(Duration(milliseconds: 700)); // simulate delay
+      await Future.delayed(const Duration(milliseconds: 700));
       final data = await DummyDataLoader.loadDummyData();
-      emit(HomeLoaded(posts: data['posts']));
+
+      final posts = (data['posts'] as List).map((p) {
+        final map = Map<String, dynamic>.from(p);
+        return {
+          ...map,
+          'userId': int.tryParse(map['userId'].toString()) ?? 0,
+          'id': int.tryParse(map['id'].toString()) ?? 0,
+          'likedBy': List<int>.from(map['likedBy'] ?? []),
+          'likesCount': int.tryParse(map['likesCount'].toString()) ?? 0,
+        };
+      }).toList();
+
+      emit(HomeLoaded(posts: posts));
     } catch (e) {
       emit(HomeError("Failed to load posts"));
     }
+  }
+
+  void toggleLike(int postIndex, int currentUserId) {
+    if (state is! HomeLoaded) return;
+
+    final loadedState = state as HomeLoaded;
+    final posts = List<Map<String, dynamic>>.from(loadedState.posts);
+
+    final post = Map<String, dynamic>.from(posts[postIndex]);
+    final likedBy = List<int>.from(post['likedBy'] ?? []);
+
+    if (likedBy.contains(currentUserId)) {
+      likedBy.remove(currentUserId);
+      post['likesCount'] = (post['likesCount'] as int) - 1;
+    } else {
+      likedBy.add(currentUserId);
+      post['likesCount'] = (post['likesCount'] as int) + 1;
+    }
+
+    post['likedBy'] = likedBy;
+    posts[postIndex] = post;
+
+    emit(HomeLoaded(posts: posts));
   }
 }

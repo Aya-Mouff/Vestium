@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:auto_route/auto_route.dart';
 import '../widgets/nav_bar.dart';
 import '../../data/dummy/dummy-data-loader.dart';
-
+import '../../app_router.dart';
 @RoutePage()
 class UserProfileScreen extends StatefulWidget {
   final int userId; // ID of the user whose profile we want to show
-  const UserProfileScreen({super.key, required this.userId});
+  final int currentUserId;
+
+  const UserProfileScreen({super.key, required this.userId, required this.currentUserId});
 
   @override
   State<UserProfileScreen> createState() => _UserProfileScreenState();
@@ -30,7 +32,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
 
     // Find the user by the provided userId
     final selectedUser = users.firstWhere(
-      (u) => u['id'].toString() == widget.userId,
+      (u) => u['id'].toString() == widget.userId.toString(),
       orElse: () => null,
     );
 
@@ -38,7 +40,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
 
     // Filter posts of this user
     final userPosts = postsData
-        .where((p) => p['userId'].toString() == widget.userId)
+        .where((p) => p['userId'].toString() == widget.userId.toString())
         .toList();
 
     setState(() {
@@ -165,7 +167,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
           ],
         ),
       ),
-      bottomNavigationBar: const CustomNavBar(currentPage: 'home', userId: 1),
+      bottomNavigationBar: CustomNavBar(currentPage: 'home', userId: widget.currentUserId),
     );
   }
 
@@ -196,9 +198,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
         final post = posts[index];
         return GestureDetector(
           onTap: () {
-            context.router.pushNamed(
-              '/posts_details/${post['id']}',
-            );
+            context.router.push(PostsDetailsRoute(postId: int.parse(post['id']), userId: widget.userId, currentUserId: widget.currentUserId));
           },
           child: ClipRRect(
             borderRadius: BorderRadius.circular(16),

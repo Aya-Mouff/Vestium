@@ -6,8 +6,9 @@ import 'notification_item.dart';
 class NotificationsListWidget extends StatelessWidget {
   final List<NotificationItemData> notifications;
   final NotificationsCubit cubit;
+  final int currentUserId;
 
-  const NotificationsListWidget({super.key, required this.notifications, required this.cubit});
+  const NotificationsListWidget({super.key, required this.notifications, required this.cubit, required this.currentUserId});
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +16,7 @@ class NotificationsListWidget extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: 80),
       itemCount: notifications.length,
       itemBuilder: (context, index) {
-        return NotificationItemWidget(item: notifications[index], cubit: cubit);
+        return NotificationItemWidget(item: notifications[index], cubit: cubit, currentUserId: currentUserId);
       },
     );
   }
