@@ -12,7 +12,9 @@ class Category {
 
 @RoutePage()
 class ManageCategoriesScreen2 extends StatefulWidget {
-  const ManageCategoriesScreen2({super.key});
+  final int userId;
+
+  const ManageCategoriesScreen2({super.key, required this.userId});
 
   @override
   State<ManageCategoriesScreen2> createState() => _ManageCategoriesScreen2State();
