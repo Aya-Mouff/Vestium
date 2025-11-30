@@ -4,7 +4,9 @@ import 'package:auto_route/auto_route.dart';
 @RoutePage()
 
 class FollowingScreen extends StatefulWidget {
-  const FollowingScreen({super.key});
+  final int userId;
+
+  const FollowingScreen({super.key, required this.userId});
 
   @override
   State<FollowingScreen> createState() => _FollowingScreenState();
