@@ -69,27 +69,6 @@ class UserProfileScreen extends StatelessWidget {
                       userId: currentUserId,
                     ),
                     const SizedBox(height: 16),
-              // Padding(
-              //   padding: const EdgeInsets.symmetric(horizontal: 24),
-              //   child: ElevatedButton(
-              //     onPressed: () {},
-              //     style: ElevatedButton.styleFrom(
-              //       backgroundColor: const Color(0xFFE9D9CF),
-              //       shape: RoundedRectangleBorder(
-              //         borderRadius: BorderRadius.circular(12),
-              //       ),
-              //       elevation: 0,
-              //       minimumSize: const Size(double.infinity, 40),
-              //     ),
-              //     child: const Text(
-              //       'Edit Profile',
-              //       style: TextStyle(
-              //         fontFamily: 'Inter',
-              //         fontWeight: FontWeight.w500,
-              //         fontSize: 14,
-              //         color: Colors.black87,
-              //       ),
-              //     ),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 24),
                       child: SizedBox(

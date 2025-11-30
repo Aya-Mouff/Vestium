@@ -19,7 +19,7 @@ import './views/screens/my_posts_screen.dart';
 import 'views/screens/posts_details_screen/posts_details_screen.dart';
 import 'views/screens/notifications_screen/notifications_screen.dart';
 import 'views/screens/comments_screen/comments_screen.dart';
-import 'views/screens/my_profile.dart';
+import 'views/screens/my_profile_screen/my_profile.dart';
 import 'views/screens/login_screen.dart';
 import 'views/screens/user_Profile_screen/user_profile_screen.dart';
 import './views/screens/help_center.dart';
@@ -57,10 +57,10 @@ class AppRouter extends _$AppRouter {
         AutoRoute(page: SetNewPasswordRoute.page, path: '/set_new_password'),
         AutoRoute(page: MyProfileRoute.page, path: '/my_profile/:userId'),
         AutoRoute(page: UserProfileRoute.page, path: '/user_profile/:userId/:currentUserId'),
-        AutoRoute(page: AccountManagerRoute.page, path: '/account_manager'),
+        AutoRoute(page: AccountManagerRoute.page, path: '/account_manager/:userId'),
         AutoRoute(page: HelpCenterRoute.page, path: '/help_center'),
         AutoRoute(page: OutfitCreatorRoute.page, path: '/create_outfit/:userId'),
-        AutoRoute(page: OutfitDetailsRoute.page, path: '/outfit-details/:outfitId'),
+        AutoRoute(page: OutfitDetailsRoute.page, path: '/outfit-details/:outfitId/:userId'),
         AutoRoute(page: CameraAccessRoute.page),
         AutoRoute(page: TakePicRoute.page),
         AutoRoute(page: GalleryAccessRoute.page),
@@ -72,8 +72,8 @@ class AppRouter extends _$AppRouter {
         AutoRoute(page: OnboardingRoute2.page, path: '/onboarding2'),
         AutoRoute(page: OnboardingRoute3.page, path: '/onboarding3'),
         AutoRoute(page: ManageCategoriesRoute.page, path: '/manage_categories1'),
-        AutoRoute(page: ManageCategoriesRoute2.page, path: '/manage_categories2'),
-        AutoRoute(page: SettingsRoute1.page, path: '/settings1'),
+        AutoRoute(page: ManageCategoriesRoute2.page, path: '/manage_categories2/:userId'),
+        AutoRoute(page: SettingsRoute1.page, path: '/settings1/:userId'),
         AutoRoute(page: SearchRoute.page, path: '/search1/:userId'),
         AutoRoute(page: FollowersRoute.page, path: '/followers/:userId'),
         AutoRoute(page: FollowingRoute.page, path: '/following/:userId'),
