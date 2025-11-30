@@ -7,7 +7,7 @@ import 'package:vestium/views/screens/reset_password.dart';
 import 'package:vestium/views/screens/singup_screen.dart';
 import 'package:vestium/views/screens/outfit_details_screen.dart';
 import 'package:vestium/views/screens/camera_permisssion_screen.dart';
-import 'package:vestium/views/screens/gallery_permissison_screen.dart';
+import 'package:vestium/views/screens/gallery_permissison_screen.dart'; 
 import 'package:vestium/views/screens/take_pic_screen.dart';
 import 'package:vestium/views/screens/photo_preview_screen.dart';
 import 'package:vestium/views/screens/edit_item_screen.dart';
@@ -21,7 +21,7 @@ import 'views/screens/notifications_screen/notifications_screen.dart';
 import 'views/screens/comments_screen/comments_screen.dart';
 import 'views/screens/my_profile.dart';
 import 'views/screens/login_screen.dart';
-import './views/screens/user_profile_screen.dart';
+import 'views/screens/user_Profile_screen/user_profile_screen.dart';
 import './views/screens/help_center.dart';
 import './views/screens/onboarding_screen1.dart';
 import './views/screens/onboarding_screen2.dart';
@@ -75,8 +75,8 @@ class AppRouter extends _$AppRouter {
         AutoRoute(page: ManageCategoriesRoute2.page, path: '/manage_categories2'),
         AutoRoute(page: SettingsRoute1.page, path: '/settings1'),
         AutoRoute(page: SearchRoute.page, path: '/search1/:userId'),
-        AutoRoute(page: FollowersRoute.page, path: '/followers1'),
-        AutoRoute(page: FollowingRoute.page, path: '/following1'),
+        AutoRoute(page: FollowersRoute.page, path: '/followers/:userId'),
+        AutoRoute(page: FollowingRoute.page, path: '/following/:userId'),
         AutoRoute(page: NewPostRoute.page, path: '/newpost'),
         AutoRoute(page: SelectOutfitRoute.page, path: '/selectoutfit'),
         AutoRoute(page: WardrobeRoute.page, path: '/wardrobe1/:userId'),
