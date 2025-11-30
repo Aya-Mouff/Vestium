@@ -15,7 +15,7 @@ import 'package:vestium/views/screens/item_details_screen.dart';
 import 'package:vestium/views/screens/edit_outfit_screen.dart';
 import './views/screens/splash_screen.dart';
 import 'views/screens/home_screen/home_screen.dart';
-import './views/screens/my_posts_screen.dart';
+import 'views/screens/my_posts_screen/my_posts_screen.dart';
 import 'views/screens/posts_details_screen/posts_details_screen.dart';
 import 'views/screens/notifications_screen/notifications_screen.dart';
 import 'views/screens/comments_screen/comments_screen.dart';
