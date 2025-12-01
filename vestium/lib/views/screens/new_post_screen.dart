@@ -4,13 +4,29 @@ import '../../app_router.dart';
 
 @RoutePage()
 class NewPostScreen extends StatefulWidget {
-  const NewPostScreen({super.key});
+  final int userId;
+
+  const NewPostScreen({
+    super.key,
+    @PathParam('userId') this.userId = -1,
+  });
 
   @override
   State<NewPostScreen> createState() => _NewPostScreenState();
 }
 
 class _NewPostScreenState extends State<NewPostScreen> {
+  @override
+  void initState() {
+    super.initState();
+    // Check if user is a guest and redirect if so
+    if (widget.userId == -1) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        context.router.replaceNamed('/access-denied');
+      });
+    }
+  }
+  
   final TextEditingController _captionController = TextEditingController();
   final TextEditingController _tagsController = TextEditingController();
   bool isPublic = true;
@@ -24,8 +40,8 @@ class _NewPostScreenState extends State<NewPostScreen> {
   }
 
   Future<void> _selectOutfit() async {
-    // Navigate to SelectOutfitScreen and wait for result
-    final result = await context.router.push(const SelectOutfitRoute());
+    // Navigate to SelectOutfitScreen and wait for result, passing userId
+    final result = await context.router.push(SelectOutfitRoute(userId: widget.userId));
     
     if (result != null && result is Map<String, dynamic>) {
       setState(() {

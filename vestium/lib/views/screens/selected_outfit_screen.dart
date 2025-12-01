@@ -3,7 +3,12 @@ import 'package:auto_route/auto_route.dart';
 
 @RoutePage()
 class SelectOutfitScreen extends StatefulWidget {
-  const SelectOutfitScreen({super.key});
+  final int userId;
+
+  const SelectOutfitScreen({
+    super.key,
+    @PathParam('userId') this.userId = -1,
+  });
 
   @override
   State<SelectOutfitScreen> createState() => _SelectOutfitScreenState();
@@ -17,6 +22,12 @@ class _SelectOutfitScreenState extends State<SelectOutfitScreen>
   @override
   void initState() {
     super.initState();
+    // Check if user is a guest and redirect if so
+    if (widget.userId == -1) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        context.router.replaceNamed('/access-denied');
+      });
+    }
     _tabController = TabController(length: 2, vsync: this);
     _tabController.addListener(_handleTabChange);
   }

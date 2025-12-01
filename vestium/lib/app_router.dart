@@ -4,7 +4,7 @@ import 'package:vestium/views/screens/account_manager.dart';
 import 'package:vestium/views/screens/check_ur_email.dart';
 import 'package:vestium/views/screens/create_outfit.dart';
 import 'package:vestium/views/screens/reset_password.dart';
-import 'package:vestium/views/screens/singup_screen.dart';
+import 'package:vestium/views/screens/signup_screen/signup_page.dart';
 import 'package:vestium/views/screens/outfit_details_screen.dart';
 import 'package:vestium/views/screens/camera_permisssion_screen.dart';
 import 'package:vestium/views/screens/gallery_permissison_screen.dart';
@@ -20,7 +20,7 @@ import 'views/screens/posts_details_screen/posts_details_screen.dart';
 import 'views/screens/notifications_screen/notifications_screen.dart';
 import 'views/screens/comments_screen/comments_screen.dart';
 import 'views/screens/my_profile.dart';
-import 'views/screens/login_screen.dart';
+import 'views/screens/login_screen/login_page.dart';
 import './views/screens/user_profile_screen.dart';
 import './views/screens/help_center.dart';
 import './views/screens/onboarding_screen1.dart';
@@ -37,6 +37,7 @@ import './views/screens/selected_outfit_screen.dart';
 import './views/screens/wardrobe_screen.dart';
 import 'views/screens/set_new_password_screen.dart';
 import 'views/screens/access_denied.dart';
+
 part 'app_router.gr.dart';
 
 @AutoRouterConfig(replaceInRouteName: 'Screen,Route')
@@ -77,8 +78,9 @@ class AppRouter extends _$AppRouter {
         AutoRoute(page: SearchRoute.page, path: '/search1/:userId'),
         AutoRoute(page: FollowersRoute.page, path: '/followers1'),
         AutoRoute(page: FollowingRoute.page, path: '/following1'),
-        AutoRoute(page: NewPostRoute.page, path: '/newpost'),
-        AutoRoute(page: SelectOutfitRoute.page, path: '/selectoutfit'),
+        AutoRoute(page: NewPostRoute.page, path: '/newpost/:userId'),
+        AutoRoute(page: SelectOutfitRoute.page, path: '/selectoutfit/:userId'),
         AutoRoute(page: WardrobeRoute.page, path: '/wardrobe1/:userId'),
+        AutoRoute(page: AccessDeniedRoute.page, path: '/access-denied'),
       ];
 }

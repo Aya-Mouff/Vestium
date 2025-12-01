@@ -53,7 +53,35 @@ class User {
         'camera_permission': cameraPermission,
         'gallery_permission': galleryPermission,
       };
+
+  // ADD THIS copyWith METHOD:
+  User copyWith({
+    int? userId,
+    String? username,
+    String? fullName,
+    String? bio,
+    String? pfp,
+    String? email,
+    String? password,
+    String? dateCreated,
+    int? cameraPermission,
+    int? galleryPermission,
+  }) {
+    return User(
+      userId: userId ?? this.userId,
+      username: username ?? this.username,
+      fullName: fullName ?? this.fullName,
+      bio: bio ?? this.bio,
+      pfp: pfp ?? this.pfp,
+      email: email ?? this.email,
+      password: password ?? this.password,
+      dateCreated: dateCreated ?? this.dateCreated,
+      cameraPermission: cameraPermission ?? this.cameraPermission,
+      galleryPermission: galleryPermission ?? this.galleryPermission,
+    );
+  }
 }
+
 
 // ------------------------
 // FOLLOWINGS / FOLLOWERS

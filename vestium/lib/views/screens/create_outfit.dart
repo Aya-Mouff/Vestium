@@ -5,7 +5,10 @@ import 'package:flutter/material.dart';
 class OutfitCreatorScreen extends StatefulWidget {
   final int userId;
 
-  const OutfitCreatorScreen({super.key, required this.userId});
+  const OutfitCreatorScreen({
+    super.key,
+    @PathParam('userId') required this.userId,
+  });
 
 
   @override
@@ -13,6 +16,17 @@ class OutfitCreatorScreen extends StatefulWidget {
 }
 
 class _OutfitCreatorScreenState extends State<OutfitCreatorScreen> {
+  @override
+  void initState() {
+    super.initState();
+    // Check if user is a guest and redirect if so
+    if (widget.userId == -1) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        context.router.replaceNamed('/access-denied');
+      });
+    }
+  }
+
   final List<String> selectedOutfitItems = [];
   
   // Dummy clothing data - images from assets/images/dummyData

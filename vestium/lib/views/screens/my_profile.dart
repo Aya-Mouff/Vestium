@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:vestium/app_router.dart';
+import 'package:vestium/repo/user_repo.dart';
+import 'package:vestium/repo/outfit_repo.dart';
+import 'package:vestium/repo/post_repo.dart';
 import '../widgets/nav_bar.dart';
-import '../../data/dummy/dummy-data-loader.dart';
 
 @RoutePage()
 class MyProfileScreen extends StatefulWidget {
@@ -26,46 +28,71 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
   void initState() {
     super.initState();
     _loadUserData();
-  } 
+  }
 
   Future<void> _loadUserData() async {
-    final data = await DummyDataLoader.loadDummyData();
-    final users = data['users'] as List<dynamic>;
-    final outfitsData = data['outfits'] as List<dynamic>;
-    final postsData = data['posts'] as List<dynamic>;
+    try {
+      final userRepo = UserRepo();
+      final outfitRepo = OutfitRepo();
+      final postRepo = PostRepo();
 
-    // Get current user (you might want to get this from auth state instead of hardcoding)
-    final current = users.firstWhere((u) => u['id'].toString() == '1');
+      // Get the user by userId
+      final user = await userRepo.getById(widget.userId);
+      if (user == null) {
+        return;
+      }
 
-    // Get ONLY this user's outfits
-    final userOutfits = outfitsData
-        .where((o) => o['userId'].toString() == '1')
-        .toList();
+      // Get this user's outfits
+      final userOutfits = await outfitRepo.getByUserId(widget.userId);
 
-    // Get ONLY this user's posts
-    final userPosts = postsData
-        .where((p) => p['userId'].toString() == '1')
-        .toList();
+      // Get this user's posts
+      final userPosts = await postRepo.getAll();
+      final filteredPosts = userPosts.where((p) => p.outfitId != null).toList();
 
-    // Extract categories from THIS USER'S outfits only
-    final categoriesFromUserOutfits = userOutfits
-        .map<String>(
-          (outfit) => outfit['category']?.toString() ?? 'Uncategorized',
-        )
-        .toSet() // Remove duplicates
-        .toList();
+      // Extract categories from THIS USER'S outfits only
+      final categoriesFromUserOutfits = userOutfits
+          .map<String>((outfit) => outfit.description ?? 'Uncategorized')
+          .toSet()
+          .toList();
 
-    setState(() {
-      currentUser = current;
-      outfits = userOutfits;
-      filteredOutfits = List.from(userOutfits);
-      posts = userPosts;
+      setState(() {
+        currentUser = {
+          'id': user.userId,
+          'username': user.username ?? 'User',
+          'fullName': user.fullName ?? 'User',
+          'bio': user.bio ?? 'No bio',
+          'profileImage': 'assets/images/dummyData/profile.jpg',
+          'customOutfitCategories': [],
+        };
+        outfits = userOutfits.map((o) {
+          return {
+            'id': o.outfitId,
+            'userId': o.userId,
+            'outfit_name': o.outfitName,
+            'description': o.description,
+            'category': o.description ?? 'Uncategorized',
+            'date': o.date,
+            'season': o.season,
+          };
+        }).toList();
+        filteredOutfits = List.from(outfits);
+        posts = filteredPosts.map((p) {
+          return {
+            'id': p.postId,
+            'userId': p.outfitId,
+            'image': p.imagePath,
+            'caption': p.caption,
+            'date': p.date,
+          };
+        }).toList();
 
-      // Use categories from user's actual outfits, fallback to user's custom categories if none
-      userOutfitCategories = categoriesFromUserOutfits.isNotEmpty
-          ? categoriesFromUserOutfits
-          : List<String>.from(current['customOutfitCategories'] ?? []);
-    });
+        userOutfitCategories = categoriesFromUserOutfits.isNotEmpty
+            ? categoriesFromUserOutfits
+            : [];
+      });
+    } catch (e) {
+      print('Error loading user data: $e');
+    }
   }
 
   void _filterOutfitsByCategory(String category) {
@@ -113,7 +140,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
             child: IconButton(
               icon: const Icon(Icons.settings_outlined, color: Colors.black87),
               onPressed: () {
-                context.pushRoute(const AccountManagerRoute());
+                context.pushRoute(AccountManagerRoute(userId: widget.userId));
               },
             ),
           ),
@@ -253,7 +280,10 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
             )
           : null,
 
-      bottomNavigationBar: CustomNavBar(currentPage: 'profile', userId: widget.userId),
+      bottomNavigationBar: CustomNavBar(
+        currentPage: 'profile',
+        userId: widget.userId,
+      ),
     );
   }
 

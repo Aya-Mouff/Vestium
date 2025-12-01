@@ -21,6 +21,14 @@ class PostsDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Check if user is a guest and redirect if so
+    if (userId == -1 || currentUserId == -1) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        context.router.replaceNamed('/access-denied');
+      });
+      return const SizedBox();
+    }
+
     return BlocProvider(
       create: (_) => PostsDetailsCubit()..loadPosts(userId: userId, postId: postId, currentUserId: currentUserId),
       child: Scaffold(

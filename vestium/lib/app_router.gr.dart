@@ -22,9 +22,19 @@ abstract class _$AppRouter extends RootStackRouter {
       );
     },
     AccountManagerRoute.name: (routeData) {
+      final pathParams = routeData.inheritedPathParams;
+      final args = routeData.argsAs<AccountManagerRouteArgs>(
+          orElse: () => AccountManagerRouteArgs(
+                  userId: pathParams.getInt(
+                'userId',
+                -1,
+              )));
       return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: const AccountManagerScreen(),
+        child: AccountManagerScreen(
+          key: args.key,
+          userId: args.userId,
+        ),
       );
     },
     CameraAccessRoute.name: (routeData) {
@@ -170,9 +180,19 @@ abstract class _$AppRouter extends RootStackRouter {
       );
     },
     NewPostRoute.name: (routeData) {
+      final pathParams = routeData.inheritedPathParams;
+      final args = routeData.argsAs<NewPostRouteArgs>(
+          orElse: () => NewPostRouteArgs(
+                  userId: pathParams.getInt(
+                'userId',
+                -1,
+              )));
       return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: const NewPostScreen(),
+        child: NewPostScreen(
+          key: args.key,
+          userId: args.userId,
+        ),
       );
     },
     NotificationsRoute.name: (routeData) {
@@ -207,7 +227,10 @@ abstract class _$AppRouter extends RootStackRouter {
       );
     },
     OutfitCreatorRoute.name: (routeData) {
-      final args = routeData.argsAs<OutfitCreatorRouteArgs>();
+      final pathParams = routeData.inheritedPathParams;
+      final args = routeData.argsAs<OutfitCreatorRouteArgs>(
+          orElse: () =>
+              OutfitCreatorRouteArgs(userId: pathParams.getInt('userId')));
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: OutfitCreatorScreen(
@@ -271,9 +294,19 @@ abstract class _$AppRouter extends RootStackRouter {
       );
     },
     SelectOutfitRoute.name: (routeData) {
+      final pathParams = routeData.inheritedPathParams;
+      final args = routeData.argsAs<SelectOutfitRouteArgs>(
+          orElse: () => SelectOutfitRouteArgs(
+                  userId: pathParams.getInt(
+                'userId',
+                -1,
+              )));
       return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: const SelectOutfitScreen(),
+        child: SelectOutfitScreen(
+          key: args.key,
+          userId: args.userId,
+        ),
       );
     },
     SetNewPasswordRoute.name: (routeData) {
@@ -346,16 +379,41 @@ class AccessDeniedRoute extends PageRouteInfo<void> {
 
 /// generated route for
 /// [AccountManagerScreen]
-class AccountManagerRoute extends PageRouteInfo<void> {
-  const AccountManagerRoute({List<PageRouteInfo>? children})
-      : super(
+class AccountManagerRoute extends PageRouteInfo<AccountManagerRouteArgs> {
+  AccountManagerRoute({
+    Key? key,
+    int userId = -1,
+    List<PageRouteInfo>? children,
+  }) : super(
           AccountManagerRoute.name,
+          args: AccountManagerRouteArgs(
+            key: key,
+            userId: userId,
+          ),
+          rawPathParams: {'userId': userId},
           initialChildren: children,
         );
 
   static const String name = 'AccountManagerRoute';
 
-  static const PageInfo<void> page = PageInfo<void>(name);
+  static const PageInfo<AccountManagerRouteArgs> page =
+      PageInfo<AccountManagerRouteArgs>(name);
+}
+
+class AccountManagerRouteArgs {
+  const AccountManagerRouteArgs({
+    this.key,
+    this.userId = -1,
+  });
+
+  final Key? key;
+
+  final int userId;
+
+  @override
+  String toString() {
+    return 'AccountManagerRouteArgs{key: $key, userId: $userId}';
+  }
 }
 
 /// generated route for
@@ -787,16 +845,41 @@ class MyProfileRouteArgs {
 
 /// generated route for
 /// [NewPostScreen]
-class NewPostRoute extends PageRouteInfo<void> {
-  const NewPostRoute({List<PageRouteInfo>? children})
-      : super(
+class NewPostRoute extends PageRouteInfo<NewPostRouteArgs> {
+  NewPostRoute({
+    Key? key,
+    int userId = -1,
+    List<PageRouteInfo>? children,
+  }) : super(
           NewPostRoute.name,
+          args: NewPostRouteArgs(
+            key: key,
+            userId: userId,
+          ),
+          rawPathParams: {'userId': userId},
           initialChildren: children,
         );
 
   static const String name = 'NewPostRoute';
 
-  static const PageInfo<void> page = PageInfo<void>(name);
+  static const PageInfo<NewPostRouteArgs> page =
+      PageInfo<NewPostRouteArgs>(name);
+}
+
+class NewPostRouteArgs {
+  const NewPostRouteArgs({
+    this.key,
+    this.userId = -1,
+  });
+
+  final Key? key;
+
+  final int userId;
+
+  @override
+  String toString() {
+    return 'NewPostRouteArgs{key: $key, userId: $userId}';
+  }
 }
 
 /// generated route for
@@ -893,6 +976,7 @@ class OutfitCreatorRoute extends PageRouteInfo<OutfitCreatorRouteArgs> {
             key: key,
             userId: userId,
           ),
+          rawPathParams: {'userId': userId},
           initialChildren: children,
         );
 
@@ -1104,16 +1188,41 @@ class SearchRouteArgs {
 
 /// generated route for
 /// [SelectOutfitScreen]
-class SelectOutfitRoute extends PageRouteInfo<void> {
-  const SelectOutfitRoute({List<PageRouteInfo>? children})
-      : super(
+class SelectOutfitRoute extends PageRouteInfo<SelectOutfitRouteArgs> {
+  SelectOutfitRoute({
+    Key? key,
+    int userId = -1,
+    List<PageRouteInfo>? children,
+  }) : super(
           SelectOutfitRoute.name,
+          args: SelectOutfitRouteArgs(
+            key: key,
+            userId: userId,
+          ),
+          rawPathParams: {'userId': userId},
           initialChildren: children,
         );
 
   static const String name = 'SelectOutfitRoute';
 
-  static const PageInfo<void> page = PageInfo<void>(name);
+  static const PageInfo<SelectOutfitRouteArgs> page =
+      PageInfo<SelectOutfitRouteArgs>(name);
+}
+
+class SelectOutfitRouteArgs {
+  const SelectOutfitRouteArgs({
+    this.key,
+    this.userId = -1,
+  });
+
+  final Key? key;
+
+  final int userId;
+
+  @override
+  String toString() {
+    return 'SelectOutfitRouteArgs{key: $key, userId: $userId}';
+  }
 }
 
 /// generated route for
