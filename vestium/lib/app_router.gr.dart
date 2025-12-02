@@ -22,13 +22,7 @@ abstract class _$AppRouter extends RootStackRouter {
       );
     },
     AccountManagerRoute.name: (routeData) {
-      final pathParams = routeData.inheritedPathParams;
-      final args = routeData.argsAs<AccountManagerRouteArgs>(
-          orElse: () => AccountManagerRouteArgs(
-                  userId: pathParams.getInt(
-                'userId',
-                -1,
-              )));
+      final args = routeData.argsAs<AccountManagerRouteArgs>();
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: AccountManagerScreen(
@@ -93,15 +87,23 @@ abstract class _$AppRouter extends RootStackRouter {
       );
     },
     FollowersRoute.name: (routeData) {
+      final args = routeData.argsAs<FollowersRouteArgs>();
       return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: const FollowersScreen(),
+        child: FollowersScreen(
+          key: args.key,
+          userId: args.userId,
+        ),
       );
     },
     FollowingRoute.name: (routeData) {
+      final args = routeData.argsAs<FollowingRouteArgs>();
       return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: const FollowingScreen(),
+        child: FollowingScreen(
+          key: args.key,
+          userId: args.userId,
+        ),
       );
     },
     GalleryAccessRoute.name: (routeData) {
@@ -151,9 +153,13 @@ abstract class _$AppRouter extends RootStackRouter {
       );
     },
     ManageCategoriesRoute2.name: (routeData) {
+      final args = routeData.argsAs<ManageCategoriesRoute2Args>();
       return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: const ManageCategoriesScreen2(),
+        child: ManageCategoriesScreen2(
+          key: args.key,
+          userId: args.userId,
+        ),
       );
     },
     MyPostsRoute.name: (routeData) {
@@ -316,9 +322,13 @@ abstract class _$AppRouter extends RootStackRouter {
       );
     },
     SettingsRoute1.name: (routeData) {
+      final args = routeData.argsAs<SettingsRoute1Args>();
       return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: const SettingsScreen1(),
+        child: SettingsScreen1(
+          key: args.key,
+          userId: args.userId,
+        ),
       );
     },
     SignUpRoute.name: (routeData) {
@@ -382,7 +392,7 @@ class AccessDeniedRoute extends PageRouteInfo<void> {
 class AccountManagerRoute extends PageRouteInfo<AccountManagerRouteArgs> {
   AccountManagerRoute({
     Key? key,
-    int userId = -1,
+    required int userId,
     List<PageRouteInfo>? children,
   }) : super(
           AccountManagerRoute.name,
@@ -390,7 +400,6 @@ class AccountManagerRoute extends PageRouteInfo<AccountManagerRouteArgs> {
             key: key,
             userId: userId,
           ),
-          rawPathParams: {'userId': userId},
           initialChildren: children,
         );
 
@@ -403,7 +412,7 @@ class AccountManagerRoute extends PageRouteInfo<AccountManagerRouteArgs> {
 class AccountManagerRouteArgs {
   const AccountManagerRouteArgs({
     this.key,
-    this.userId = -1,
+    required this.userId,
   });
 
   final Key? key;
@@ -594,30 +603,78 @@ class EditOutfitRouteArgs {
 
 /// generated route for
 /// [FollowersScreen]
-class FollowersRoute extends PageRouteInfo<void> {
-  const FollowersRoute({List<PageRouteInfo>? children})
-      : super(
+class FollowersRoute extends PageRouteInfo<FollowersRouteArgs> {
+  FollowersRoute({
+    Key? key,
+    required int userId,
+    List<PageRouteInfo>? children,
+  }) : super(
           FollowersRoute.name,
+          args: FollowersRouteArgs(
+            key: key,
+            userId: userId,
+          ),
           initialChildren: children,
         );
 
   static const String name = 'FollowersRoute';
 
-  static const PageInfo<void> page = PageInfo<void>(name);
+  static const PageInfo<FollowersRouteArgs> page =
+      PageInfo<FollowersRouteArgs>(name);
+}
+
+class FollowersRouteArgs {
+  const FollowersRouteArgs({
+    this.key,
+    required this.userId,
+  });
+
+  final Key? key;
+
+  final int userId;
+
+  @override
+  String toString() {
+    return 'FollowersRouteArgs{key: $key, userId: $userId}';
+  }
 }
 
 /// generated route for
 /// [FollowingScreen]
-class FollowingRoute extends PageRouteInfo<void> {
-  const FollowingRoute({List<PageRouteInfo>? children})
-      : super(
+class FollowingRoute extends PageRouteInfo<FollowingRouteArgs> {
+  FollowingRoute({
+    Key? key,
+    required int userId,
+    List<PageRouteInfo>? children,
+  }) : super(
           FollowingRoute.name,
+          args: FollowingRouteArgs(
+            key: key,
+            userId: userId,
+          ),
           initialChildren: children,
         );
 
   static const String name = 'FollowingRoute';
 
-  static const PageInfo<void> page = PageInfo<void>(name);
+  static const PageInfo<FollowingRouteArgs> page =
+      PageInfo<FollowingRouteArgs>(name);
+}
+
+class FollowingRouteArgs {
+  const FollowingRouteArgs({
+    this.key,
+    required this.userId,
+  });
+
+  final Key? key;
+
+  final int userId;
+
+  @override
+  String toString() {
+    return 'FollowingRouteArgs{key: $key, userId: $userId}';
+  }
 }
 
 /// generated route for
@@ -754,16 +811,40 @@ class ManageCategoriesRoute extends PageRouteInfo<void> {
 
 /// generated route for
 /// [ManageCategoriesScreen2]
-class ManageCategoriesRoute2 extends PageRouteInfo<void> {
-  const ManageCategoriesRoute2({List<PageRouteInfo>? children})
-      : super(
+class ManageCategoriesRoute2 extends PageRouteInfo<ManageCategoriesRoute2Args> {
+  ManageCategoriesRoute2({
+    Key? key,
+    required int userId,
+    List<PageRouteInfo>? children,
+  }) : super(
           ManageCategoriesRoute2.name,
+          args: ManageCategoriesRoute2Args(
+            key: key,
+            userId: userId,
+          ),
           initialChildren: children,
         );
 
   static const String name = 'ManageCategoriesRoute2';
 
-  static const PageInfo<void> page = PageInfo<void>(name);
+  static const PageInfo<ManageCategoriesRoute2Args> page =
+      PageInfo<ManageCategoriesRoute2Args>(name);
+}
+
+class ManageCategoriesRoute2Args {
+  const ManageCategoriesRoute2Args({
+    this.key,
+    required this.userId,
+  });
+
+  final Key? key;
+
+  final int userId;
+
+  @override
+  String toString() {
+    return 'ManageCategoriesRoute2Args{key: $key, userId: $userId}';
+  }
 }
 
 /// generated route for
@@ -1241,16 +1322,40 @@ class SetNewPasswordRoute extends PageRouteInfo<void> {
 
 /// generated route for
 /// [SettingsScreen1]
-class SettingsRoute1 extends PageRouteInfo<void> {
-  const SettingsRoute1({List<PageRouteInfo>? children})
-      : super(
+class SettingsRoute1 extends PageRouteInfo<SettingsRoute1Args> {
+  SettingsRoute1({
+    Key? key,
+    required int userId,
+    List<PageRouteInfo>? children,
+  }) : super(
           SettingsRoute1.name,
+          args: SettingsRoute1Args(
+            key: key,
+            userId: userId,
+          ),
           initialChildren: children,
         );
 
   static const String name = 'SettingsRoute1';
 
-  static const PageInfo<void> page = PageInfo<void>(name);
+  static const PageInfo<SettingsRoute1Args> page =
+      PageInfo<SettingsRoute1Args>(name);
+}
+
+class SettingsRoute1Args {
+  const SettingsRoute1Args({
+    this.key,
+    required this.userId,
+  });
+
+  final Key? key;
+
+  final int userId;
+
+  @override
+  String toString() {
+    return 'SettingsRoute1Args{key: $key, userId: $userId}';
+  }
 }
 
 /// generated route for

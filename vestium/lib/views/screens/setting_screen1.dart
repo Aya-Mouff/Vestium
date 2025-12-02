@@ -4,7 +4,9 @@ import 'package:auto_route/auto_route.dart';
 @RoutePage()
 
 class SettingsScreen1 extends StatefulWidget {
-  const SettingsScreen1({super.key});
+  final int userId;
+
+  const SettingsScreen1({super.key, required this.userId});
 
   @override
   State<SettingsScreen1> createState() => _SettingsScreen1State();

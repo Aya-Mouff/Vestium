@@ -7,7 +7,7 @@ import 'package:vestium/views/screens/reset_password_screen/reset_password_page.
 import 'package:vestium/views/screens/signup_screen/signup_page.dart';
 import 'package:vestium/views/screens/outfit_details_screen.dart';
 import 'package:vestium/views/screens/camera_permisssion_screen.dart';
-import 'package:vestium/views/screens/gallery_permissison_screen.dart';
+import 'package:vestium/views/screens/gallery_permissison_screen.dart'; 
 import 'package:vestium/views/screens/take_pic_screen.dart';
 import 'package:vestium/views/screens/photo_preview_screen.dart';
 import 'package:vestium/views/screens/edit_item_screen.dart';
@@ -15,13 +15,17 @@ import 'package:vestium/views/screens/item_details_screen.dart';
 import 'package:vestium/views/screens/edit_outfit_screen.dart';
 import './views/screens/splash_screen.dart';
 import 'views/screens/home_screen/home_screen.dart';
-import './views/screens/my_posts_screen.dart';
+import 'views/screens/my_posts_screen/my_posts_screen.dart';
 import 'views/screens/posts_details_screen/posts_details_screen.dart';
 import 'views/screens/notifications_screen/notifications_screen.dart';
 import 'views/screens/comments_screen/comments_screen.dart';
 import 'views/screens/my_profile.dart';
 import 'views/screens/login_screen/login_page.dart';
-import './views/screens/user_profile_screen.dart';
+import './views/screens/user_profile_screen/user_profile_screen.dart';
+import './views/screens/help_center_screen/help_center_page.dart';
+import 'views/screens/my_profile_screen/my_profile.dart';
+import 'views/screens/login_screen.dart';
+import 'views/screens/user_Profile_screen/user_profile_screen.dart';
 import './views/screens/help_center_screen/help_center_page.dart';
 import './views/screens/onboarding_screen1.dart';
 import './views/screens/onboarding_screen2.dart';
@@ -58,10 +62,10 @@ class AppRouter extends _$AppRouter {
         AutoRoute(page: SetNewPasswordRoute.page, path: '/set_new_password'),
         AutoRoute(page: MyProfileRoute.page, path: '/my_profile/:userId'),
         AutoRoute(page: UserProfileRoute.page, path: '/user_profile/:userId/:currentUserId'),
-        AutoRoute(page: AccountManagerRoute.page, path: '/account_manager'),
+        AutoRoute(page: AccountManagerRoute.page, path: '/account_manager/:userId'),
         AutoRoute(page: HelpCenterRoute.page, path: '/help_center'),
         AutoRoute(page: OutfitCreatorRoute.page, path: '/create_outfit/:userId'),
-        AutoRoute(page: OutfitDetailsRoute.page, path: '/outfit-details/:outfitId'),
+        AutoRoute(page: OutfitDetailsRoute.page, path: '/outfit-details/:outfitId/:userId'),
         AutoRoute(page: CameraAccessRoute.page),
         AutoRoute(page: TakePicRoute.page),
         AutoRoute(page: GalleryAccessRoute.page),
@@ -73,13 +77,17 @@ class AppRouter extends _$AppRouter {
         AutoRoute(page: OnboardingRoute2.page, path: '/onboarding2'),
         AutoRoute(page: OnboardingRoute3.page, path: '/onboarding3'),
         AutoRoute(page: ManageCategoriesRoute.page, path: '/manage_categories1'),
-        AutoRoute(page: ManageCategoriesRoute2.page, path: '/manage_categories2'),
-        AutoRoute(page: SettingsRoute1.page, path: '/settings1'),
+        AutoRoute(page: ManageCategoriesRoute2.page, path: '/manage_categories2/:userId'),
+        AutoRoute(page: SettingsRoute1.page, path: '/settings1/:userId'),
         AutoRoute(page: SearchRoute.page, path: '/search1/:userId'),
         AutoRoute(page: FollowersRoute.page, path: '/followers1'),
         AutoRoute(page: FollowingRoute.page, path: '/following1'),
         AutoRoute(page: NewPostRoute.page, path: '/newpost/:userId'),
         AutoRoute(page: SelectOutfitRoute.page, path: '/selectoutfit/:userId'),
+        AutoRoute(page: FollowersRoute.page, path: '/followers/:userId'),
+        AutoRoute(page: FollowingRoute.page, path: '/following/:userId'),
+        AutoRoute(page: NewPostRoute.page, path: '/newpost'),
+        AutoRoute(page: SelectOutfitRoute.page, path: '/selectoutfit'),
         AutoRoute(page: WardrobeRoute.page, path: '/wardrobe1/:userId'),
         AutoRoute(page: AccessDeniedRoute.page, path: '/access-denied'),
       ];

@@ -4,11 +4,7 @@ import 'package:vestium/app_router.dart';
 @RoutePage()
 class AccountManagerScreen extends StatelessWidget {
   final int userId;
-
-  const AccountManagerScreen({
-    super.key,
-    @PathParam('userId') this.userId = -1,
-  });
+  const AccountManagerScreen({super.key, required this.userId});
 
   @override
   Widget build(BuildContext context) {
