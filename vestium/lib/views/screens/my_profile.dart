@@ -5,6 +5,7 @@ import 'package:vestium/repo/user_repo.dart';
 import 'package:vestium/repo/outfit_repo.dart';
 import 'package:vestium/repo/post_repo.dart';
 import '../widgets/nav_bar.dart';
+import 'access_denied.dart';
 
 @RoutePage()
 class MyProfileScreen extends StatefulWidget {
@@ -16,6 +17,26 @@ class MyProfileScreen extends StatefulWidget {
 }
 
 class _MyProfileScreenState extends State<MyProfileScreen> {
+  @override
+  Widget build(BuildContext context) {
+    // Check if user is a guest and return AccessDeniedScreen
+    if (widget.userId == -1) {
+      return const AccessDeniedScreen();
+    }
+
+    return _ProfileContent(userId: widget.userId);
+  }
+}
+
+class _ProfileContent extends StatefulWidget {
+  final int userId;
+  const _ProfileContent({required this.userId});
+
+  @override
+  State<_ProfileContent> createState() => _ProfileContentState();
+}
+
+class _ProfileContentState extends State<_ProfileContent> {
   Map<String, dynamic>? currentUser;
   List<dynamic> outfits = [];
   List<dynamic> filteredOutfits = [];

@@ -14,10 +14,7 @@ class LoginCubit extends Cubit<LoginState> {
   // ------------------------
 
   /// Main login method with email and password
-  Future<void> login({
-    required String email,
-    required String password,
-  }) async {
+  Future<void> login({required String email, required String password}) async {
     // Emit loading state
     emit(const LoginLoading());
 
@@ -38,10 +35,7 @@ class LoginCubit extends Cubit<LoginState> {
   // ------------------------
 
   /// Validate the login form
-  void validateForm({
-    required String email,
-    required String password,
-  }) {
+  void validateForm({required String email, required String password}) {
     // Check for empty fields
     if (email.isEmpty || password.isEmpty) {
       emit(const LoginFormInvalid('Please fill all fields'));
