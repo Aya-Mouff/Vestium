@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:auto_route/auto_route.dart';
 import '../widgets/nav_bar.dart';
+import 'access_denied.dart';
 
 @RoutePage()
 /// ---------------------------------------------------------------
@@ -17,6 +18,26 @@ class WardrobeScreen extends StatefulWidget {
 }
 
 class _WardrobeScreenState extends State<WardrobeScreen> {
+  @override
+  Widget build(BuildContext context) {
+    // Check if user is a guest and return AccessDeniedScreen
+    if (widget.userId == -1) {
+      return const AccessDeniedScreen();
+    }
+
+    return _WardrobeContent(userId: widget.userId);
+  }
+}
+
+class _WardrobeContent extends StatefulWidget {
+  final int userId;
+  const _WardrobeContent({required this.userId});
+
+  @override
+  State<_WardrobeContent> createState() => _WardrobeContentState();
+}
+
+class _WardrobeContentState extends State<_WardrobeContent> {
   // ---------- filter state ----------
   String selected = 'All';
 

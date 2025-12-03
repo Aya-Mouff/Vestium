@@ -13,7 +13,6 @@ Future<bool> init_my_app() async {
   }
 
   await DBHelper.getDatabase();
-
   return true;
 }
 
