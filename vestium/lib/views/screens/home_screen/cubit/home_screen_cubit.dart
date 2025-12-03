@@ -1,10 +1,27 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../data/dummy/dummy-data-loader.dart';
+import '../../../../repo/user_repo.dart';
 import 'home_screen_state.dart';
 
 class HomeCubit extends Cubit<HomeState> {
+  final UserRepo userRepo = UserRepo();
+
   HomeCubit() : super(HomeLoading()) {
     loadPosts();
+  }
+
+  /// Load user data from database by userId
+  Future<void> loadUserData(int userId) async {
+    try {
+      final user = await userRepo.getById(userId);
+      if (user != null) {
+        emit(HomeUserLoaded(user: user));
+      } else {
+        emit(HomeError(message: 'User not found'));
+      }
+    } catch (e) {
+      emit(HomeError(message: e.toString()));
+    }
   }
 
   Future<void> loadPosts() async {
@@ -26,7 +43,7 @@ class HomeCubit extends Cubit<HomeState> {
 
       emit(HomeLoaded(posts: posts));
     } catch (e) {
-      emit(HomeError("Failed to load posts"));
+      emit(HomeError(message: "Failed to load posts"));
     }
   }
 

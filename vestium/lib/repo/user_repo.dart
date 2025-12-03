@@ -4,8 +4,6 @@ import '../databases/db_models.dart';
 import 'package:flutter/foundation.dart';
 
 class UserRepo {
-
-  
   Future<List<User>> getAll() async {
     final db = await DBHelper.getDatabase();
     final res = await db.query('user');
@@ -28,7 +26,12 @@ class UserRepo {
 
   Future<bool> update(int id, User user) async {
     final db = await DBHelper.getDatabase();
-    await db.update('user', user.toMap(), where: 'user_id = ?', whereArgs: [id]);
+    await db.update(
+      'user',
+      user.toMap(),
+      where: 'user_id = ?',
+      whereArgs: [id],
+    );
     return true;
   }
 
@@ -44,7 +47,11 @@ class UserRepo {
 
   Future<bool> insert(User user) async {
     final db = await DBHelper.getDatabase();
-    await db.insert('user', user.toMap(), conflictAlgorithm: ConflictAlgorithm.replace);
+    await db.insert(
+      'user',
+      user.toMap(),
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
     debugPrint('Inserted user: ${user.email}');
     return true;
   }
@@ -70,7 +77,9 @@ class UserRepo {
     // Check if email already exists using getByEmail method
     final existingUser = await getByEmail(email);
     if (existingUser != null) {
-      throw Exception('This email is already registered. Please use a different email or login.');
+      throw Exception(
+        'This email is already registered. Please use a different email or login.',
+      );
     }
 
     // Validate password strength (basic validation)
@@ -83,13 +92,17 @@ class UserRepo {
       throw Exception('Please enter a valid email address');
     }
 
+    // Generate username from fullName if not provided
+    final generatedUsername =
+        username ?? fullName.replaceAll(' ', '').toLowerCase();
+
     // Create new user object with current timestamp
     final user = User(
       email: email,
       password: password,
       fullName: fullName,
-      username: username,
-      bio: bio,
+      username: generatedUsername,
+      bio: bio ?? '',
       dateCreated: DateTime.now().toIso8601String(),
       cameraPermission: 0,
       galleryPermission: 0,
@@ -97,7 +110,7 @@ class UserRepo {
 
     // Insert user into database using insert method
     final success = await insert(user);
-    
+
     if (!success) {
       throw Exception('Failed to create user account');
     }
@@ -120,7 +133,7 @@ class UserRepo {
 
     // Get user by email using getByEmail method
     final user = await getByEmail(email);
-    
+
     if (user != null && user.password == password) {
       return user;
     } else {
@@ -161,7 +174,11 @@ class UserRepo {
   /// Get user by username
   Future<User?> getByUsername(String username) async {
     final db = await DBHelper.getDatabase();
-    final res = await db.query('user', where: 'username = ?', whereArgs: [username]);
+    final res = await db.query(
+      'user',
+      where: 'username = ?',
+      whereArgs: [username],
+    );
     if (res.isEmpty) return null;
     return User.fromMap(res.first);
   }
@@ -173,7 +190,7 @@ class UserRepo {
     }
 
     final success = await update(user.userId!, user);
-    
+
     if (success) {
       return user;
     } else {
