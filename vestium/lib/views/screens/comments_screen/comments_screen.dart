@@ -19,14 +19,6 @@ class CommentsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Check if user is a guest and redirect if so
-    if (userId == -1) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        context.router.replaceNamed('/access-denied');
-      });
-      return const SizedBox();
-    }
-
     return BlocProvider(
       create: (_) => CommentsScreenCubit(postId: postId, userId: userId)..loadComments(),
       child: Scaffold(
