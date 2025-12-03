@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:auto_route/auto_route.dart';
 import '../widgets/nav_bar.dart';
+import 'package:vestium/app_router.dart';
 import 'access_denied.dart';
 
 @RoutePage()
@@ -52,12 +53,36 @@ class _WardrobeContentState extends State<_WardrobeContent> {
   // ---------- dummy items ----------
   final String demoImg = 'assets/images/dummyData/casual-weekend-outfit.jpg';
   final List<Map<String, String>> items = [
-    {'img': 'assets/images/dummyData/casual-weekend-outfit.jpg', 'name': 'Denim Jacket', 'cat': 'Outerwear'},
-    {'img': 'assets/images/dummyData/casual-weekend-outfit.jpg', 'name': 'White T-Shirt', 'cat': 'Tops'},
-    {'img': 'assets/images/dummyData/casual-weekend-outfit.jpg', 'name': 'Black Jeans', 'cat': 'Bottoms'},
-    {'img': 'assets/images/dummyData/casual-weekend-outfit.jpg', 'name': 'Summer Dress', 'cat': 'Dresses'},
-    {'img': 'assets/images/dummyData/casual-weekend-outfit.jpg', 'name': 'Sneakers', 'cat': 'Shoes'},
-    {'img': 'assets/images/dummyData/casual-weekend-outfit.jpg', 'name': 'Leather Bag', 'cat': 'Accessories'},
+    {
+      'img': 'assets/images/dummyData/casual-weekend-outfit.jpg',
+      'name': 'Denim Jacket',
+      'cat': 'Outerwear',
+    },
+    {
+      'img': 'assets/images/dummyData/casual-weekend-outfit.jpg',
+      'name': 'White T-Shirt',
+      'cat': 'Tops',
+    },
+    {
+      'img': 'assets/images/dummyData/casual-weekend-outfit.jpg',
+      'name': 'Black Jeans',
+      'cat': 'Bottoms',
+    },
+    {
+      'img': 'assets/images/dummyData/casual-weekend-outfit.jpg',
+      'name': 'Summer Dress',
+      'cat': 'Dresses',
+    },
+    {
+      'img': 'assets/images/dummyData/casual-weekend-outfit.jpg',
+      'name': 'Sneakers',
+      'cat': 'Shoes',
+    },
+    {
+      'img': 'assets/images/dummyData/casual-weekend-outfit.jpg',
+      'name': 'Leather Bag',
+      'cat': 'Accessories',
+    },
   ];
 
   // ---------------------------------------------------------------
@@ -133,8 +158,11 @@ class _WardrobeContentState extends State<_WardrobeContent> {
                           // text tags
                           else ...[
                             if (isSelected)
-                              const Icon(Icons.check,
-                                  size: 16, color: Colors.white)
+                              const Icon(
+                                Icons.check,
+                                size: 16,
+                                color: Colors.white,
+                              )
                             else
                               const SizedBox(width: 4),
                             const SizedBox(width: 4),
@@ -168,12 +196,16 @@ class _WardrobeContentState extends State<_WardrobeContent> {
       // ---------- floating + ----------
       floatingActionButton: FloatingActionButton(
         backgroundColor: const Color(0xFF8B6B61),
-        onPressed: () => setState(() => selected = '+'),
+        onPressed: () {
+          context.router.push(CameraAccessRoute());
+        },
         child: const Icon(Icons.add, color: Colors.white),
       ),
-       bottomNavigationBar: CustomNavBar(currentPage: 'wardrobe', userId: widget.userId),
+      bottomNavigationBar: CustomNavBar(
+        currentPage: 'wardrobe',
+        userId: widget.userId,
+      ),
     );
-    
   }
 
   // ---------------------------------------------------------------

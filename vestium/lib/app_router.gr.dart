@@ -4,7 +4,7 @@
 // AutoRouterGenerator
 // **************************************************************************
 
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, unused_element_parameter
 // coverage:ignore-file
 
 part of 'app_router.dart';
@@ -257,7 +257,7 @@ abstract class _$AppRouter extends RootStackRouter {
         child: OutfitDetailsScreen(
           key: args.key,
           outfitId: args.outfitId,
-          userId: args.userId,
+          // userId: args.userId,
         ),
       );
     },
@@ -297,6 +297,12 @@ abstract class _$AppRouter extends RootStackRouter {
           key: args.key,
           userId: args.userId,
         ),
+      );
+    },
+    SelectItemRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const SelectItemScreen(),
       );
     },
     SelectOutfitRoute.name: (routeData) {
@@ -1265,6 +1271,20 @@ class SearchRouteArgs {
   String toString() {
     return 'SearchRouteArgs{key: $key, userId: $userId}';
   }
+}
+
+/// generated route for
+/// [SelectItemScreen]
+class SelectItemRoute extends PageRouteInfo<void> {
+  const SelectItemRoute({List<PageRouteInfo>? children})
+      : super(
+          SelectItemRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'SelectItemRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
 }
 
 /// generated route for

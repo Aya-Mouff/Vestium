@@ -5,14 +5,23 @@ import 'package:vestium/views/screens/check_email_screen/check_email_page.dart';
 import 'package:vestium/views/screens/create_outfit.dart';
 import 'package:vestium/views/screens/reset_password_screen/reset_password_page.dart';
 import 'package:vestium/views/screens/signup_screen/signup_page.dart';
-import 'package:vestium/views/screens/outfit_details_screen.dart';
-import 'package:vestium/views/screens/camera_permisssion_screen.dart';
-import 'package:vestium/views/screens/gallery_permissison_screen.dart';
-import 'package:vestium/views/screens/take_pic_screen.dart';
-import 'package:vestium/views/screens/photo_preview_screen.dart';
-import 'package:vestium/views/screens/edit_item_screen.dart';
-import 'package:vestium/views/screens/item_details_screen.dart';
-import 'package:vestium/views/screens/edit_outfit_screen.dart';
+// import 'package:vestium/views/screens/outfit_details_screen.dart';
+import 'package:vestium/views/screens/outfit_details/outfit_details_screen.dart';
+// import 'package:vestium/views/screens/camera_permisssion_screen.dart';
+import 'package:vestium/views/screens/camera_access/camera_access_screen.dart';
+// import 'package:vestium/views/screens/gallery_permissison_screen.dart';
+import 'package:vestium/views/screens/gallery_access/gallery_access_screen.dart';
+// import 'package:vestium/views/screens/take_pic_screen.dart';
+import 'package:vestium/views/screens/take_pic/take_pic_screen.dart';
+// import 'package:vestium/views/screens/photo_preview_screen.dart';
+import 'package:vestium/views/screens/photo_preview/photo_preview_screen.dart';
+// import 'package:vestium/views/screens/edit_item_screen.dart';
+import 'package:vestium/views/screens/edit_item/edit_item_screen.dart';
+// import 'package:vestium/views/screens/item_details_screen.dart';
+import 'package:vestium/views/screens/item_details/item_details_screen.dart';
+// import 'package:vestium/views/screens/edit_outfit_screen.dart';
+import 'package:vestium/views/screens/edit_outfit/edit_outfit_screen.dart';
+import 'package:vestium/views/screens/select_item/select_item_screen.dart';
 import './views/screens/splash_screen.dart';
 import 'views/screens/home_screen/home_screen.dart';
 import 'views/screens/my_posts_screen/my_posts_screen.dart';
@@ -69,7 +78,7 @@ class AppRouter extends _$AppRouter {
     AutoRoute(page: OutfitCreatorRoute.page, path: '/create_outfit/:userId'),
     AutoRoute(
       page: OutfitDetailsRoute.page,
-      path: '/outfit-details/:outfitId/:userId',
+      // path: '/outfit-details/:outfitId/:userId',
     ),
     AutoRoute(page: CameraAccessRoute.page),
     AutoRoute(page: TakePicRoute.page),
@@ -92,6 +101,7 @@ class AppRouter extends _$AppRouter {
     AutoRoute(page: FollowingRoute.page, path: '/following1'),
     AutoRoute(page: NewPostRoute.page, path: '/newpost/:userId'),
     AutoRoute(page: SelectOutfitRoute.page, path: '/selectoutfit/:userId'),
+    AutoRoute(page: SelectItemRoute.page, ),
     AutoRoute(page: FollowersRoute.page, path: '/followers/:userId'),
     AutoRoute(page: FollowingRoute.page, path: '/following/:userId'),
     AutoRoute(page: NewPostRoute.page, path: '/newpost'),
