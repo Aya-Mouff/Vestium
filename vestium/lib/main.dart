@@ -3,8 +3,9 @@ import 'dart:io';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import './app_router.dart';
 import 'databases/db_helper.dart';
+import 'package:vestium/databases/services/current_user_service.dart';
 
-Future<bool> init_my_app() async {
+Future<bool> initMyApp() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   if (Platform.isWindows || Platform.isLinux) {
@@ -13,11 +14,12 @@ Future<bool> init_my_app() async {
   }
 
   await DBHelper.getDatabase();
+  await CurrentUserService.loadLastUserFromDatabase();
   return true;
 }
 
 void main() async {
-  await init_my_app();
+  await initMyApp();
 
   final appRouter = AppRouter();
 

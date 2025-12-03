@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 // import '../../../repo/user_repo.dart';
 import 'package:vestium/repo/user_repo.dart';
 import 'signup_state.dart';
+import 'package:vestium/databases/services/current_user_service.dart';
 
 class SignupCubit extends Cubit<SignupState> {
   final UserRepo userRepo;
@@ -33,6 +34,8 @@ class SignupCubit extends Cubit<SignupState> {
         username: username,
         bio: bio,
       );
+
+      CurrentUserService.setCurrentUser(user);
 
       // Emit success state with the created user
       emit(SignupSuccess(user));

@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:vestium/repo/user_repo.dart';
 import 'login_state.dart';
+import 'package:vestium/databases/services/current_user_service.dart';
 
 class LoginCubit extends Cubit<LoginState> {
   final UserRepo userRepo;
@@ -22,6 +23,8 @@ class LoginCubit extends Cubit<LoginState> {
       // Call the repository to authenticate the user
       final user = await userRepo.signIn(email, password);
 
+      CurrentUserService.setCurrentUser(user);
+      
       // Emit success state with the authenticated user
       emit(LoginSuccess(user));
     } catch (e) {

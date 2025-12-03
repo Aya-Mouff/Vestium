@@ -177,7 +177,7 @@ class _LogInScreenState extends State<LogInScreen> {
                                     borderRadius: BorderRadius.circular(12),
                                   ),
                                   disabledBackgroundColor:
-                                      Colors.grey.withOpacity(0.5),
+                                      Colors.grey.withValues(alpha: .5),
                                 ),
                                 child: state is LoginLoading
                                     ? const SizedBox(
