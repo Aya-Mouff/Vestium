@@ -142,7 +142,6 @@ class ItemModel {
   int? itemId;
   int? userId; // FK → user.user_id
   String? imagePath;
-  int? categoryId; // FK → items_categories.category_id (nullable!)
   String? itemName;
   String? description;
   String? season;
@@ -152,7 +151,6 @@ class ItemModel {
     this.itemId,
     this.userId,
     this.imagePath,
-    this.categoryId,
     this.itemName,
     this.description,
     this.season,
@@ -163,7 +161,6 @@ class ItemModel {
         itemId: map['item_id'],
         userId: map['user_id'],
         imagePath: map['image_path'],
-        categoryId: map['category_id'],
         itemName: map['item_name'],
         description: map['description'],
         season: map['season'],
@@ -174,12 +171,32 @@ class ItemModel {
         'item_id': itemId,
         'user_id': userId,
         'image_path': imagePath,
-        'category_id': categoryId,
         'item_name': itemName,
         'description': description,
         'season': season,
         'date': date,
       };
+
+  // ADD THIS copyWith METHOD:
+  ItemModel copyWith({
+    int? itemId,
+    int? userId,
+    String? imagePath,
+    String? itemName,
+    String? description,
+    String? season,
+    String? date,
+  }) {
+    return ItemModel(
+      itemId: itemId ?? this.itemId,
+      userId: userId ?? this.userId,
+      imagePath: imagePath ?? this.imagePath,
+      itemName: itemName ?? this.itemName,
+      description: description ?? this.description,
+      season: season ?? this.season,
+      date: date ?? this.date,
+    );
+  }
 }
 
 // ------------------------
@@ -366,5 +383,28 @@ class LikeModel {
         'post_id': postId,
         'user_id': userId,
         'date': date,
+      };
+}
+
+// ------------------------
+// ITEM CATEGORY JOIN (many-to-many)
+// ------------------------
+class ItemCategoryJoin {
+  int itemId;
+  int categoryId;
+
+  ItemCategoryJoin({
+    required this.itemId,
+    required this.categoryId,
+  });
+
+  factory ItemCategoryJoin.fromMap(Map<String, dynamic> map) => ItemCategoryJoin(
+        itemId: map['item_id'],
+        categoryId: map['category_id'],
+      );
+
+  Map<String, dynamic> toMap() => {
+        'item_id': itemId,
+        'category_id': categoryId,
       };
 }
