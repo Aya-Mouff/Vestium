@@ -37,7 +37,7 @@ class PhotoPreviewImage extends StatelessWidget {
                       Icon(
                         Icons.error_outline,
                         size: 64,
-                        color: const Color(0xFF795548).withOpacity(0.6),
+                        color: const Color(0xFF795548).withValues(alpha: .6),
                       ),
                       const SizedBox(height: 16),
                       const Text(

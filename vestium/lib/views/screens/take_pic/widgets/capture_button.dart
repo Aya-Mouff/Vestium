@@ -38,6 +38,6 @@ class CaptureButton extends StatelessWidget {
 
   void _onCapturePressed(BuildContext context) {
     context.read<TakePicCubit>().capturePhoto();
-    // Navigation will be handled by BlocListener in TakePicBody
+    
   }
 }
