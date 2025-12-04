@@ -37,11 +37,11 @@ import './views/screens/onboarding_screen2.dart';
 import './views/screens/onboarding_screen3.dart';
 import './views/screens/manage_categories_screen1.dart';
 import './views/screens/manage_categories_screen2.dart';
-import './views/screens/setting_screen1.dart';
-import './views/screens/searching_screen1.dart';
-import './views/screens/followers_screen.dart';
-import './views/screens/following_screen.dart';
-import './views/screens/new_post_screen.dart';
+import './views/screens/settings_screen/settings_screen1.dart';
+import './views/screens/searching_screen/searching_screen1.dart';
+import './views/screens/followers_screen/followers_screen.dart';
+import './views/screens/following_screen/following_screen.dart';
+import './views/screens/new_post_screen/new_post_screen.dart';
 import './views/screens/selected_outfit_screen.dart';
 import './views/screens/wardrobe_screen.dart';
 import 'views/screens/set_new_password_screen.dart';
@@ -90,21 +90,21 @@ class AppRouter extends _$AppRouter {
     AutoRoute(page: OnboardingRoute.page, path: '/onboarding1'),
     AutoRoute(page: OnboardingRoute2.page, path: '/onboarding2'),
     AutoRoute(page: OnboardingRoute3.page, path: '/onboarding3'),
-    AutoRoute(page: ManageCategoriesRoute.page, path: '/manage_categories1'),
+    AutoRoute(page: ManageCategoriesRoute.page, path: '/manage_categories1/:userId'),
     AutoRoute(
       page: ManageCategoriesRoute2.page,
       path: '/manage_categories2/:userId',
     ),
     AutoRoute(page: SettingsRoute1.page, path: '/settings1/:userId'),
     AutoRoute(page: SearchRoute.page, path: '/search1/:userId'),
-    AutoRoute(page: FollowersRoute.page, path: '/followers1'),
-    AutoRoute(page: FollowingRoute.page, path: '/following1'),
+    AutoRoute(page: FollowersRoute.page, path: '/followers1/:userId'),
+    AutoRoute(page: FollowingRoute.page, path: '/following1/:userId'),
     AutoRoute(page: NewPostRoute.page, path: '/newpost/:userId'),
     AutoRoute(page: SelectOutfitRoute.page, path: '/selectoutfit/:userId'),
     AutoRoute(page: SelectItemRoute.page, ),
     AutoRoute(page: FollowersRoute.page, path: '/followers/:userId'),
     AutoRoute(page: FollowingRoute.page, path: '/following/:userId'),
-    AutoRoute(page: NewPostRoute.page, path: '/newpost'),
+    AutoRoute(page: NewPostRoute.page, path: '/newpost/:userId'),
     AutoRoute(page: SelectOutfitRoute.page, path: '/selectoutfit'),
     AutoRoute(page: WardrobeRoute.page, path: '/wardrobe1/:userId'),
     AutoRoute(page: AccessDeniedRoute.page, path: '/access-denied'),
