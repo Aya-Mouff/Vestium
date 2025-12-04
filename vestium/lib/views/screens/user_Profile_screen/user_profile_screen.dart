@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'cubit/user_profile_screen_cubit.dart';
 import 'cubit/user_profile_screen_state.dart';
-import 'data/user_profile_repository.dart';
+import '../../../../repo/user_repo.dart';
+import '../../../../repo/post_repo.dart';
+import '../../../../repo/follow_repo.dart';
 import 'widgets/user_header.dart';
 import 'widgets/user_stats.dart';
 import 'widgets/posts_grid.dart';
@@ -24,7 +26,9 @@ class UserProfileScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (_) => UserProfileCubit(
-        repository: UserProfileRepository(),
+        userRepo: UserRepo(),
+        postRepo: PostRepo(),
+        followRepo: FollowRepo(),
         currentUserId: currentUserId,
       )..loadProfile(userId),
       child: Scaffold(
@@ -37,7 +41,7 @@ class UserProfileScreen extends StatelessWidget {
             builder: (context, state) {
               if (state is UserProfileLoaded) {
                 return Text(
-                  state.user['username'],
+                  state.user.username!,
                   style: const TextStyle(fontSize: 18, color: Colors.black),
                 );
               }
@@ -60,12 +64,12 @@ class UserProfileScreen extends StatelessWidget {
                 child: Column(
                   children: [
                     const SizedBox(height: 16),
-                    UserHeader(user: state.user),
+                    UserHeader(user: state.user.toMap()),
                     const SizedBox(height: 16),
                     UserStats(
                       posts: state.posts.length,
-                      followers: state.user['followersCount'],
-                      following: state.user['followingCount'],
+                      followers: state.followersCount, 
+                      following: state.followingCount,
                       userId: currentUserId,
                     ),
                     const SizedBox(height: 16),

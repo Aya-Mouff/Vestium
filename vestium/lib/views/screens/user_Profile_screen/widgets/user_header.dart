@@ -11,11 +11,11 @@ class UserHeader extends StatelessWidget {
       children: [
         CircleAvatar(
           radius: 40,
-          backgroundImage: AssetImage(user['profileImage']),
+          backgroundImage: AssetImage(user['pfp'] ?? 'assets/images/icons/person.jpg'),
         ),
         const SizedBox(height: 12),
         Text(
-          user['fullName'],
+          user['full_name'] ?? '',
           style: const TextStyle(
             fontFamily: 'CormorantGaramond',
             fontSize: 18,
@@ -23,7 +23,7 @@ class UserHeader extends StatelessWidget {
           ),
         ),
         Text(
-          user['bio'],
+          user['bio'] ?? '',
           textAlign: TextAlign.center,
           style: const TextStyle(fontSize: 13, color: Colors.black54),
         ),

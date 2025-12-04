@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:auto_route/auto_route.dart';
 import '../../../../app_router.dart';
-
 class PostHeader extends StatelessWidget {
   final Map<String, dynamic> post;
   final int userId;
@@ -16,11 +15,15 @@ class PostHeader extends StatelessWidget {
       child: Row(
         children: [
           GestureDetector(
-            onTap: () {
-              context.router.push(UserProfileRoute(
-                userId: userId,
-                currentUserId: currentUserId,
-              ));
+            onTap: () async {
+              userId == currentUserId
+                  ? context.router.push(MyProfileRoute(
+                      userId: currentUserId,
+                    ))
+                  : context.router.push(UserProfileRoute(
+                    userId: userId,
+                    currentUserId: currentUserId,
+                  ));
             },
             child: CircleAvatar(
               radius: 18,
@@ -30,10 +33,15 @@ class PostHeader extends StatelessWidget {
           const SizedBox(width: 12),
           TextButton(
             onPressed: () {
-              context.router.push(UserProfileRoute(
-                userId: userId, // already int now
-                currentUserId: currentUserId,
-              ));
+
+              userId == currentUserId
+                  ? context.router.push(MyProfileRoute(
+                      userId: currentUserId,
+                    ))
+                  : context.router.push(UserProfileRoute(
+                    userId: userId,
+                    currentUserId: currentUserId,
+                  ));
             },
             child: Text(
               post['username'],

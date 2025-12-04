@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:auto_route/auto_route.dart';
 import '../../../../app_router.dart';
+import '../../../../databases/db_models.dart';
 
 class PostsGrid extends StatelessWidget {
-  final List<dynamic> posts;
+  final List<PostModel> posts;
   final int profileUserId;
   final int currentUserId;
 
@@ -40,7 +41,7 @@ class PostsGrid extends StatelessWidget {
           onTap: () {
             context.router.push(
               PostsDetailsRoute(
-                postId: int.parse(post['id']),
+                postId: post.postId!,
                 userId: profileUserId,
                 currentUserId: currentUserId,
               ),
@@ -48,7 +49,7 @@ class PostsGrid extends StatelessWidget {
           },
           child: ClipRRect(
             borderRadius: BorderRadius.circular(16),
-            child: Image.asset(post['imageUrl'], fit: BoxFit.cover),
+            child: Image.asset(post.imagePath!, fit: BoxFit.cover),
           ),
         );
       },

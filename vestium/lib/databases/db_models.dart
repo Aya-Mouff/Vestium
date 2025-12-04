@@ -158,7 +158,7 @@ class ItemModel {
     this.season,
     this.date,
   });
-
+ 
   factory ItemModel.fromMap(Map<String, dynamic> map) => ItemModel(
         itemId: map['item_id'],
         userId: map['user_id'],
