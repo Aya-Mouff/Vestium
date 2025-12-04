@@ -1,11 +1,16 @@
-import 'package:flutter/material.dart';
 import 'dart:io';
+
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
+import 'package:sqflite/sqflite.dart';
+
 import './app_router.dart';
 import 'databases/db_helper.dart';
-import 'package:vestium/databases/services/current_user_service.dart';
+import 'databases/services/current_user_service.dart';
+import 'repo/user_repo.dart';
 
-Future<bool> initMyApp() async {
+Future<void> initMyApp() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   if (Platform.isWindows || Platform.isLinux) {
@@ -13,17 +18,26 @@ Future<bool> initMyApp() async {
     databaseFactory = databaseFactoryFfi;
   }
 
+  // Open / migrate DB
   await DBHelper.getDatabase();
+
+  // Load last logged-in user (if any)
   await CurrentUserService.loadLastUserFromDatabase();
-  return true;
 }
 
 void main() async {
+  final userRepo = UserRepo();
+
   await initMyApp();
 
   final appRouter = AppRouter();
 
-  runApp(MyApp(appRouter: appRouter));
+  runApp(
+    RepositoryProvider<UserRepo>.value(
+      value: userRepo,
+      child: MyApp(appRouter: appRouter),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {

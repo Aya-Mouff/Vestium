@@ -65,15 +65,15 @@ class CustomNavBar extends StatelessWidget {
             child: IconButton(
               icon: Icon(
                 Icons.add,
-                color: currentPage == 'add'
+                color: currentPage == 'newpost'
                     ? Colors.black
                     : Color(0xC0795548), // change icon color
                 size: 24,
               ),
               onPressed: () {
-                context.pushRoute(OutfitCreatorRoute(userId: userId));
+                context.pushRoute(NewPostRoute(userId: userId));
               },
-            ),
+            ),//  AutoRoute(page: NewPostRoute.page, path: '/newpost'),
           ),
           IconButton(
             icon: Icon(
