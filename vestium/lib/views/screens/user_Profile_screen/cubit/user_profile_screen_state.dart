@@ -1,8 +1,9 @@
-import 'package:equatable/equatable.dart';
-
-class UserProfileState extends Equatable {
-  @override
-  List<Object?> get props => [];
+// user_profile_screen_state.dart
+import 'package:flutter/material.dart';
+import '../../../../databases/db_models.dart';
+@immutable
+abstract class UserProfileState {
+  const UserProfileState();
 }
 
 class UserProfileInitial extends UserProfileState {}
@@ -10,36 +11,39 @@ class UserProfileInitial extends UserProfileState {}
 class UserProfileLoading extends UserProfileState {}
 
 class UserProfileLoaded extends UserProfileState {
-  final Map<String, dynamic> user;
-  final List<dynamic> posts;
+  final User user;
+  final List<PostModel> posts;
   final bool isFollowing;
+  final int followersCount;  // Add this
+  final int followingCount;  // Add this
 
-  UserProfileLoaded({
+  const UserProfileLoaded({
     required this.user,
     required this.posts,
     required this.isFollowing,
+    this.followersCount = 0,
+    this.followingCount = 0,
   });
 
   UserProfileLoaded copyWith({
-    Map<String, dynamic>? user,
-    List<dynamic>? posts,
+    User? user,
+    List<PostModel>? posts,
     bool? isFollowing,
+    int? followersCount,  // Add this
+    int? followingCount,  // Add this
   }) {
     return UserProfileLoaded(
       user: user ?? this.user,
       posts: posts ?? this.posts,
       isFollowing: isFollowing ?? this.isFollowing,
+      followersCount: followersCount ?? this.followersCount,
+      followingCount: followingCount ?? this.followingCount,
     );
   }
-
-  @override
-  List<Object?> get props => [user, posts, isFollowing];
 }
 
 class UserProfileError extends UserProfileState {
   final String message;
-  UserProfileError(this.message);
 
-  @override
-  List<Object?> get props => [message];
+  const UserProfileError(this.message);
 }
