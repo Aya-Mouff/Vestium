@@ -16,6 +16,8 @@ class PhotoPreview extends StatefulWidget {
 class PhotoPreviewState extends State<PhotoPreview> {
   final GlobalKey<EraserCanvasState> _eraserCanvasKey = GlobalKey<EraserCanvasState>();
   String _currentImagePath = '';
+  String? _lastSavedPath; // Track the last saved edited image
+  // In photo_preview.dart - make sure this method exists in PhotoPreviewState
 
   @override
   void initState() {
@@ -28,6 +30,7 @@ class PhotoPreviewState extends State<PhotoPreview> {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.imagePath != widget.imagePath) {
       _currentImagePath = widget.imagePath;
+      _lastSavedPath = null;
     }
   }
 
@@ -37,28 +40,66 @@ class PhotoPreviewState extends State<PhotoPreview> {
       if (newPath != null) {
         setState(() {
           _currentImagePath = newPath;
+          _lastSavedPath = newPath; // Save the edited path
         });
+        print('✅ Photo preview updated with new path: $newPath');
       }
       return newPath;
     } catch (e) {
-      print('Error saving edited image: $e');
+      print('❌ Error saving edited image: $e');
       return null;
     }
   }
+
+  Future<String?> confirmEdits() async {
+    print('🔍 confirmEdits called');
+    
+    if (_eraserCanvasKey.currentState == null) {
+      print('❌ EraserCanvas state is null');
+      return null;
+    }
+
+    try {
+      final newPath = await _eraserCanvasKey.currentState!.saveEditedImage();
+      print('💾 Saved image path: $newPath');
+      
+      if (newPath != null) {
+        setState(() {
+          _currentImagePath = newPath;
+          _lastSavedPath = newPath;
+        });
+        print('✅ Edited image applied: $newPath');
+        return newPath;
+      } else {
+        print('❌ saveEditedImage returned null');
+        return null;
+      }
+    } catch (e) {
+      print('❌ Error in confirmEdits: $e');
+      return null;
+    }
+  }
+
 
   void resetImage() {
     _eraserCanvasKey.currentState?.clearStrokes();
     setState(() {
       _currentImagePath = widget.imagePath;
+      _lastSavedPath = null;
     });
   }
 
-  String getCurrentImagePath() => _currentImagePath;
+  String getCurrentImagePath() => _lastSavedPath ?? _currentImagePath;
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<EditItemCubit, EditItemState>(
       builder: (context, state) {
+        // Use edited image path from state if available and not in remove BG mode
+        final displayPath = !state.isRemovingBg && state.editedImagePath != null
+            ? state.editedImagePath!
+            : _currentImagePath;
+
         return Expanded(
           child: Container(
             margin: const EdgeInsets.symmetric(horizontal: 16),
@@ -81,43 +122,12 @@ class PhotoPreviewState extends State<PhotoPreview> {
                   if (state.isRemovingBg)
                     EraserCanvas(
                       key: _eraserCanvasKey,
-                      imagePath: _currentImagePath,
+                      imagePath: displayPath,
                       eraserSize: state.eraserSize,
                     )
                   else
-                    // Show normal image preview
-                    Image.file(
-                      File(_currentImagePath),
-                      fit: BoxFit.contain,
-                      errorBuilder: (context, error, stackTrace) {
-                        return Container(
-                          color: const Color(0xFFD7CCC8),
-                          child: Center(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(
-                                  Icons.error_outline,
-                                  size: 64,
-                                  color: const Color(0xFF795548)
-                                      .withAlpha((0.6 * 255).toInt()),
-                                ),
-                                const SizedBox(height: 16),
-                                const Text(
-                                  'Failed to load image',
-                                  style: TextStyle(
-                                    fontFamily: 'Inter',
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.w200,
-                                    color: Color(0xFF795548),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        );
-                      },
-                    ),
+                    // Show normal image preview with proper refresh
+                    _ImageDisplay(imagePath: displayPath),
                   
                   // Instruction overlay when in eraser mode
                   if (state.isRemovingBg)
@@ -159,6 +169,48 @@ class PhotoPreviewState extends State<PhotoPreview> {
                     ),
                 ],
               ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+}
+
+class _ImageDisplay extends StatelessWidget {
+  final String imagePath;
+
+  const _ImageDisplay({required this.imagePath});
+
+  @override
+  Widget build(BuildContext context) {
+    return Image.file(
+      File(imagePath),
+      key: ValueKey(imagePath), // Force rebuild when path changes
+      fit: BoxFit.contain,
+      errorBuilder: (context, error, stackTrace) {
+        return Container(
+          color: const Color(0xFFD7CCC8),
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.error_outline,
+                  size: 64,
+                  color: const Color(0xFF795548).withAlpha((0.6 * 255).toInt()),
+                ),
+                const SizedBox(height: 16),
+                const Text(
+                  'Failed to load image',
+                  style: TextStyle(
+                    fontFamily: 'Inter',
+                    fontSize: 15,
+                    fontWeight: FontWeight.w200,
+                    color: Color(0xFF795548),
+                  ),
+                ),
+              ],
             ),
           ),
         );

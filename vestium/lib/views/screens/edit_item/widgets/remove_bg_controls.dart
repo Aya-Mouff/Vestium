@@ -50,14 +50,21 @@ class _EraserSizeLabel extends StatelessWidget {
             letterSpacing: 0.2,
           ),
         ),
-        Text(
-          '${eraserSize.round()}px',
-          style: TextStyle(
-            fontFamily: 'Inter',
-            fontSize: 14,
-            fontWeight: FontWeight.w200,
-            color: const Color(0xFF795548).withAlpha((0.8 * 255).toInt()),
-            letterSpacing: 0.2,
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+          decoration: BoxDecoration(
+            color: const Color(0xFFD7CCC8),
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Text(
+            '${eraserSize.round()}px',
+            style: const TextStyle(
+              fontFamily: 'Inter',
+              fontSize: 13,
+              fontWeight: FontWeight.w500,
+              color: Color(0xFF795548),
+              letterSpacing: 0.2,
+            ),
           ),
         ),
       ],
@@ -86,6 +93,8 @@ class _EraserSizeSlider extends StatelessWidget {
         value: eraserSize,
         min: 10,
         max: 100,
+        divisions: 18,
+        label: '${eraserSize.round()}px',
         onChanged: (value) {
           context.read<EditItemCubit>().updateEraserSize(value);
         },
@@ -118,7 +127,7 @@ class _ActionButtons extends StatelessWidget {
             ),
             style: OutlinedButton.styleFrom(
               foregroundColor: const Color(0xFF795548),
-              side: const BorderSide(color: Color(0xFF795548)),
+              side: const BorderSide(color: Color(0xFF795548), width: 1.5),
               padding: const EdgeInsets.symmetric(vertical: 12),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),

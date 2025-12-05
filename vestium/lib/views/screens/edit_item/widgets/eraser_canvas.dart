@@ -25,8 +25,11 @@ class EraserCanvas extends StatefulWidget {
 
 class EraserCanvasState extends State<EraserCanvas> {
   final GlobalKey _canvasKey = GlobalKey();
+  
   ui.Image? _originalImage;
   img.Image? _editableImage;
+  img.Image? _maskImage; // Separate mask for transparency
+  
   List<EraserStroke> _strokes = [];
   Offset? _currentPoint;
   bool _isLoading = true;
@@ -59,7 +62,21 @@ class EraserCanvasState extends State<EraserCanvas> {
       _originalImage = frame.image;
 
       // Load for editing with image package
-      _editableImage = img.decodeImage(bytes);
+      final decodedImage = img.decodeImage(bytes);
+      if (decodedImage == null) {
+        throw Exception('Failed to decode image');
+      }
+      
+      _editableImage = decodedImage;
+      
+      // Create a separate mask image (all opaque initially)
+      _maskImage = img.Image(
+        decodedImage.width,
+        decodedImage.height,
+      );
+      
+      // Fill mask with white (fully opaque)
+      img.fill(_maskImage!, img.getColor(255, 255, 255, 255));
 
       _imageSize = Size(
         _originalImage!.width.toDouble(),
@@ -82,9 +99,12 @@ class EraserCanvasState extends State<EraserCanvas> {
       _currentPoint = localPosition;
       _strokes.add(EraserStroke(
         points: [localPosition],
-        eraserSize: widget.eraserSize,
+        eraserSize: widget.eraserSize, // Use current eraser size
       ));
     });
+    
+    // Apply erasing immediately
+    _applyEraserAtPoint(localPosition);
   }
 
   void _onPanUpdate(DragUpdateDetails details) {
@@ -112,7 +132,7 @@ class EraserCanvasState extends State<EraserCanvas> {
   }
 
   void _applyEraserAtPoint(Offset point) {
-    if (_editableImage == null || _imageSize == null) return;
+    if (_maskImage == null || _imageSize == null) return;
 
     final renderBox = _canvasKey.currentContext?.findRenderObject() as RenderBox?;
     if (renderBox == null) return;
@@ -120,29 +140,26 @@ class EraserCanvasState extends State<EraserCanvas> {
     final canvasSize = renderBox.size;
 
     // Convert canvas coordinates to image coordinates
-    final scaleX = _editableImage!.width / canvasSize.width;
-    final scaleY = _editableImage!.height / canvasSize.height;
+    final scaleX = _maskImage!.width / canvasSize.width;
+    final scaleY = _maskImage!.height / canvasSize.height;
 
     final imageX = (point.dx * scaleX).round();
     final imageY = (point.dy * scaleY).round();
-    final radius = (widget.eraserSize * scaleX).round();
+    final radius = (widget.eraserSize * scaleX / 2).round();
 
-    // Erase pixels in circular area
+    // Optimized circle erasing - only update mask
+    final radiusSquared = radius * radius;
     for (int dy = -radius; dy <= radius; dy++) {
+      final dySquared = dy * dy;
       for (int dx = -radius; dx <= radius; dx++) {
-        if (dx * dx + dy * dy <= radius * radius) {
+        if (dx * dx + dySquared <= radiusSquared) {
           final x = imageX + dx;
           final y = imageY + dy;
 
-          if (x >= 0 && x < _editableImage!.width && 
-              y >= 0 && y < _editableImage!.height) {
-            // Set alpha to 0 (transparent)
-            final pixel = _editableImage!.getPixel(x, y);
-            final r = img.getRed(pixel);
-            final g = img.getGreen(pixel);
-            final b = img.getBlue(pixel);
-            // Use getColor() to get the color, then create new color with alpha = 0
-            _editableImage!.setPixelRgba(x, y, r, g, b, 0);
+          if (x >= 0 && x < _maskImage!.width && 
+              y >= 0 && y < _maskImage!.height) {
+            // Set mask to transparent (black with alpha 0)
+            _maskImage!.setPixelRgba(x, y, 0, 0, 0, 0);
           }
         }
       }
@@ -150,13 +167,36 @@ class EraserCanvasState extends State<EraserCanvas> {
   }
 
   Future<String> saveEditedImage() async {
-    if (_editableImage == null) {
+    if (_editableImage == null || _maskImage == null) {
       throw Exception('No image to save');
     }
 
     try {
+      // Create final image by applying mask to original
+      final finalImage = img.Image(
+        _editableImage!.width,
+        _editableImage!.height,
+      );
+
+      // Apply mask to create transparent areas
+      for (int y = 0; y < finalImage.height; y++) {
+        for (int x = 0; x < finalImage.width; x++) {
+          final pixel = _editableImage!.getPixel(x, y);
+          final maskPixel = _maskImage!.getPixel(x, y);
+          final maskAlpha = img.getAlpha(maskPixel);
+          
+          if (maskAlpha == 0) {
+            // Transparent pixel
+            finalImage.setPixelRgba(x, y, 0, 0, 0, 0);
+          } else {
+            // Keep original pixel
+            finalImage.setPixel(x, y, pixel);
+          }
+        }
+      }
+
       // Encode to PNG to preserve transparency
-      final pngBytes = img.encodePng(_editableImage!);
+      final pngBytes = img.encodePng(finalImage);
 
       // Save to app directory
       final appDir = await getApplicationDocumentsDirectory();
@@ -210,10 +250,10 @@ class EraserCanvasState extends State<EraserCanvas> {
         child: CustomPaint(
           painter: EraserPainter(
             image: _originalImage!,
-            editableImage: _editableImage!,
+            maskImage: _maskImage!,
             strokes: _strokes,
             currentPoint: _currentPoint,
-            eraserSize: widget.eraserSize,
+            eraserSize: widget.eraserSize, // Use current size from widget
           ),
           child: Container(),
         ),
@@ -240,14 +280,14 @@ class EraserStroke {
 
 class EraserPainter extends CustomPainter {
   final ui.Image image;
-  final img.Image editableImage;
+  final img.Image maskImage;
   final List<EraserStroke> strokes;
   final Offset? currentPoint;
   final double eraserSize;
 
   EraserPainter({
     required this.image,
-    required this.editableImage,
+    required this.maskImage,
     required this.strokes,
     this.currentPoint,
     required this.eraserSize,
@@ -255,13 +295,10 @@ class EraserPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    // Draw the edited image with transparency
-    final bytes = img.encodePng(editableImage);
-    
-    // For real-time display, we'll draw the original and apply masking
+    // Draw the image with transparency applied
     canvas.saveLayer(null, Paint());
     
-    // Draw the image
+    // Draw the base image
     paintImage(
       canvas: canvas,
       rect: Rect.fromLTWH(0, 0, size.width, size.height),
@@ -269,12 +306,13 @@ class EraserPainter extends CustomPainter {
       fit: BoxFit.contain,
     );
 
-    // Draw eraser strokes as transparent areas
+    // Apply mask using blend mode
     final erasePaint = Paint()
       ..color = Colors.transparent
       ..blendMode = BlendMode.clear
       ..style = PaintingStyle.fill;
 
+    // Draw all strokes as erased areas
     for (final stroke in strokes) {
       for (final point in stroke.points) {
         canvas.drawCircle(point, stroke.eraserSize / 2, erasePaint);
@@ -283,7 +321,7 @@ class EraserPainter extends CustomPainter {
 
     canvas.restore();
 
-    // Draw current eraser indicator
+    // Draw current eraser indicator with current size
     if (currentPoint != null) {
       final indicatorPaint = Paint()
         ..color = const Color(0xFF795548).withOpacity(0.3)

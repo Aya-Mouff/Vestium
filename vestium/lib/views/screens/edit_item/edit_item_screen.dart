@@ -21,29 +21,40 @@ class EditItemScreen extends StatefulWidget {
 
 class _EditItemScreenState extends State<EditItemScreen> {
   final GlobalKey<PhotoPreviewState> _photoPreviewKey = GlobalKey<PhotoPreviewState>();
-
   Future<void> _handleSave() async {
-    final cubit = context.read<EditItemCubit>();
-    
-    // Save the edited image
-    final newPath = await _photoPreviewKey.currentState?.saveEditedImage();
-    
-    if (newPath != null) {
-      // Update the cubit with the new image path
-      cubit.setEditedImagePath(newPath);
-      print('✅ Image saved and state updated: $newPath');
-    } else {
-      print('❌ Failed to save image');
+    try {
+      print('🔧 _handleSave called');
+
+      // Save the edited image and update PhotoPreview state
+      final newPath = await _photoPreviewKey.currentState?.confirmEdits();
+      
+      print('📝 New path from confirmEdits: $newPath');
+
+      if (newPath != null && newPath.isNotEmpty) {
+        // Use the cubit from the current context
+        context.read<EditItemCubit>().setEditedImagePath(newPath);
+        if (mounted) {
+          context.read<EditItemCubit>().setEditedImagePath(newPath);
+          print('✅ Image saved and state updated: $newPath');
+        }
+      } else {
+        print('⚠️ No new path returned');
+      }
+    } catch (e, stackTrace) {
+      print('❌ Error in _handleSave: $e');
+      print('Stack trace: $stackTrace');
+      
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Failed to save edited image'),
+          SnackBar(
+            content: Text('Failed to save edited image: $e'),
             backgroundColor: Colors.red,
           ),
         );
       }
     }
   }
+
 
   void _handleReset() {
     _photoPreviewKey.currentState?.resetImage();
