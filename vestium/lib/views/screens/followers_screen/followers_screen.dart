@@ -28,19 +28,30 @@ class FollowersScreen extends StatelessWidget {
         UserRepo(),
         userId: userId,
       )..loadFollowers(),
-      child: const _FollowersView(),
+      child: _FollowersView(
+        userId: userId,
+        currentUserId: currentUserId,
+      ),
     );
   }
 }
 
 class _FollowersView extends StatefulWidget {
-  const _FollowersView();
+  final int userId;
+  final int currentUserId;
+
+  const _FollowersView({
+    required this.userId,
+    required this.currentUserId,
+  });
 
   @override
   State<_FollowersView> createState() => _FollowersViewState();
 }
 
 class _FollowersViewState extends State<_FollowersView> {
+
+
   final TextEditingController _searchController = TextEditingController();
 
   @override
@@ -87,7 +98,7 @@ class _FollowersViewState extends State<_FollowersView> {
             children: [
               FollowersSearchBar(controller: _searchController),
               Expanded(
-                child: _buildFollowersList(state),
+                child: _buildFollowersList(state, userId: widget.userId, currentUserId: widget.currentUserId),
               ),
             ],
           ),
@@ -96,7 +107,7 @@ class _FollowersViewState extends State<_FollowersView> {
     );
   }
 
-  Widget _buildFollowersList(FollowersState state) {
+  Widget _buildFollowersList(FollowersState state, {required int userId, required int currentUserId}) {
     if (state.isLoading) {
       return const Center(child: CircularProgressIndicator());
     }
@@ -133,11 +144,15 @@ class _FollowersViewState extends State<_FollowersView> {
       itemCount: state.filteredFollowers.length,
       itemBuilder: (context, index) {
         final follower = state.filteredFollowers[index];
+        final followerUserId = follower['userId'] ?? int.tryParse(follower['id'] ?? '') ?? 0;
+        
         return FollowerItem(
           name: follower['name'] ?? '',
           username: follower['username'] ?? '',
           profileImage: follower['profileImage'] ?? '',
           isFollowing: follower['isFollowing'] ?? false,
+          followerUserId: followerUserId, // Pass the follower's actual user ID
+          currentUserId: currentUserId,
           onFollowTap: () =>
               context.read<FollowersCubit>().toggleFollow(index),
         );

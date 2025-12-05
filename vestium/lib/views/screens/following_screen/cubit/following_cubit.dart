@@ -28,19 +28,36 @@ class FollowingCubit extends Cubit<FollowingState> {
 
       final List<Map<String, dynamic>> followingData = [];
 
+      // for (final rel in myRelations) {
+      //   final followedUser = await _userRepo.getById(rel.followingId);
+      //   if (followedUser == null) continue;
+
+      //   followingData.add({
+      //     'id': followedUser.userId?.toString() ?? '',
+      //     'name': followedUser.fullName ?? '',
+      //     'username': followedUser.username ?? '',
+      //     'bio': followedUser.bio ?? '',
+      //     'profileImage': followedUser.pfp ?? '',
+      //     'followersCount': 0,
+      //     'followingCount': 0,
+      //     'isFollowing': true, // by definition we follow them
+      //   });
+      // }
+      // In FollowingCubit.loadFollowing() method, update the followingData.add:
       for (final rel in myRelations) {
         final followedUser = await _userRepo.getById(rel.followingId);
         if (followedUser == null) continue;
 
         followingData.add({
           'id': followedUser.userId?.toString() ?? '',
+          'userId': followedUser.userId, // Add this - the actual person's ID
           'name': followedUser.fullName ?? '',
           'username': followedUser.username ?? '',
           'bio': followedUser.bio ?? '',
           'profileImage': followedUser.pfp ?? '',
           'followersCount': 0,
           'followingCount': 0,
-          'isFollowing': true, // by definition we follow them
+          'isFollowing': true,
         });
       }
 
