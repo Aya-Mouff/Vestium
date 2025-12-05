@@ -35,7 +35,8 @@ class OutfitsGrid extends StatelessWidget {
       itemBuilder: (context, index) {
         final outfit = outfits[index];
         return GestureDetector(
-          onTap: () => context.pushRoute( OutfitDetailsRoute(outfitId: outfit['id'], userId: userId)),
+          // onTap: () => context.pushRoute( OutfitDetailsRoute(outfitId: outfit['id'], userId: userId)),
+          onTap: () => context.pushRoute( OutfitDetailsRoute(outfitId: outfit['id'])),
           child: ClipRRect(
             borderRadius: BorderRadius.circular(12),
             child: Image.asset(
