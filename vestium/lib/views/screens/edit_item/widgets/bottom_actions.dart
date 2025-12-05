@@ -5,7 +5,12 @@ import 'edit_buttons.dart';
 import 'remove_bg_controls.dart';
 
 class BottomActions extends StatelessWidget {
-  const BottomActions({super.key});
+  final VoidCallback? onReset;
+
+  const BottomActions({
+    super.key,
+    this.onReset,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +23,9 @@ class BottomActions extends StatelessWidget {
             color: const Color(0xFFFFFFFF),
             borderRadius: BorderRadius.circular(24),
           ),
-          child: state.isRemovingBg ? const RemoveBgControls() : const EditButtons(),
+          child: state.isRemovingBg 
+              ? RemoveBgControls(onReset: onReset) 
+              : const EditButtons(),
         );
       },
     );
