@@ -37,11 +37,12 @@ class FollowersCubit extends Cubit<FollowersState> {
 
         followersData.add({
           'id': followerUser.userId?.toString() ?? '',
+          'userId': followerUser.userId, // Add this - the actual follower's ID
           'name': followerUser.fullName ?? '',
           'username': followerUser.username ?? '',
           'bio': followerUser.bio ?? '',
           'profileImage': followerUser.pfp ?? '',
-          'followersCount': 0, // fill if you track counts
+          'followersCount': 0,
           'followingCount': 0,
           'isFollowing': await _isCurrentUserFollowingBack(
             currentUserId: userId,

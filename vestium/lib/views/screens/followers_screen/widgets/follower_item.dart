@@ -6,6 +6,8 @@ class FollowerItem extends StatelessWidget {
   final String profileImage;
   final bool isFollowing;
   final VoidCallback onFollowTap;
+  final int followerUserId; // Changed from userId to followerUserId
+  final int currentUserId;
 
   const FollowerItem({
     super.key,
@@ -14,13 +16,15 @@ class FollowerItem extends StatelessWidget {
     required this.profileImage,
     required this.isFollowing,
     required this.onFollowTap,
+    required this.followerUserId, // Changed parameter name
+    required this.currentUserId,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
       width: 381.26,
-      height: 74.13,
+      height: 80.13,
       margin: const EdgeInsets.only(bottom: 12.0),
       padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
       decoration: BoxDecoration(
@@ -80,35 +84,37 @@ class FollowerItem extends StatelessWidget {
               ],
             ),
           ),
-          InkWell(
-            onTap: onFollowTap,
-            borderRadius: BorderRadius.circular(8),
-            child: Container(
-              width: isFollowing ? 95.83 : 73.34,
-              height: 35.99,
-              decoration: BoxDecoration(
-                color: isFollowing ? Colors.transparent : const Color(0xFF795548),
-                border: Border.all(
-                  color: const Color(0xFF795548),
-                  width: 1,
+          // Check if the follower is not the current user
+          if (followerUserId != currentUserId) // Changed to followerUserId
+            InkWell(
+              onTap: onFollowTap,
+              borderRadius: BorderRadius.circular(8),
+              child: Container(
+                width: isFollowing ? 95.83 : 73.34,
+                height: 35.99,
+                decoration: BoxDecoration(
+                  color: isFollowing ? Colors.transparent : const Color(0xFF795548),
+                  border: Border.all(
+                    color: const Color(0xFF795548),
+                    width: 1,
+                  ),
+                  borderRadius: BorderRadius.circular(8),
                 ),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Center(
-                child: Text(
-                  isFollowing ? 'Following' : 'Follow',
-                  style: TextStyle(
-                    fontSize: 13,
-                    fontWeight: FontWeight.w600,
-                    color: isFollowing
-                        ? const Color(0xFF795548)
-                        : Colors.white,
-                    fontFamily: 'Inter',
+                child: Center(
+                  child: Text(
+                    isFollowing ? 'Following' : 'Follow',
+                    style: TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
+                      color: isFollowing
+                          ? const Color(0xFF795548)
+                          : Colors.white,
+                      fontFamily: 'Inter',
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
         ],
       ),
     );
