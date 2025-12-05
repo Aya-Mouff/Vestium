@@ -1,5 +1,4 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import '../../../../repo/follow_repo.dart';
 import '../../../../repo/user_repo.dart';
 import '../../../../databases/db_models.dart';
