@@ -63,6 +63,16 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    EditItemDetailsRoute.name: (routeData) {
+      final args = routeData.argsAs<EditItemDetailsRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: EditItemDetailsScreen(
+          key: args.key,
+          itemId: args.itemId,
+        ),
+      );
+    },
     EditItemRoute.name: (routeData) {
       final args = routeData.argsAs<EditItemRouteArgs>();
       return AutoRoutePage<dynamic>(
@@ -531,6 +541,44 @@ class CommentsRouteArgs {
   @override
   String toString() {
     return 'CommentsRouteArgs{key: $key, postId: $postId, userId: $userId}';
+  }
+}
+
+/// generated route for
+/// [EditItemDetailsScreen]
+class EditItemDetailsRoute extends PageRouteInfo<EditItemDetailsRouteArgs> {
+  EditItemDetailsRoute({
+    Key? key,
+    required int itemId,
+    List<PageRouteInfo>? children,
+  }) : super(
+          EditItemDetailsRoute.name,
+          args: EditItemDetailsRouteArgs(
+            key: key,
+            itemId: itemId,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'EditItemDetailsRoute';
+
+  static const PageInfo<EditItemDetailsRouteArgs> page =
+      PageInfo<EditItemDetailsRouteArgs>(name);
+}
+
+class EditItemDetailsRouteArgs {
+  const EditItemDetailsRouteArgs({
+    this.key,
+    required this.itemId,
+  });
+
+  final Key? key;
+
+  final int itemId;
+
+  @override
+  String toString() {
+    return 'EditItemDetailsRouteArgs{key: $key, itemId: $itemId}';
   }
 }
 
