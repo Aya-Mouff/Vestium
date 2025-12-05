@@ -23,10 +23,13 @@ class FilterChips extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 24),
       child: Row(
         children: [
+          // Always show 'All' chip first
           _buildChip('All', selectedCategory == 'All'),
-          ...categories.map(
+          // Show user's categories (excluding any 'All' that might be in the list)
+          ...categories.where((cat) => cat != 'All').map(
             (category) => _buildChip(category, selectedCategory == category),
           ),
+          // Add category button at the end
           _buildAddCategoryChip(context),
         ],
       ),
