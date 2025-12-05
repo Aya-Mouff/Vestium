@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:io';
 
 class CommentInputField extends StatelessWidget {
   final bool canComment;
@@ -12,11 +13,31 @@ class CommentInputField extends StatelessWidget {
     required this.currentUser,
   });
 
+  Widget _buildProfileImage(String imagePath) {
+    if (imagePath.startsWith('assets/')) {
+      return CircleAvatar(
+        radius: 20,
+        backgroundImage: AssetImage(imagePath),
+        onBackgroundImageError: (exception, stackTrace) {
+          // Fallback handled by CircleAvatar child
+        },
+      );
+    } else {
+      return CircleAvatar(
+        radius: 20,
+        backgroundImage: FileImage(File(imagePath)),
+        onBackgroundImageError: (exception, stackTrace) {
+          // Fallback handled by CircleAvatar child
+        },
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final controller = TextEditingController();
 
-    if (!canComment) {
+    if (!canComment || currentUser == null) {
       return Container(
         padding: const EdgeInsets.all(16),
         color: Colors.white,
@@ -30,6 +51,8 @@ class CommentInputField extends StatelessWidget {
         ),
       );
     }
+
+    final profileImage = currentUser['profileImage'] ?? 'assets/images/icons/person.jpg';
 
     return Container(
       decoration: BoxDecoration(
@@ -47,13 +70,7 @@ class CommentInputField extends StatelessWidget {
       child: SafeArea(
         child: Row(
           children: [
-            CircleAvatar(
-              radius: 20,
-              backgroundImage: AssetImage(
-                currentUser?["profileImage"] ??
-                'assets/images/dummyData/profile-pic-women.jpg',
-              ),
-            ),
+            _buildProfileImage(profileImage),
             const SizedBox(width: 12),
             Expanded(
               child: TextField(
