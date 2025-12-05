@@ -15,9 +15,9 @@ class StatsRow extends StatelessWidget {
         Text(value.toString(), style: const TextStyle(fontWeight: FontWeight.w600)),
         const SizedBox(height: 4),
         if (label == "Followers")
-          TextButton(onPressed: () {context.pushRoute(FollowersRoute(userId: userId));}, child: Text(label, style: const TextStyle(color: Colors.black54) )),
+          TextButton(onPressed: () {context.pushRoute(FollowersRoute(userId: userId, currentUserId: userId));}, child: Text(label, style: const TextStyle(color: Colors.black54) )),
         if (label == "Following")
-          TextButton(onPressed: () {context.pushRoute(FollowingRoute(userId: userId));}, child: Text(label, style: const TextStyle(color: Colors.black54) )),
+          TextButton(onPressed: () {context.pushRoute(FollowingRoute(userId: userId, currentUserId: userId));}, child: Text(label, style: const TextStyle(color: Colors.black54) )),
         if (label == "Outfits")
           TextButton(onPressed: () {}, child: Text(label, style: const TextStyle(color: Colors.black54) )),
       ],

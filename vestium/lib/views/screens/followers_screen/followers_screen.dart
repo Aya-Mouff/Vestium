@@ -12,10 +12,12 @@ import 'widgets/follower_item.dart';
 @RoutePage()
 class FollowersScreen extends StatelessWidget {
   final int userId;
+  final int currentUserId;
 
   const FollowersScreen({
     super.key,
     required this.userId,
+    required this.currentUserId,
   });
 
   @override

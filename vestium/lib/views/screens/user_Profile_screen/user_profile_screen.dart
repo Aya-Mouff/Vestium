@@ -64,13 +64,14 @@ class UserProfileScreen extends StatelessWidget {
                 child: Column(
                   children: [
                     const SizedBox(height: 16),
-                    UserHeader(user: state.user.toMap()),
+                    UserHeader(user: state.user), // Pass User object directly
                     const SizedBox(height: 16),
                     UserStats(
                       posts: state.posts.length,
                       followers: state.followersCount, 
                       following: state.followingCount,
-                      userId: currentUserId,
+                      userId: userId,
+                      currentUserId: currentUserId,
                     ),
                     const SizedBox(height: 16),
                     Padding(

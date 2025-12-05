@@ -7,6 +7,7 @@ class UserStats extends StatelessWidget {
   final int followers;
   final int following;
   final int userId;
+  final int currentUserId;
 
   const UserStats({
     super.key,
@@ -14,6 +15,7 @@ class UserStats extends StatelessWidget {
     required this.followers,
     required this.following,
     required this.userId,
+    required this.currentUserId,
   });
 
   @override
@@ -47,14 +49,14 @@ class UserStats extends StatelessWidget {
         const SizedBox(height: 4),
         if (label == "Followers") 
           TextButton(
-            onPressed: () {context.router.push(FollowersRoute(userId: userId));}, 
+            onPressed: () {context.router.push(FollowersRoute(userId: userId, currentUserId: currentUserId));}, 
             child: Text(
               label, 
               style: const TextStyle(fontSize: 13, color: Colors.black54)),
           ),
         if (label == "Following") 
           TextButton(
-            onPressed: () {context.router.push(FollowingRoute(userId: userId));}, 
+            onPressed: () {context.router.push(FollowingRoute(userId: userId, currentUserId: currentUserId));}, 
             child: Text(
               label, 
               style: const TextStyle(fontSize: 13, color: Colors.black54)),
