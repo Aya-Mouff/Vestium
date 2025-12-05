@@ -6,6 +6,10 @@ import '../../../../repo/post_repo.dart';
 import '../../../../repo/follow_repo.dart';
 import '../../../../repo/outfit_category_repo.dart';
 import '../../../../databases/db_models.dart';
+import '../../../../databases/services/user_profile_service.dart';
+import '../../../../databases/services/outfit_image_service.dart';
+import '../../../../databases/services/post_image_service.dart'; // Add this import
+import 'dart:io';
 
 class MyProfileCubit extends Cubit<MyProfileState> {
   final UserRepo userRepo = UserRepo();
@@ -65,24 +69,30 @@ class MyProfileCubit extends Cubit<MyProfileState> {
         }
       }
 
+      // Get the valid profile image path
+      final profileImagePath = await _getValidProfileImagePath(userId, user.pfp);
+
       // Convert User model to Map for compatibility with existing UI
       final currentUserMap = {
         'id': user.userId,
         'username': user.username ?? 'Unknown User',
         'fullName': user.fullName ?? 'Unknown',
         'bio': user.bio ?? '',
-        'pfp': user.pfp ?? '',
+        'pfp': profileImagePath,
         'followersCount': followersCount,
         'followingCount': followingCount,
         'customOutfitCategories': userOutfitCategories,
       };
 
-      // Convert outfits to format expected by UI
-      final outfitsList = userOutfits.map((outfit) {
+      // Convert outfits to format expected by UI, with proper image paths
+      final outfitsList = await Future.wait(userOutfits.map((outfit) async {
         final category = allCategories.firstWhere(
           (cat) => cat.categoryId == outfit.categoryId,
           orElse: () => OutfitCategory(categoryName: 'Uncategorized'),
         );
+        
+        // Get outfit image path from OutfitImageService
+        final outfitImagePath = await OutfitImageService.getOutfitImagePath(outfit.outfitId ?? -1);
         
         return {
           'id': outfit.outfitId,
@@ -93,22 +103,27 @@ class MyProfileCubit extends Cubit<MyProfileState> {
           'categoryId': outfit.categoryId,
           'season': outfit.season ?? '',
           'date': outfit.date ?? '',
-          'imageUrl': 'assets/images/placeholder_outfit.png',
+          'imageUrl': outfitImagePath ?? 'assets/images/placeholder_outfit.png',
+          'imagePath': outfitImagePath,
         };
-      }).toList();
+      }));
 
-      // Convert posts to format expected by UI
-      final postsList = userPosts.map((post) {
+      // Convert posts to format expected by UI, with proper image paths
+      final postsList = await Future.wait(userPosts.map((post) async {
+        // Get post image path from PostImageService
+        final postImagePath = await PostImageService.getPostImagePath(post.postId ?? -1);
+        
         return {
           'id': post.postId,
           'outfitId': post.outfitId,
           'caption': post.caption ?? '',
           'date': post.date ?? '',
-          'imageUrl': post.imagePath ?? 'assets/images/placeholder_post.png',
+          'imageUrl': postImagePath ?? post.imagePath ?? 'assets/images/placeholder_post.png',
+          'imagePath': postImagePath ?? post.imagePath,
         };
-      }).toList();
+      }));
 
-      // Ensure 'All' is not in the categories list (it's handled separately in FilterChips)
+      // Ensure 'All' is not in the categories list
       final categoriesWithoutAll = userOutfitCategories.where((cat) => cat != 'All').toList();
 
       emit(
@@ -125,6 +140,33 @@ class MyProfileCubit extends Cubit<MyProfileState> {
     } catch (e) {
       emit(MyProfileError(message: e.toString()));
     }
+  }
+
+  /// Helper method to get the valid profile image path
+  Future<String> _getValidProfileImagePath(int userId, String? pfpPath) async {
+    // If a path is provided in the database, check if it's valid
+    if (pfpPath != null && pfpPath.isNotEmpty) {
+      // Check if it's an asset path
+      if (pfpPath.startsWith('assets/')) {
+        return pfpPath;
+      }
+      
+      // Check if it's a file path that exists
+      final file = File(pfpPath);
+      final fileExists = await file.exists();
+      if (fileExists) {
+        return pfpPath;
+      }
+    }
+    
+    // If no valid path in database, check user_profiles directory
+    final userProfilePath = await UserProfileService.getUserProfileImagePath(userId);
+    if (userProfilePath != null) {
+      return userProfilePath;
+    }
+    
+    // Fallback to default asset
+    return 'assets/images/icons/person.jpg';
   }
 
   void toggleView(bool showOutfits) {

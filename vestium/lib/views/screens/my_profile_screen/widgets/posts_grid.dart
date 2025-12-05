@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:vestium/app_router.dart';
+import 'dart:io';
 
 class PostsGrid extends StatelessWidget {
   final List<dynamic> posts;
@@ -32,17 +33,46 @@ class PostsGrid extends StatelessWidget {
       ),
       itemBuilder: (context, index) {
         final post = posts[index];
+        final imagePath = post['imageUrl'];
+        
         return GestureDetector(
-          onTap: () => context.pushRoute(MyPostsRoute(postId:post['id'])),
+          onTap: () => context.pushRoute(MyPostsRoute(postId: post['id'])),
           child: ClipRRect(
             borderRadius: BorderRadius.circular(16),
-            child: Image.asset(
-              post['imageUrl'],
-              fit: BoxFit.cover,
-            ),
+            child: _buildPostImage(imagePath),
           ),
         );
       },
     );
+  }
+
+  Widget _buildPostImage(String imagePath) {
+    if (imagePath.startsWith('assets/')) {
+      return Image.asset(
+        imagePath,
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) {
+          return Container(
+            color: const Color(0xFFE9D9CF),
+            child: const Center(
+              child: Icon(Icons.photo, color: Color(0xFF7B5247), size: 40),
+            ),
+          );
+        },
+      );
+    } else {
+      return Image.file(
+        File(imagePath),
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) {
+          return Container(
+            color: const Color(0xFFE9D9CF),
+            child: const Center(
+              child: Icon(Icons.photo, color: Color(0xFF7B5247), size: 40),
+            ),
+          );
+        },
+      );
+    }
   }
 }

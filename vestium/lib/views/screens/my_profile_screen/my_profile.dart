@@ -52,7 +52,6 @@ class MyProfileScreen extends StatelessWidget {
                         color: Colors.black87,
                       ),
                       onPressed: () {
-                        // Fixed: Now goes to SettingsRoute1 (Edit Profile) instead of AccountManagerRoute
                         context.pushRoute(SettingsRoute1(userId: userId));
                       },
                     ),
@@ -68,7 +67,6 @@ class MyProfileScreen extends StatelessWidget {
             if (state is MyProfileLoaded && state.showOutfits) {
               return FloatingActionButton(
                 onPressed: () {
-                  // Navigate to OutfitCreatorRoute
                   context.pushRoute(OutfitCreatorRoute(userId: userId));
                 },
                 backgroundColor: const Color(0xFF7B5247),
@@ -130,8 +128,16 @@ class MyProfileScreen extends StatelessWidget {
                             ),
                             elevation: 0,
                             minimumSize: const Size(double.infinity, 40),
+                            // Remove splash/ripple effect completely
+                            splashFactory: NoSplash.splashFactory,
+                            overlayColor: null, // Set to null instead
                           ),
-                          child: const Text('Edit Profile'),
+                          child: const Text(
+                            'Edit Profile',
+                            style: TextStyle(
+                              color: Colors.black87,
+                            ),
+                          ),
                         ),
                       ),
                       const SizedBox(height: 16),
