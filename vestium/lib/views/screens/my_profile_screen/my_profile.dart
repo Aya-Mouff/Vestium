@@ -23,22 +23,6 @@ class MyProfileScreen extends StatelessWidget {
       create: (_) => MyProfileCubit()..loadUserData(userId),
       child: Scaffold(
         backgroundColor: const Color(0xFFF5ECE7),
-        // appBar: AppBar(
-        //   backgroundColor: Colors.white,
-        //   centerTitle: true,
-        //   elevation: 0,
-        // title: BlocBuilder<MyProfileCubit, MyProfileState>(
-        //   builder: (context, state) {
-        //     if (state is MyProfileLoaded) {
-        //       return Text(
-        //         state.currentUser['username'],
-        //         style: const TextStyle(fontSize: 18, color: Colors.black),
-        //       );
-        //     }
-        //     return const Text("");
-        //   },
-        // ),
-        // ),
         appBar: AppBar(
           backgroundColor: Colors.white,
           elevation: 0,
@@ -68,7 +52,8 @@ class MyProfileScreen extends StatelessWidget {
                         color: Colors.black87,
                       ),
                       onPressed: () {
-                        context.pushRoute(AccountManagerRoute(userId: userId));
+                        // Fixed: Now goes to SettingsRoute1 (Edit Profile) instead of AccountManagerRoute
+                        context.pushRoute(SettingsRoute1(userId: userId));
                       },
                     ),
                   );
@@ -77,7 +62,27 @@ class MyProfileScreen extends StatelessWidget {
               },
             ),
           ],
-        ), // Padding( // padding: EdgeInsets.only(right: 16), // child: Icon(Icons.settings_outlined, color: Colors.black87), // ), ], ),
+        ),
+        floatingActionButton: BlocBuilder<MyProfileCubit, MyProfileState>(
+          builder: (context, state) {
+            if (state is MyProfileLoaded && state.showOutfits) {
+              return FloatingActionButton(
+                onPressed: () {
+                  // Navigate to OutfitCreatorRoute
+                  context.pushRoute(OutfitCreatorRoute(userId: userId));
+                },
+                backgroundColor: const Color(0xFF7B5247),
+                foregroundColor: Colors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30),
+                ),
+                elevation: 4,
+                child: const Icon(Icons.add, size: 28),
+              );
+            }
+            return const SizedBox();
+          },
+        ),
         body: BlocBuilder<MyProfileCubit, MyProfileState>(
           builder: (context, state) {
             if (state is MyProfileLoading || state is MyProfileInitial) {
@@ -93,122 +98,130 @@ class MyProfileScreen extends StatelessWidget {
             }
 
             if (state is MyProfileLoaded) {
-              return SingleChildScrollView(
-                child: Column(
-                  children: [
-                    const SizedBox(height: 16),
-                    ProfileHeader(currentUser: state.currentUser),
-                    StatsRow(
-                      outfitsCount: state.outfits.length,
-                      followers: state.currentUser['followersCount'],
-                      following: state.currentUser['followingCount'],
-                      userId: userId,
-                    ),
-                    const SizedBox(height: 12),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 24),
-                      child: ElevatedButton(
-                        onPressed: () {
-                          context.pushRoute(SettingsRoute1(userId: userId));
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFFE9D9CF),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          elevation: 0,
-                          minimumSize: const Size(double.infinity, 40),
-                        ),
-                        child: const Text('Edit Profile'),
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 24),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: GestureDetector(
-                              onTap: () => context
-                                  .read<MyProfileCubit>()
-                                  .toggleView(false),
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 10,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: !state.showOutfits
-                                      ? const Color(0xFF7B5247)
-                                      : Colors.transparent,
-                                  borderRadius: BorderRadius.circular(30),
-                                ),
-                                child: Center(
-                                  child: Text(
-                                    'Posts',
-                                    style: TextStyle(
-                                      color: !state.showOutfits
-                                          ? Colors.white
-                                          : Colors.black87,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                          Expanded(
-                            child: GestureDetector(
-                              onTap: () => context
-                                  .read<MyProfileCubit>()
-                                  .toggleView(true),
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 10,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: state.showOutfits
-                                      ? const Color(0xFF7B5247)
-                                      : Colors.transparent,
-                                  borderRadius: BorderRadius.circular(30),
-                                ),
-                                child: Center(
-                                  child: Text(
-                                    'Outfits',
-                                    style: TextStyle(
-                                      color: state.showOutfits
-                                          ? Colors.white
-                                          : Colors.black87,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    if (state.showOutfits)
-                      FilterChips(
-                        categories: state.userOutfitCategories,
-                        selectedCategory: state.selectedCategory,
+              return RefreshIndicator(
+                onRefresh: () async {
+                  await context.read<MyProfileCubit>().loadUserData(userId);
+                },
+                color: const Color(0xFF7B5247),
+                backgroundColor: const Color(0xFFF5ECE7),
+                child: SingleChildScrollView(
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  child: Column(
+                    children: [
+                      const SizedBox(height: 16),
+                      ProfileHeader(currentUser: state.currentUser),
+                      StatsRow(
+                        outfitsCount: state.outfits.length,
+                        followers: state.currentUser['followersCount'],
+                        following: state.currentUser['followingCount'],
                         userId: userId,
-                        onSelect: (category) => context
-                            .read<MyProfileCubit>()
-                            .filterOutfits(category),
                       ),
-                    const SizedBox(height: 16),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: state.showOutfits
-                          ? OutfitsGrid(
-                              outfits: state.filteredOutfits,
-                              userId: userId,
-                            )
-                          : PostsGrid(posts: state.posts),
-                    ),
-                    const SizedBox(height: 80),
-                  ],
+                      const SizedBox(height: 12),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 24),
+                        child: ElevatedButton(
+                          onPressed: () {
+                            context.pushRoute(SettingsRoute1(userId: userId));
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFFE9D9CF),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            elevation: 0,
+                            minimumSize: const Size(double.infinity, 40),
+                          ),
+                          child: const Text('Edit Profile'),
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 24),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: GestureDetector(
+                                onTap: () => context
+                                    .read<MyProfileCubit>()
+                                    .toggleView(false),
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 10,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: !state.showOutfits
+                                        ? const Color(0xFF7B5247)
+                                        : Colors.transparent,
+                                    borderRadius: BorderRadius.circular(30),
+                                  ),
+                                  child: Center(
+                                    child: Text(
+                                      'Posts',
+                                      style: TextStyle(
+                                        color: !state.showOutfits
+                                            ? Colors.white
+                                            : Colors.black87,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            Expanded(
+                              child: GestureDetector(
+                                onTap: () => context
+                                    .read<MyProfileCubit>()
+                                    .toggleView(true),
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 10,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: state.showOutfits
+                                        ? const Color(0xFF7B5247)
+                                        : Colors.transparent,
+                                    borderRadius: BorderRadius.circular(30),
+                                  ),
+                                  child: Center(
+                                    child: Text(
+                                      'Outfits',
+                                      style: TextStyle(
+                                        color: state.showOutfits
+                                            ? Colors.white
+                                            : Colors.black87,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      if (state.showOutfits)
+                        FilterChips(
+                          categories: state.userOutfitCategories,
+                          selectedCategory: state.selectedCategory,
+                          userId: userId,
+                          onSelect: (category) => context
+                              .read<MyProfileCubit>()
+                              .filterOutfits(category),
+                        ),
+                      const SizedBox(height: 16),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        child: state.showOutfits
+                            ? OutfitsGrid(
+                                outfits: state.filteredOutfits,
+                                userId: userId,
+                              )
+                            : PostsGrid(posts: state.posts),
+                      ),
+                      const SizedBox(height: 80),
+                    ],
+                  ),
                 ),
               );
             }
