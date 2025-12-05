@@ -63,9 +63,7 @@ class _EditItemScreenState extends State<EditItemScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => EditItemCubit(),
-      child: Scaffold(
+    return Scaffold(
         backgroundColor: const Color(0xFFF5ECE7),
         body: SafeArea(
           child: Column(
@@ -82,7 +80,6 @@ class _EditItemScreenState extends State<EditItemScreen> {
             ],
           ),
         ),
-      ),
-    );
+      ); 
   }
 }
