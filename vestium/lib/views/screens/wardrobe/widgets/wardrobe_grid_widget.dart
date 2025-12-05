@@ -44,12 +44,12 @@ class WardrobeGridWidget extends StatelessWidget {
     return BlocBuilder<WardrobeCubit, WardrobeState>(
       builder: (context, state) {
         return GridView.builder(
-          padding: const EdgeInsets.all(12), // Reduced from 16
+          padding: const EdgeInsets.all(16), // Reduced from 16
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2,
             crossAxisSpacing: 12, // Reduced from 16
-            mainAxisSpacing: 12, // Reduced from 16
-            childAspectRatio: 0.65, // Adjusted for reduced card size
+            mainAxisSpacing: 13, // Reduced from 16
+            childAspectRatio: 0.46, 
           ),
           itemCount: state.items.length,
           itemBuilder: (_, index) => WardrobeItemCard(item: state.items[index]),
