@@ -4,7 +4,7 @@
 // AutoRouterGenerator
 // **************************************************************************
 
-// ignore_for_file: type=lint, unused_element_parameter
+// ignore_for_file: type=lint
 // coverage:ignore-file
 
 part of 'app_router.dart';
@@ -103,6 +103,7 @@ abstract class _$AppRouter extends RootStackRouter {
         child: FollowersScreen(
           key: args.key,
           userId: args.userId,
+          currentUserId: args.currentUserId,
         ),
       );
     },
@@ -113,6 +114,7 @@ abstract class _$AppRouter extends RootStackRouter {
         child: FollowingScreen(
           key: args.key,
           userId: args.userId,
+          currentUserId: args.currentUserId,
         ),
       );
     },
@@ -384,7 +386,7 @@ abstract class _$AppRouter extends RootStackRouter {
         routeData: routeData,
         child: WardrobeScreen(
           key: args.key,
-          //userId: args.userId,
+          userId: args.userId,
         ),
       );
     },
@@ -663,12 +665,14 @@ class FollowersRoute extends PageRouteInfo<FollowersRouteArgs> {
   FollowersRoute({
     Key? key,
     required int userId,
+    required int currentUserId,
     List<PageRouteInfo>? children,
   }) : super(
           FollowersRoute.name,
           args: FollowersRouteArgs(
             key: key,
             userId: userId,
+            currentUserId: currentUserId,
           ),
           initialChildren: children,
         );
@@ -683,15 +687,18 @@ class FollowersRouteArgs {
   const FollowersRouteArgs({
     this.key,
     required this.userId,
+    required this.currentUserId,
   });
 
   final Key? key;
 
   final int userId;
 
+  final int currentUserId;
+
   @override
   String toString() {
-    return 'FollowersRouteArgs{key: $key, userId: $userId}';
+    return 'FollowersRouteArgs{key: $key, userId: $userId, currentUserId: $currentUserId}';
   }
 }
 
@@ -701,12 +708,14 @@ class FollowingRoute extends PageRouteInfo<FollowingRouteArgs> {
   FollowingRoute({
     Key? key,
     required int userId,
+    required int currentUserId,
     List<PageRouteInfo>? children,
   }) : super(
           FollowingRoute.name,
           args: FollowingRouteArgs(
             key: key,
             userId: userId,
+            currentUserId: currentUserId,
           ),
           initialChildren: children,
         );
@@ -721,15 +730,18 @@ class FollowingRouteArgs {
   const FollowingRouteArgs({
     this.key,
     required this.userId,
+    required this.currentUserId,
   });
 
   final Key? key;
 
   final int userId;
 
+  final int currentUserId;
+
   @override
   String toString() {
-    return 'FollowingRouteArgs{key: $key, userId: $userId}';
+    return 'FollowingRouteArgs{key: $key, userId: $userId, currentUserId: $currentUserId}';
   }
 }
 

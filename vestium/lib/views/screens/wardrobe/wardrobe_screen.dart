@@ -130,7 +130,8 @@ import 'widgets/wardrobe_app_bar.dart';
 
 @RoutePage()
 class WardrobeScreen extends StatefulWidget {
-  const WardrobeScreen({super.key});
+  final int userId; // ADDED userId PARAMETER
+  const WardrobeScreen({super.key, required this.userId});
 
   @override
   State<WardrobeScreen> createState() => _WardrobeScreenState();

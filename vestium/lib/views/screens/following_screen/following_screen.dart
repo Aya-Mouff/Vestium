@@ -12,10 +12,12 @@ import 'widgets/following_item.dart';
 @RoutePage()
 class FollowingScreen extends StatelessWidget {
   final int userId;
+  final int currentUserId;
 
   const FollowingScreen({
     super.key,
     required this.userId,
+    required this.currentUserId,
   });
 
   @override
