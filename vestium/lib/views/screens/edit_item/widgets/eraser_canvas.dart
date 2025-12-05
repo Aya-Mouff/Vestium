@@ -6,7 +6,6 @@ import 'package:image/image.dart' as img;
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as p;
 
-/// Interactive canvas widget for finger-based background erasing
 class EraserCanvas extends StatefulWidget {
   final String imagePath;
   final double eraserSize;
@@ -25,11 +24,11 @@ class EraserCanvas extends StatefulWidget {
 
 class EraserCanvasState extends State<EraserCanvas> {
   final GlobalKey _canvasKey = GlobalKey();
-  
+
   ui.Image? _originalImage;
   img.Image? _editableImage;
-  img.Image? _maskImage; // Separate mask for transparency
-  
+  img.Image? _maskImage;
+
   List<EraserStroke> _strokes = [];
   Offset? _currentPoint;
   bool _isLoading = true;
@@ -49,6 +48,10 @@ class EraserCanvasState extends State<EraserCanvas> {
     }
   }
 
+  // -------------------
+  // LOAD IMAGE
+  // -------------------
+
   Future<void> _loadImage() async {
     setState(() => _isLoading = true);
 
@@ -56,26 +59,16 @@ class EraserCanvasState extends State<EraserCanvas> {
       final file = File(widget.imagePath);
       final bytes = await file.readAsBytes();
 
-      // Load for Flutter rendering
       final codec = await ui.instantiateImageCodec(bytes);
       final frame = await codec.getNextFrame();
       _originalImage = frame.image;
 
-      // Load for editing with image package
-      final decodedImage = img.decodeImage(bytes);
-      if (decodedImage == null) {
-        throw Exception('Failed to decode image');
-      }
-      
-      _editableImage = decodedImage;
-      
-      // Create a separate mask image (all opaque initially)
-      _maskImage = img.Image(
-        decodedImage.width,
-        decodedImage.height,
-      );
-      
-      // Fill mask with white (fully opaque)
+      final decoded = img.decodeImage(bytes);
+      if (decoded == null) throw Exception("Failed to decode image");
+
+      _editableImage = decoded;
+
+      _maskImage = img.Image(decoded.width, decoded.height);
       img.fill(_maskImage!, img.getColor(255, 255, 255, 255));
 
       _imageSize = Size(
@@ -85,80 +78,102 @@ class EraserCanvasState extends State<EraserCanvas> {
 
       setState(() => _isLoading = false);
     } catch (e) {
-      print('Error loading image: $e');
+      print("Error loading image: $e");
       setState(() => _isLoading = false);
     }
   }
+
+  // -------------------
+  // TOUCH HANDLERS
+  // -------------------
 
   void _onPanStart(DragStartDetails details) {
     final renderBox = _canvasKey.currentContext?.findRenderObject() as RenderBox?;
     if (renderBox == null) return;
 
-    final localPosition = renderBox.globalToLocal(details.globalPosition);
+    final local = renderBox.globalToLocal(details.globalPosition);
+
     setState(() {
-      _currentPoint = localPosition;
-      _strokes.add(EraserStroke(
-        points: [localPosition],
-        eraserSize: widget.eraserSize, // Use current eraser size
-      ));
+      _currentPoint = local;
+      _strokes.add(EraserStroke(points: [local], eraserSize: widget.eraserSize));
     });
-    
-    // Apply erasing immediately
-    _applyEraserAtPoint(localPosition);
+
+    _applyEraserAtPoint(local);
   }
 
   void _onPanUpdate(DragUpdateDetails details) {
     final renderBox = _canvasKey.currentContext?.findRenderObject() as RenderBox?;
     if (renderBox == null) return;
 
-    final localPosition = renderBox.globalToLocal(details.globalPosition);
-    
+    final local = renderBox.globalToLocal(details.globalPosition);
+
     setState(() {
-      _currentPoint = localPosition;
-      if (_strokes.isNotEmpty) {
-        _strokes.last.points.add(localPosition);
-      }
+      _currentPoint = local;
+      _strokes.last.points.add(local);
     });
 
-    // Apply erasing in real-time
-    _applyEraserAtPoint(localPosition);
+    _applyEraserAtPoint(local);
   }
 
   void _onPanEnd(DragEndDetails details) {
-    setState(() {
-      _currentPoint = null;
-    });
+    setState(() => _currentPoint = null);
     widget.onImageUpdated?.call();
   }
 
+  // -------------------
+  // FIX: MATCH Touch → Image Pixel
+  // -------------------
+
+  Rect _calculateImageRect(Size canvas, ui.Image image) {
+    final imageAspect = image.width / image.height;
+    final canvasAspect = canvas.width / canvas.height;
+
+    double drawW, drawH;
+
+    if (imageAspect > canvasAspect) {
+      drawW = canvas.width;
+      drawH = drawW / imageAspect;
+    } else {
+      drawH = canvas.height;
+      drawW = drawH * imageAspect;
+    }
+
+    final offsetX = (canvas.width - drawW) / 2;
+    final offsetY = (canvas.height - drawH) / 2;
+
+    return Rect.fromLTWH(offsetX, offsetY, drawW, drawH);
+  }
+
   void _applyEraserAtPoint(Offset point) {
-    if (_maskImage == null || _imageSize == null) return;
+    if (_maskImage == null || _originalImage == null) return;
 
     final renderBox = _canvasKey.currentContext?.findRenderObject() as RenderBox?;
     if (renderBox == null) return;
 
     final canvasSize = renderBox.size;
+    final imageRect = _calculateImageRect(canvasSize, _originalImage!);
 
-    // Convert canvas coordinates to image coordinates
-    final scaleX = _maskImage!.width / canvasSize.width;
-    final scaleY = _maskImage!.height / canvasSize.height;
+    // Touch outside actual image → ignore
+    if (!imageRect.contains(point)) return;
 
-    final imageX = (point.dx * scaleX).round();
-    final imageY = (point.dy * scaleY).round();
-    final radius = (widget.eraserSize * scaleX / 2).round();
+    // Normalize (0 → 1)
+    final dx = (point.dx - imageRect.left) / imageRect.width;
+    final dy = (point.dy - imageRect.top) / imageRect.height;
 
-    // Optimized circle erasing - only update mask
-    final radiusSquared = radius * radius;
+    // Convert to pixel coordinates
+    final imageX = (dx * _maskImage!.width).round();
+    final imageY = (dy * _maskImage!.height).round();
+    final radius = (widget.eraserSize / imageRect.width * _maskImage!.width / 2).round();
+
+    final r2 = radius * radius;
+
     for (int dy = -radius; dy <= radius; dy++) {
-      final dySquared = dy * dy;
+      final dy2 = dy * dy;
       for (int dx = -radius; dx <= radius; dx++) {
-        if (dx * dx + dySquared <= radiusSquared) {
+        if (dx * dx + dy2 <= r2) {
           final x = imageX + dx;
           final y = imageY + dy;
-
-          if (x >= 0 && x < _maskImage!.width && 
-              y >= 0 && y < _maskImage!.height) {
-            // Set mask to transparent (black with alpha 0)
+          if (x >= 0 && x < _maskImage!.width && y >= 0 && y < _maskImage!.height) {
             _maskImage!.setPixelRgba(x, y, 0, 0, 0, 0);
           }
         }
@@ -166,58 +181,41 @@ class EraserCanvasState extends State<EraserCanvas> {
     }
   }
 
+  // -------------------
+  // SAVING
+  // -------------------
+
   Future<String> saveEditedImage() async {
     if (_editableImage == null || _maskImage == null) {
-      throw Exception('No image to save');
+      throw Exception("No image to save");
     }
 
-    try {
-      // Create final image by applying mask to original
-      final finalImage = img.Image(
-        _editableImage!.width,
-        _editableImage!.height,
-      );
+    final finalImage = img.Image(_editableImage!.width, _editableImage!.height);
 
-      // Apply mask to create transparent areas
-      for (int y = 0; y < finalImage.height; y++) {
-        for (int x = 0; x < finalImage.width; x++) {
-          final pixel = _editableImage!.getPixel(x, y);
-          final maskPixel = _maskImage!.getPixel(x, y);
-          final maskAlpha = img.getAlpha(maskPixel);
-          
-          if (maskAlpha == 0) {
-            // Transparent pixel
-            finalImage.setPixelRgba(x, y, 0, 0, 0, 0);
-          } else {
-            // Keep original pixel
-            finalImage.setPixel(x, y, pixel);
-          }
+    for (int y = 0; y < finalImage.height; y++) {
+      for (int x = 0; x < finalImage.width; x++) {
+        final pixel = _editableImage!.getPixel(x, y);
+        final mask = _maskImage!.getPixel(x, y);
+        final alpha = img.getAlpha(mask);
+
+        if (alpha == 0) {
+          finalImage.setPixelRgba(x, y, 0, 0, 0, 0);
+        } else {
+          finalImage.setPixel(x, y, pixel);
         }
       }
-
-      // Encode to PNG to preserve transparency
-      final pngBytes = img.encodePng(finalImage);
-
-      // Save to app directory
-      final appDir = await getApplicationDocumentsDirectory();
-      final imagesDir = Directory(p.join(appDir.path, 'vestium_images'));
-      if (!await imagesDir.exists()) {
-        await imagesDir.create(recursive: true);
-      }
-
-      final timestamp = DateTime.now().millisecondsSinceEpoch;
-      final filename = 'edited_item_$timestamp.png';
-      final newPath = p.join(imagesDir.path, filename);
-
-      final file = File(newPath);
-      await file.writeAsBytes(pngBytes);
-
-      print('✅ Edited image saved: $newPath');
-      return newPath;
-    } catch (e) {
-      print('❌ Error saving edited image: $e');
-      rethrow;
     }
+
+    final png = img.encodePng(finalImage);
+
+    final dir = await getApplicationDocumentsDirectory();
+    final folder = Directory(p.join(dir.path, 'vestium_images'));
+    if (!await folder.exists()) folder.createSync(recursive: true);
+
+    final path = p.join(folder.path, "edited_${DateTime.now().millisecondsSinceEpoch}.png");
+    final file = File(path)..writeAsBytesSync(png);
+
+    return path;
   }
 
   void clearStrokes() {
@@ -225,20 +223,13 @@ class EraserCanvasState extends State<EraserCanvas> {
       _strokes.clear();
       _currentPoint = null;
     });
-    _loadImage(); // Reload original image
+    _loadImage();
   }
 
   @override
   Widget build(BuildContext context) {
     if (_isLoading || _originalImage == null) {
-      return Container(
-        color: const Color(0xFFD7CCC8),
-        child: const Center(
-          child: CircularProgressIndicator(
-            color: Color(0xFF795548),
-          ),
-        ),
-      );
+      return const Center(child: CircularProgressIndicator());
     }
 
     return GestureDetector(
@@ -250,21 +241,15 @@ class EraserCanvasState extends State<EraserCanvas> {
         child: CustomPaint(
           painter: EraserPainter(
             image: _originalImage!,
-            maskImage: _maskImage!,
+            mask: _maskImage!,
             strokes: _strokes,
-            currentPoint: _currentPoint,
-            eraserSize: widget.eraserSize, // Use current size from widget
+            current: _currentPoint,
+            eraserSize: widget.eraserSize,
           ),
           child: Container(),
         ),
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    _originalImage?.dispose();
-    super.dispose();
   }
 }
 
@@ -272,70 +257,84 @@ class EraserStroke {
   final List<Offset> points;
   final double eraserSize;
 
-  EraserStroke({
-    required this.points,
-    required this.eraserSize,
-  });
+  EraserStroke({required this.points, required this.eraserSize});
 }
 
 class EraserPainter extends CustomPainter {
   final ui.Image image;
-  final img.Image maskImage;
+  final img.Image mask;
   final List<EraserStroke> strokes;
-  final Offset? currentPoint;
+  final Offset? current;
   final double eraserSize;
 
   EraserPainter({
     required this.image,
-    required this.maskImage,
+    required this.mask,
     required this.strokes,
-    this.currentPoint,
+    required this.current,
     required this.eraserSize,
   });
 
   @override
   void paint(Canvas canvas, Size size) {
-    // Draw the image with transparency applied
     canvas.saveLayer(null, Paint());
-    
-    // Draw the base image
+
+    // DRAW IMAGE WITH SAME RECT AS LOGIC
+    final rect = _calculateImageRect(size, image);
+
     paintImage(
       canvas: canvas,
-      rect: Rect.fromLTWH(0, 0, size.width, size.height),
+      rect: rect,
       image: image,
       fit: BoxFit.contain,
     );
 
-    // Apply mask using blend mode
     final erasePaint = Paint()
-      ..color = Colors.transparent
       ..blendMode = BlendMode.clear
       ..style = PaintingStyle.fill;
 
-    // Draw all strokes as erased areas
-    for (final stroke in strokes) {
-      for (final point in stroke.points) {
-        canvas.drawCircle(point, stroke.eraserSize / 2, erasePaint);
+    for (final s in strokes) {
+      for (final p in s.points) {
+        canvas.drawCircle(p, s.eraserSize / 2, erasePaint);
       }
     }
 
     canvas.restore();
 
-    // Draw current eraser indicator with current size
-    if (currentPoint != null) {
-      final indicatorPaint = Paint()
-        ..color = const Color(0xFF795548).withOpacity(0.3)
+    if (current != null) {
+      final p = Paint()
+        ..color = Colors.brown.withOpacity(0.3)
         ..style = PaintingStyle.stroke
         ..strokeWidth = 2;
 
-      canvas.drawCircle(currentPoint!, eraserSize / 2, indicatorPaint);
+      canvas.drawCircle(current!, eraserSize / 2, p);
     }
   }
 
   @override
-  bool shouldRepaint(EraserPainter oldDelegate) {
-    return oldDelegate.strokes != strokes ||
-        oldDelegate.currentPoint != currentPoint ||
-        oldDelegate.eraserSize != eraserSize;
+  bool shouldRepaint(covariant EraserPainter old) =>
+      strokes != old.strokes || current != old.current || eraserSize != old.eraserSize;
+}
+
+// Duplicate helper for painter
+Rect _calculateImageRect(Size canvas, ui.Image image) {
+  final imageAspect = image.width / image.height;
+  final canvasAspect = canvas.width / canvas.height;
+
+  double w, h;
+
+  if (imageAspect > canvasAspect) {
+    w = canvas.width;
+    h = w / imageAspect;
+  } else {
+    h = canvas.height;
+    w = h * imageAspect;
   }
+
+  return Rect.fromLTWH(
+    (canvas.width - w) / 2,
+    (canvas.height - h) / 2,
+    w,
+    h,
+  );
 }
