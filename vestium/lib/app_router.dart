@@ -43,7 +43,8 @@ import './views/screens/followers_screen/followers_screen.dart';
 import './views/screens/following_screen/following_screen.dart';
 import './views/screens/new_post_screen/new_post_screen.dart';
 import './views/screens/selected_outfit_screen.dart';
-import './views/screens/wardrobe_screen.dart';
+// import './views/screens/wardrobe_screen.dart';
+import 'package:vestium/views/screens/wardrobe/wardrobe_screen.dart';
 import 'views/screens/set_new_password_screen.dart';
 import 'views/screens/access_denied.dart';
 
@@ -106,7 +107,7 @@ class AppRouter extends _$AppRouter {
     AutoRoute(page: FollowingRoute.page, path: '/following/:userId'),
     AutoRoute(page: NewPostRoute.page, path: '/newpost/:userId'),
     AutoRoute(page: SelectOutfitRoute.page, path: '/selectoutfit'),
-    AutoRoute(page: WardrobeRoute.page, path: '/wardrobe1/:userId'),
+    AutoRoute(page: WardrobeRoute.page),
     AutoRoute(page: AccessDeniedRoute.page, path: '/access-denied'),
   ];
 }
