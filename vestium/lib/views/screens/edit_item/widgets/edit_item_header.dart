@@ -6,8 +6,13 @@ import '../cubit/edit_item_cubit.dart';
 
 class EditItemHeader extends StatelessWidget {
   final String imagePath;
+  final VoidCallback? onSave;
 
-  const EditItemHeader({super.key, required this.imagePath});
+  const EditItemHeader({
+    super.key,
+    required this.imagePath,
+    this.onSave,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +27,7 @@ class EditItemHeader extends StatelessWidget {
         children: [
           _BackButton(imagePath: imagePath),
           const _Title(),
-          _SaveButton(imagePath: imagePath),
+          _SaveButton(imagePath: imagePath, onSave: onSave),
         ],
       ),
     );
@@ -43,7 +48,7 @@ class _BackButton extends StatelessWidget {
             if (state.isRemovingBg) {
               context.read<EditItemCubit>().cancelRemoveBg();
             } else {
-              context.router.maybePop(); // FIXED: Using context.router
+              context.router.maybePop();
             }
           },
           child: const Icon(
@@ -62,26 +67,34 @@ class _Title extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Expanded(
-      child: Text(
-        'Edit Item',
-        textAlign: TextAlign.center,
-        style: TextStyle(
-          fontFamily: 'CormorantGaramond',
-          fontSize: 20,
-          fontWeight: FontWeight.w400,
-          color: Color(0xFF3E2723),
-          letterSpacing: 0.2,
-        ),
-      ),
+    return BlocBuilder<EditItemCubit, EditItemState>(
+      builder: (context, state) {
+        return Expanded(
+          child: Text(
+            state.isRemovingBg ? 'Remove Background' : 'Edit Item',
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+              fontFamily: 'CormorantGaramond',
+              fontSize: 20,
+              fontWeight: FontWeight.w400,
+              color: Color(0xFF3E2723),
+              letterSpacing: 0.2,
+            ),
+          ),
+        );
+      },
     );
   }
 }
 
 class _SaveButton extends StatelessWidget {
   final String imagePath;
+  final VoidCallback? onSave;
 
-  const _SaveButton({required this.imagePath});
+  const _SaveButton({
+    required this.imagePath,
+    this.onSave,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -99,12 +112,27 @@ class _SaveButton extends StatelessWidget {
     );
   }
 
-  void _saveAndContinue(BuildContext context, EditItemState state) {
+  void _saveAndContinue(BuildContext context, EditItemState state) async {
     if (state.isRemovingBg) {
+      // Save the edited image
+      if (onSave != null) {
+        onSave!();
+      }
+      // Exit eraser mode
       context.read<EditItemCubit>().cancelRemoveBg();
+      
+      // Show confirmation
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Background removed successfully'),
+          backgroundColor: Color(0xFF795548),
+          duration: Duration(seconds: 2),
+        ),
+      );
     } else {
-      // FIXED: Using proper router navigation
-      context.router.push(ItemDetailsRoute(imagePath: imagePath));
+      // Proceed to next screen with the current image
+      final finalImagePath = state.editedImagePath ?? imagePath;
+      context.router.push(ItemDetailsRoute(imagePath: finalImagePath));
     }
   }
 }

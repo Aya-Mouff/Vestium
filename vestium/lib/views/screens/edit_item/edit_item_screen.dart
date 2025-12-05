@@ -16,10 +16,40 @@ class EditItemScreen extends StatefulWidget {
   });
 
   @override
-  State<EditItemScreen> createState() => _EditItemPageState();
+  State<EditItemScreen> createState() => _EditItemScreenState();
 }
 
-class _EditItemPageState extends State<EditItemScreen> {
+class _EditItemScreenState extends State<EditItemScreen> {
+  final GlobalKey<PhotoPreviewState> _photoPreviewKey = GlobalKey<PhotoPreviewState>();
+
+  Future<void> _handleSave() async {
+    final cubit = context.read<EditItemCubit>();
+    
+    // Save the edited image
+    final newPath = await _photoPreviewKey.currentState?.saveEditedImage();
+    
+    if (newPath != null) {
+      // Update the cubit with the new image path
+      cubit.setEditedImagePath(newPath);
+      print('✅ Image saved and state updated: $newPath');
+    } else {
+      print('❌ Failed to save image');
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Failed to save edited image'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
+  }
+
+  void _handleReset() {
+    _photoPreviewKey.currentState?.resetImage();
+    context.read<EditItemCubit>().clearEditedImage();
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
@@ -29,9 +59,15 @@ class _EditItemPageState extends State<EditItemScreen> {
         body: SafeArea(
           child: Column(
             children: [
-              EditItemHeader(imagePath: widget.imagePath),
-              PhotoPreview(imagePath: widget.imagePath),
-              const BottomActions(),
+              EditItemHeader(
+                imagePath: widget.imagePath,
+                onSave: _handleSave,
+              ),
+              PhotoPreview(
+                key: _photoPreviewKey,
+                imagePath: widget.imagePath,
+              ),
+              BottomActions(onReset: _handleReset),
             ],
           ),
         ),

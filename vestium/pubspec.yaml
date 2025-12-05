@@ -23,6 +23,7 @@ dependencies:
   image_picker: ^1.0.4
   photo_manager: ^3.8.2
   cached_network_image: ^3.3.0
+  image: ^3.3.0
 
 dev_dependencies:
   flutter_test:

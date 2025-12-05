@@ -3,7 +3,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../cubit/edit_item_cubit.dart';
 
 class RemoveBgControls extends StatelessWidget {
-  const RemoveBgControls({super.key});
+  final VoidCallback? onReset;
+
+  const RemoveBgControls({
+    super.key,
+    this.onReset,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -15,6 +20,8 @@ class RemoveBgControls extends StatelessWidget {
             const SizedBox(height: 12),
             _EraserSizeSlider(eraserSize: state.eraserSize),
             const SizedBox(height: 16),
+            _ActionButtons(onReset: onReset),
+            const SizedBox(height: 12),
             const _InstructionText(),
           ],
         );
@@ -87,13 +94,50 @@ class _EraserSizeSlider extends StatelessWidget {
   }
 }
 
+class _ActionButtons extends StatelessWidget {
+  final VoidCallback? onReset;
+
+  const _ActionButtons({this.onReset});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Expanded(
+          child: OutlinedButton.icon(
+            onPressed: onReset,
+            icon: const Icon(Icons.refresh, size: 18),
+            label: const Text(
+              'Reset',
+              style: TextStyle(
+                fontFamily: 'Inter',
+                fontSize: 14,
+                fontWeight: FontWeight.w200,
+                letterSpacing: 0.2,
+              ),
+            ),
+            style: OutlinedButton.styleFrom(
+              foregroundColor: const Color(0xFF795548),
+              side: const BorderSide(color: Color(0xFF795548)),
+              padding: const EdgeInsets.symmetric(vertical: 12),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
 class _InstructionText extends StatelessWidget {
   const _InstructionText();
 
   @override
   Widget build(BuildContext context) {
     return Text(
-      'Tap to remove background automatically',
+      'Draw on the image to remove background',
       textAlign: TextAlign.center,
       style: TextStyle(
         fontFamily: 'Inter',
