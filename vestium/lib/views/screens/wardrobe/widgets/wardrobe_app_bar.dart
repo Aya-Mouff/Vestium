@@ -77,7 +77,7 @@ class WardrobeAppBar extends StatelessWidget implements PreferredSizeWidget {
   const WardrobeAppBar({super.key});
 
   @override
-  Size get preferredSize => const Size.fromHeight(120); // Height for title + categories
+  Size get preferredSize => const Size.fromHeight(120); 
 
   @override
   Widget build(BuildContext context) {
@@ -96,9 +96,9 @@ class WardrobeAppBar extends StatelessWidget implements PreferredSizeWidget {
         children: [
           // Title section with refresh button
           SizedBox(
-            height: 80, // Fixed height for title area
+            height: 90, // Fixed height for title area
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
+              padding: const EdgeInsets.symmetric(horizontal: 16,),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
