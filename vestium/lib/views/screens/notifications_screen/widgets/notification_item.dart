@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:auto_route/auto_route.dart';
 import '../cubit/notifications_screen_cubit.dart';
 import '../cubit/notifications_screen_state.dart';
-import '../../../../app_router.dart'; // Make sure your routes are imported
+import '../../../../app_router.dart';
+import 'dart:io';
 
 class NotificationItemWidget extends StatelessWidget {
   final NotificationItemData item;
@@ -17,13 +18,63 @@ class NotificationItemWidget extends StatelessWidget {
     required this.currentUserId,
   });
 
+  Widget _buildProfileImage(String imagePath) {
+    if (imagePath.startsWith('assets/')) {
+      return CircleAvatar(
+        radius: 24,
+        backgroundImage: AssetImage(imagePath),
+        onBackgroundImageError: (exception, stackTrace) {
+          // Fallback will be handled by CircleAvatar
+        },
+      );
+    } else {
+      return CircleAvatar(
+        radius: 24,
+        backgroundImage: FileImage(File(imagePath)),
+        onBackgroundImageError: (exception, stackTrace) {
+          // Fallback will be handled by CircleAvatar
+        },
+      );
+    }
+  }
+
+  Widget _buildPostImage(String imagePath) {
+    if (imagePath.startsWith('assets/')) {
+      return Image.asset(
+        imagePath,
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) {
+          return Container(
+            color: const Color(0xFFE9D9CF),
+            child: const Center(
+              child: Icon(Icons.photo, color: Color(0xFF7B5247), size: 20),
+            ),
+          );
+        },
+      );
+    } else {
+      return Image.file(
+        File(imagePath),
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) {
+          return Container(
+            color: const Color(0xFFE9D9CF),
+            child: const Center(
+              child: Icon(Icons.photo, color: Color(0xFF7B5247), size: 20),
+            ),
+          );
+        },
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
       decoration: BoxDecoration(
         color: const Color(0xFFF5ECE7),
-        border: Border(bottom: BorderSide(color: Color(0x30795548), width: 1)),
+        border: Border(bottom: BorderSide(color: const Color(0x30795548), width: 1)),
       ),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -33,14 +84,11 @@ class NotificationItemWidget extends StatelessWidget {
             // Profile Image with gesture
             GestureDetector(
               onTap: () {
-                context.router.push(UserProfileRoute(userId: item.sourceUserId, currentUserId: currentUserId)); // Navigate to user profile
+                context.router.push(UserProfileRoute(userId: item.sourceUserId, currentUserId: currentUserId));
               },
               child: Stack(
                 children: [
-                  CircleAvatar(
-                    radius: 24,
-                    backgroundImage: AssetImage(item.sourceProfileImage),
-                  ),
+                  _buildProfileImage(item.sourceProfileImage),
                   Positioned(
                     right: 0,
                     bottom: 0,
@@ -80,7 +128,7 @@ class NotificationItemWidget extends StatelessWidget {
                             },
                         ),
                         TextSpan(
-                          text: cubit.getNotificationText(item.type),
+                          text: cubit.getNotificationText(item.type, commentText: item.commentText),
                           style: const TextStyle(
                               fontFamily: 'Inter',
                               fontWeight: FontWeight.w400,
@@ -102,16 +150,23 @@ class NotificationItemWidget extends StatelessWidget {
               ),
             ),
             if (item.sourcePostId != null && item.sourcePostId!.isNotEmpty)
-              Container(
-                width: 50,
-                height: 50,
-                decoration:
-                    BoxDecoration(borderRadius: BorderRadius.circular(8), color: Colors.grey.shade300),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(8),
-                  child: Image.asset(cubit.getPostImage(item.sourcePostId),
-                      fit: BoxFit.cover),
-                ),
+              FutureBuilder<String>(
+                future: cubit.getPostImage(item.sourcePostId),
+                builder: (context, snapshot) {
+                  final imagePath = snapshot.data ?? 'assets/images/placeholder_post.png';
+                  return Container(
+                    width: 50,
+                    height: 50,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8),
+                      color: const Color(0xFFE9D9CF),
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(8),
+                      child: _buildPostImage(imagePath),
+                    ),
+                  );
+                },
               ),
           ],
         ),
