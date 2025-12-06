@@ -60,7 +60,6 @@ class AppRouter extends _$AppRouter {
     AutoRoute(page: MyPostsRoute.page, path: '/my_posts/:postId'),
     AutoRoute(page: NotificationsRoute.page, path: '/notifications/:userId'),
     AutoRoute(page: CommentsRoute.page, path: '/comments/:postId/:userId'),
-    AutoRoute(page: MyPostsRoute.page, path: '/my_posts'),
     AutoRoute(
       page: PostsDetailsRoute.page,
       path: '/posts_details/:postId/:userId/:currentUserId',

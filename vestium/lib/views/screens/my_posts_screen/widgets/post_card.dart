@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:auto_route/auto_route.dart';
-import '../../../../app_router.dart';
+import '../../../../databases/services/user_profile_service.dart';
+import '../../../../app_router.dart'; // Added for navigation
+import 'dart:io';
 
 class PostCard extends StatelessWidget {
   final Map<String, dynamic> post;
   final bool isLiked;
   final VoidCallback onLikePressed;
-  final VoidCallback onCommentPressed;
   final VoidCallback onDeletePressed;
 
   const PostCard({
@@ -14,13 +15,14 @@ class PostCard extends StatelessWidget {
     required this.post,
     required this.isLiked,
     required this.onLikePressed,
-    required this.onCommentPressed,
     required this.onDeletePressed,
   });
 
   @override
   Widget build(BuildContext context) {
+    // Use ValueKey to help Flutter identify this widget
     return Container(
+      key: ValueKey('post_${post['id']}'),
       margin: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
       decoration: BoxDecoration(
         color: Colors.white,
@@ -38,7 +40,7 @@ class PostCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _buildUserHeader(),
-          _buildPostImage(),
+          _buildPostImage(context),
           _buildPostDetails(context),
         ],
       ),
@@ -46,40 +48,62 @@ class PostCard extends StatelessWidget {
   }
 
   Widget _buildUserHeader() {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Row(
-        children: [
-          CircleAvatar(
-            radius: 18,
-            backgroundImage: AssetImage(post['profileImage']),
+    return FutureBuilder<String?>(
+      future: UserProfileService.getUserProfileImagePath(
+          int.parse(post['userId'].toString())),
+      builder: (context, snapshot) {
+        String profileImagePath = snapshot.data ?? 'assets/images/icons/person.jpg';
+        bool isAsset = profileImagePath.startsWith('assets/');
+
+        return Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Row(
+            children: [
+              CircleAvatar(
+                radius: 18,
+                backgroundColor: Colors.grey.shade200,
+                backgroundImage: isAsset
+                    ? AssetImage(profileImagePath) as ImageProvider
+                    : FileImage(File(profileImagePath)),
+              ),
+              const SizedBox(width: 12),
+              Text(
+                post['username'] ?? 'User',
+                style: const TextStyle(
+                  fontFamily: 'CormorantGaramond',
+                  fontWeight: FontWeight.bold,
+                  fontSize: 14,
+                ),
+              ),
+            ],
           ),
-          const SizedBox(width: 12),
-          Text(
-            post['username'],
-            style: const TextStyle(
-              fontFamily: 'CormorantGaramond',
-              fontWeight: FontWeight.bold,
-              fontSize: 14,
-            ),
-          ),
-        ],
-      ),
+        );
+      },
     );
   }
 
-  Widget _buildPostImage() {
+  Widget _buildPostImage(BuildContext context) {
+    final imagePath = post['imageUrl'] ?? 'assets/default_post.png';
+    final isAsset = imagePath.startsWith('assets/');
+
     return ClipRRect(
       borderRadius: const BorderRadius.only(
         topLeft: Radius.circular(0),
         topRight: Radius.circular(0),
       ),
-      child: Image.asset(
-        post['imageUrl'],
-        width: double.infinity,
-        height: 400,
-        fit: BoxFit.cover,
-      ),
+      child: isAsset
+          ? Image.asset(
+              imagePath,
+              width: double.infinity,
+              height: 400,
+              fit: BoxFit.cover,
+            )
+          : Image.file(
+              File(imagePath),
+              width: double.infinity,
+              height: 400,
+              fit: BoxFit.cover,
+            ),
     );
   }
 
@@ -89,21 +113,24 @@ class PostCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildActionButtons(context, int.parse(post['userId'].toString())),
+          _buildActionButtons(context),
           const SizedBox(height: 8),
           _buildLikesCount(),
           const SizedBox(height: 4),
-          _buildCaption(),
+          post['caption'] != null && post['caption'].toString().isNotEmpty
+              ? _buildCaption()
+              : const SizedBox.shrink(),
           const SizedBox(height: 8),
-          _buildCommentsCount(),
+          _buildCommentsCount(context),
         ],
       ),
     );
   }
 
-  Widget _buildActionButtons(BuildContext context, int userId) {
+  Widget _buildActionButtons(BuildContext context) {
     return Row(
       children: [
+        // Like button with immediate visual feedback
         IconButton(
           icon: Icon(
             isLiked ? Icons.favorite : Icons.favorite_border,
@@ -115,12 +142,7 @@ class PostCard extends StatelessWidget {
         const SizedBox(width: 8),
         IconButton(
           icon: const Icon(Icons.mode_comment_outlined, size: 24),
-          onPressed: (){
-            context.router.push(CommentsRoute(
-              postId: int.parse(post['id'].toString()),
-              userId: userId,
-              ));
-          },
+          onPressed: () => _navigateToComments(context),
         ),
         const Spacer(),
         IconButton(
@@ -133,7 +155,7 @@ class PostCard extends StatelessWidget {
 
   Widget _buildLikesCount() {
     return Text(
-      '${post['likesCount']} likes',
+      '${post['likesCount'] ?? 0} likes',
       style: const TextStyle(
         fontFamily: 'Inter',
         fontWeight: FontWeight.w600,
@@ -147,16 +169,7 @@ class PostCard extends StatelessWidget {
       text: TextSpan(
         children: [
           TextSpan(
-            text: '${post['username']} ',
-            style: const TextStyle(
-              fontFamily: 'Inter',
-              fontWeight: FontWeight.w600,
-              fontSize: 13,
-              color: Colors.black,
-            ),
-          ),
-          TextSpan(
-            text: post['caption'],
+            text: post['caption'] ?? '',
             style: const TextStyle(
               fontFamily: 'Inter',
               fontWeight: FontWeight.w400,
@@ -169,14 +182,33 @@ class PostCard extends StatelessWidget {
     );
   }
 
-  Widget _buildCommentsCount() {
-    return Text(
-      'View all ${post['commentsCount']} comments',
-      style: TextStyle(
-        fontFamily: 'Inter',
-        fontSize: 13,
-        color: Colors.grey.shade600,
+  Widget _buildCommentsCount(BuildContext context) {
+    final commentsCount = post['commentsCount'] ?? 0;
+    
+    return GestureDetector(
+      onTap: () => _navigateToComments(context),
+      child: Text(
+        'View all $commentsCount comments',
+        style: TextStyle(
+          fontFamily: 'Inter',
+          fontSize: 13,
+          color: Colors.grey.shade600,
+        ),
       ),
     );
+  }
+
+  void _navigateToComments(BuildContext context) {
+    final postId = post['postId'] ?? int.tryParse(post['id'].toString());
+    final userId = post['userId'];
+    
+    if (postId != null && userId != null) {
+      context.router.push(
+        CommentsRoute(
+          postId: postId is int ? postId : int.parse(postId.toString()),
+          userId: userId is int ? userId : int.parse(userId.toString()),
+        ),
+      );
+    }
   }
 }

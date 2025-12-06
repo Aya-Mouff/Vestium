@@ -1,8 +1,17 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'my_posts_screen_state.dart';
-import '../../../../data/dummy/dummy-data-loader.dart';
+import '../../../../repo/post_repo.dart';
+import '../../../../repo/like_repo.dart';
+import '../../../../repo/comment_repo.dart'; // Added for comments count
+import '../../../../databases/db_models.dart';
+import '../../../../databases/services/current_user_service.dart';
+import '../../../../databases/services/post_image_service.dart';
 
 class MyPostsScreenCubit extends Cubit<MyPostsScreenState> {
+  final PostRepo _postRepo = PostRepo();
+  final LikeRepo _likeRepo = LikeRepo();
+  final CommentRepo _commentRepo = CommentRepo(); // Added
+  
   MyPostsScreenCubit() : super(MyPostsInitial());
 
   // Load all posts from a specific user based on the clicked post
@@ -10,29 +19,27 @@ class MyPostsScreenCubit extends Cubit<MyPostsScreenState> {
     emit(MyPostsLoading());
 
     try {
-      final data = await DummyDataLoader.loadDummyData();
-      final allPosts = List<Map<String, dynamic>>.from(data['posts']);
-
-      final clickedPostIndex = allPosts.indexWhere((post) => post['id'] == postId);
-
-      if (clickedPostIndex == -1) {
-        emit(const MyPostsError('Post not found'));
+      // Get the current user ID
+      final currentUserId = CurrentUserService.currentUserId;
+      if (currentUserId == null) {
+        emit(const MyPostsError('User not logged in'));
         return;
       }
 
-      final clickedPost = allPosts[clickedPostIndex];
-      final username = clickedPost['username'];
+      // Get user's posts (current user's posts)
+      final userPosts = await _postRepo.getByUserId(currentUserId);
+      
+      // Convert PostModel list to format needed by UI
+      final formattedPosts = await _formatPostsForUI(userPosts);
+      
+      // Find focused post index
+      final focusedIndex = formattedPosts.indexWhere((post) => post['id'] == postId);
 
-      final userPosts = allPosts
-          .where((post) => post['username'] == username)
-          .toList();
-
-      final focusedIndex = userPosts.indexWhere((post) => post['id'] == postId);
-
-      final likedPostIds = await _loadLikedPostsFromDatabase();
+      // Load liked posts
+      final likedPostIds = await _loadLikedPostsFromDatabase(currentUserId);
 
       emit(MyPostsLoaded(
-        posts: userPosts,
+        posts: formattedPosts,
         focusedPostIndex: focusedIndex,
         likedPostIds: likedPostIds,
       ));
@@ -41,47 +48,60 @@ class MyPostsScreenCubit extends Cubit<MyPostsScreenState> {
     }
   }
 
-  // Toggle like status for a post
+  // Toggle like status for a post - Optimized version
   Future<void> toggleLike(String postId) async {
     final currentState = state;
     if (currentState is! MyPostsLoaded) return;
 
+    final currentUserId = CurrentUserService.currentUserId;
+    if (currentUserId == null) return;
+
+    final postIdInt = int.parse(postId);
     final isCurrentlyLiked = currentState.likedPostIds.contains(postId);
     
-    // Optimistically update UI
-    final updatedLikedPosts = Set<String>.from(currentState.likedPostIds);
+    // Get the post index
     final posts = List<Map<String, dynamic>>.from(currentState.posts);
-
     final postIndex = posts.indexWhere((post) => post['id'] == postId);
+    
     if (postIndex == -1) return;
-
-    final post = Map<String, dynamic>.from(posts[postIndex]);
-
+    
+    // Create updated posts list with only the changed post
+    final updatedPosts = List<Map<String, dynamic>>.from(posts);
+    final updatedPost = Map<String, dynamic>.from(updatedPosts[postIndex]);
+    
+    // Update liked posts set
+    final updatedLikedPosts = Set<String>.from(currentState.likedPostIds);
+    
     if (isCurrentlyLiked) {
+      // Unlike
+      updatedPost['likesCount'] = (updatedPost['likesCount'] as int) - 1;
       updatedLikedPosts.remove(postId);
-      post['likesCount'] = (post['likesCount'] as int) - 1;
     } else {
+      // Like
+      updatedPost['likesCount'] = (updatedPost['likesCount'] as int) + 1;
       updatedLikedPosts.add(postId);
-      post['likesCount'] = (post['likesCount'] as int) + 1;
     }
-
-    posts[postIndex] = post;
-
-    emit(currentState.copyWith(
-      posts: posts,
+    
+    // Update only the specific post
+    updatedPosts[postIndex] = updatedPost;
+    
+    // Emit new state with updated posts
+    emit(MyPostsLoaded(
+      posts: updatedPosts,
+      focusedPostIndex: currentState.focusedPostIndex,
       likedPostIds: updatedLikedPosts,
     ));
-
-    // Persist to database
+    
+    // Update database in background
     try {
       if (isCurrentlyLiked) {
-        await _unlikePostInDatabase(postId);
+        await _unlikePostInDatabase(currentUserId, postIdInt);
       } else {
-        await _likePostInDatabase(postId);
+        await _likePostInDatabase(currentUserId, postIdInt);
       }
     } catch (e) {
-      // Revert on error
-      emit(currentState);
+      print('Error updating like in database: $e');
+      // Optionally show error toast, but don't revert UI
     }
   }
 
@@ -91,8 +111,13 @@ class MyPostsScreenCubit extends Cubit<MyPostsScreenState> {
     if (currentState is! MyPostsLoaded) return;
 
     try {
-      await _deletePostFromDatabase(postId);
+      // Delete from database
+      await _deletePostFromDatabase(int.parse(postId));
 
+      // Delete image file
+      await PostImageService.deletePostImageById(int.parse(postId));
+
+      // Update UI state
       final updatedPosts = currentState.posts
           .where((post) => post['id'] != postId)
           .toList();
@@ -116,12 +141,6 @@ class MyPostsScreenCubit extends Cubit<MyPostsScreenState> {
       }
     } catch (e) {
       emit(MyPostsError('Failed to delete post: $e'));
-      // Restore previous state after showing error
-      Future.delayed(const Duration(seconds: 2), () {
-        if (state is MyPostsError) {
-          emit(currentState);
-        }
-      });
     }
   }
 
@@ -146,30 +165,117 @@ class MyPostsScreenCubit extends Cubit<MyPostsScreenState> {
     return '/comments/$postId';
   }
 
-  // --- Database Operations (To be replaced with actual implementations) ---
+  // --- Database Operations ---
 
-  Future<Set<String>> _loadLikedPostsFromDatabase() async {
-    // TODO: Replace with actual database query
-    // Example: return await database.getLikedPostIds(currentUserId);
-    await Future.delayed(const Duration(milliseconds: 100));
-    return {};
+  Future<Set<String>> _loadLikedPostsFromDatabase(int userId) async {
+    try {
+      final allLikes = await _likeRepo.getAll();
+      final userLikes = allLikes.where((like) => like.userId == userId);
+      return Set<String>.from(userLikes.map((like) => like.postId.toString()));
+    } catch (e) {
+      print('Error loading liked posts: $e');
+      return {};
+    }
   }
 
-  Future<void> _likePostInDatabase(String postId) async {
-    // TODO: Replace with actual database call
-    // Example: await database.likePost(currentUserId, postId);
-    await Future.delayed(const Duration(milliseconds: 100));
+  Future<void> _likePostInDatabase(int userId, int postId) async {
+    try {
+      final like = LikeModel(
+        postId: postId,
+        userId: userId,
+        date: DateTime.now().toIso8601String(),
+      );
+      await _likeRepo.insert(like);
+    } catch (e) {
+      print('Error liking post: $e');
+      throw e;
+    }
   }
 
-  Future<void> _unlikePostInDatabase(String postId) async {
-    // TODO: Replace with actual database call
-    // Example: await database.unlikePost(currentUserId, postId);
-    await Future.delayed(const Duration(milliseconds: 100));
+  Future<void> _unlikePostInDatabase(int userId, int postId) async {
+    try {
+      // Get the like ID first
+      final allLikes = await _likeRepo.getAll();
+      final userLike = allLikes.firstWhere(
+        (like) => like.userId == userId && like.postId == postId,
+        orElse: () => LikeModel(),
+      );
+      
+      if (userLike.likeId != null) {
+        await _likeRepo.delete(userLike.likeId!);
+      }
+    } catch (e) {
+      print('Error unliking post: $e');
+      throw e;
+    }
   }
 
-  Future<void> _deletePostFromDatabase(String postId) async {
-    // TODO: Replace with actual database call
-    // Example: await database.deletePost(postId);
-    await Future.delayed(const Duration(milliseconds: 500));
+  Future<void> _deletePostFromDatabase(int postId) async {
+    try {
+      await _postRepo.delete(postId);
+    } catch (e) {
+      print('Error deleting post: $e');
+      throw e;
+    }
   }
-}
+
+  Future<PostModel?> _getPostById(int postId) async {
+    try {
+      final posts = await _postRepo.getByPostId(postId);
+      return posts.isNotEmpty ? posts.first : null;
+    } catch (e) {
+      print('Error getting post by ID: $e');
+      return null;
+    }
+  }
+
+  // Get comments count for a post
+  Future<int> _getCommentsCount(int postId) async {
+    try {
+      final comments = await _commentRepo.getByPostId(postId);
+      return comments.length;
+    } catch (e) {
+      print('Error getting comments count: $e');
+      return 0;
+    }
+  }
+
+  Future<List<Map<String, dynamic>>> _formatPostsForUI(List<PostModel> posts) async {
+    final formattedPosts = <Map<String, dynamic>>[];
+    
+    for (final post in posts) {
+      // Get likes count
+      final allLikes = await _likeRepo.getAll();
+      final postLikes = allLikes.where((like) => like.postId == post.postId);
+      final likesCount = postLikes.length;
+      
+      // Get comments count - FIXED
+      final commentsCount = await _getCommentsCount(post.postId!);
+      
+      // Get image path
+      final imagePath = await PostImageService.getPostImagePath(post.postId!);
+      
+      // Get current user info
+      final currentUser = CurrentUserService.currentUser;
+      
+      // Format post for UI
+      formattedPosts.add({
+        'id': post.postId.toString(),
+        'postId': post.postId, // Add actual postId for navigation
+        'userId': post.userId ?? currentUser?.userId ?? 1,
+        'username': currentUser?.username ?? 'User',
+        'profileImage': currentUser?.pfp ?? 'assets/images/icons/person.jpg',
+        'imageUrl': imagePath ?? 'assets/default_post.png',
+        'caption': post.caption ?? '',
+        'likesCount': likesCount,
+        'commentsCount': commentsCount,
+        'date': post.date ?? DateTime.now().toIso8601String(),
+      });
+    }
+    
+    // Sort by date (newest first)
+    formattedPosts.sort((a, b) => (b['date'] as String).compareTo(a['date'] as String));
+    
+    return formattedPosts;
+  }
+}   

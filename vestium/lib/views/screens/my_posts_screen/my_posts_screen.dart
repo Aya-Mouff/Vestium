@@ -200,9 +200,6 @@ class _MyPostsScreenContentState extends State<_MyPostsScreenContent> {
           post: post,
           isLiked: isLiked,
           onLikePressed: () => cubit.toggleLike(postId),
-          onCommentPressed: () => context.router.pushNamed(
-            cubit.getCommentsRoute(postId),
-          ),
           onDeletePressed: () => _showDeleteDialog(context, postId, cubit),
         );
       },
@@ -219,12 +216,6 @@ class _MyPostsScreenContentState extends State<_MyPostsScreenContent> {
       onDeletePressed: () {
         Navigator.of(context).pop();
         cubit.deletePost(postId);
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Post deleted'),
-            duration: Duration(seconds: 2),
-          ),
-        );
       },
       onCancelPressed: () => Navigator.of(context).pop(),
     );
