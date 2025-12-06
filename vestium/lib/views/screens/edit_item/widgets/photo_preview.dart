@@ -63,18 +63,13 @@ class PhotoPreviewState extends State<PhotoPreview> {
       final newPath = await _eraserCanvasKey.currentState!.saveEditedImage();
       print('💾 Saved image path: $newPath');
       
-      if (newPath != null) {
-        setState(() {
-          _currentImagePath = newPath;
-          _lastSavedPath = newPath;
-        });
-        print('✅ Edited image applied: $newPath');
-        return newPath;
-      } else {
-        print('❌ saveEditedImage returned null');
-        return null;
-      }
-    } catch (e) {
+      setState(() {
+        _currentImagePath = newPath;
+        _lastSavedPath = newPath;
+      });
+      print('✅ Edited image applied: $newPath');
+      return newPath;
+        } catch (e) {
       print('❌ Error in confirmEdits: $e');
       return null;
     }

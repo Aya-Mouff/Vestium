@@ -9,7 +9,6 @@ import 'cubit/new_post_state.dart';
 import 'widgets/new_post_app_bar.dart';
 import 'widgets/outfit_picker.dart';
 import 'widgets/caption_field.dart';
-import 'widgets/public_toggle.dart';
 
 @RoutePage()
 class NewPostScreen extends StatelessWidget {
@@ -51,17 +50,21 @@ class _NewPostViewState extends State<_NewPostView> {
     super.dispose();
   }
 
-  Future<void> _selectOutfit(BuildContext context) async {
-    final cubit = context.read<NewPostCubit>();
+Future _selectOutfit(BuildContext context) async {
+  final cubit = context.read<NewPostCubit>();
 
-    final result = await context.router.push(
-      SelectOutfitRoute(userId: cubit.userId),
-    );
+  final result = await context.router.push(
+    SelectOutfitRoute(userId: cubit.userId),
+  );
 
-    if (result != null && result is Map<String, dynamic>) {
-      cubit.setSelectedOutfit(result);
-    }
+  if (result != null && result is Map) {
+    final typed = Map<String, dynamic>.from(result);  // 👈 cast here
+    print('✅ NewPost got outfit: $typed');
+    cubit.setSelectedOutfit(typed);
   }
+}
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -102,11 +105,7 @@ class _NewPostViewState extends State<_NewPostView> {
                     controller: _captionController,
                     onChanged: cubit.setCaption,
                   ),
-                  const SizedBox(height: 20),
-                  PublicToggle(
-                    isPublic: state.isPublic,
-                    onChanged: cubit.togglePublic,
-                  ),
+                  
                 ],
               ),
             ),

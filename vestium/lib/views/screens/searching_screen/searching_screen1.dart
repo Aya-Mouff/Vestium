@@ -37,7 +37,7 @@ class SearchScreen extends StatelessWidget {
 class _SearchView extends StatefulWidget {
   final int userId;
 
-  const _SearchView({super.key, required this.userId});
+  const _SearchView({required this.userId});
 
   @override
   State<_SearchView> createState() => _SearchViewState();

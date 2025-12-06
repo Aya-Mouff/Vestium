@@ -493,10 +493,10 @@ import 'dart:io';
 // import 'dart:ui';
 import 'cubit/create_outfit_cubit.dart';
 import 'cubit/create_outfit_state.dart';
+import 'package:vestium/databases/services/outfit_creation_service.dart';
 //import 'widgets/save_outfit_dialog.dart';
 import '../../../databases/db_models.dart';
 import '../../../app_router.dart';
-import 'package:vestium/databases/services/outfit_creation_service.dart';
 
 /// Main Outfit Creator Screen
 @RoutePage()
@@ -841,7 +841,7 @@ class _OutfitCreatorScreenState extends State<OutfitCreatorScreen> {
                                 context
                                     .read<CreateOutfitCubit>()
                                     .updateItemPosition(
-                                      placedItem.itemId!,
+                                      placedItem.itemId,
                                       Offset(newX, newY),
                                     );
                               }
@@ -862,7 +862,7 @@ class _OutfitCreatorScreenState extends State<OutfitCreatorScreen> {
                                 context
                                     .read<CreateOutfitCubit>()
                                     .updateItemPosition(
-                                      placedItem.itemId!,
+                                      placedItem.itemId,
                                       Offset(newX, newY),
                                     );
                               },

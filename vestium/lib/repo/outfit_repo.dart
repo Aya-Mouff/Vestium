@@ -23,14 +23,24 @@ class OutfitRepo {
     return OutfitModel.fromMap(res.first);
   }
 
-  Future<bool> insert(OutfitModel outfit) async {
+  // Future<bool> insert(OutfitModel outfit) async {
+  //   final db = await DBHelper.getDatabase();
+  //   await db.insert(
+  //     'outfits',
+  //     outfit.toMap(),
+  //     conflictAlgorithm: ConflictAlgorithm.replace,
+  //   );
+  //   return true;
+  // }
+  Future<int> insert(OutfitModel outfit) async {
     final db = await DBHelper.getDatabase();
-    await db.insert(
+    final id = await db.insert(
       'outfits',
       outfit.toMap(),
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
-    return true;
+    print('✅ Outfit inserted with id: $id');
+    return id;
   }
 
   Future<bool> update(int id, OutfitModel outfit) async {

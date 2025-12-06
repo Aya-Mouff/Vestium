@@ -2,7 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:vestium/views/screens/account_manager.dart';
 import 'package:vestium/views/screens/check_email_screen/check_email_page.dart';
-import 'package:vestium/views/screens/create_outfit.dart';
+import 'package:vestium/views/screens/create_outfit/create_outfit_screen.dart';
 import 'package:vestium/views/screens/reset_password_screen/reset_password_page.dart';
 import 'package:vestium/views/screens/signup_screen/signup_page.dart';
 // import 'package:vestium/views/screens/outfit_details_screen.dart';
@@ -42,7 +42,7 @@ import './views/screens/searching_screen/searching_screen1.dart';
 import './views/screens/followers_screen/followers_screen.dart';
 import './views/screens/following_screen/following_screen.dart';
 import './views/screens/new_post_screen/new_post_screen.dart';
-import './views/screens/selected_outfit_screen.dart';
+import './views/screens/select_outfit/select_outfit_screen.dart';
 // import './views/screens/wardrobe_screen.dart';
 import 'package:vestium/views/screens/wardrobe/wardrobe_screen.dart';
 import 'views/screens/set_new_password_screen.dart';
@@ -61,7 +61,6 @@ class AppRouter extends _$AppRouter {
     AutoRoute(page: MyPostsRoute.page, path: '/my_posts/:postId'),
     AutoRoute(page: NotificationsRoute.page, path: '/notifications/:userId'),
     AutoRoute(page: CommentsRoute.page, path: '/comments/:postId/:userId'),
-    AutoRoute(page: MyPostsRoute.page, path: '/my_posts'),
     AutoRoute(
       page: PostsDetailsRoute.page,
       path: '/posts_details/:postId/:userId/:currentUserId',
@@ -93,18 +92,27 @@ class AppRouter extends _$AppRouter {
     AutoRoute(page: OnboardingRoute.page, path: '/onboarding1'),
     AutoRoute(page: OnboardingRoute2.page, path: '/onboarding2'),
     AutoRoute(page: OnboardingRoute3.page, path: '/onboarding3'),
-    AutoRoute(page: ManageCategoriesRoute.page, path: '/manage_categories1/:userId'),
+    AutoRoute(
+      page: ManageCategoriesRoute.page,
+      path: '/manage_categories1/:userId',
+    ),
     AutoRoute(
       page: ManageCategoriesRoute2.page,
       path: '/manage_categories2/:userId',
     ),
     AutoRoute(page: SettingsRoute1.page, path: '/settings1/:userId'),
     AutoRoute(page: SearchRoute.page, path: '/search1/:userId'),
-    AutoRoute(page: FollowersRoute.page, path: '/followers1/:userId/:currentUserId'),
-    AutoRoute(page: FollowingRoute.page, path: '/following1/:userId/:currentUserId'),
+    AutoRoute(
+      page: FollowersRoute.page,
+      path: '/followers1/:userId/:currentUserId',
+    ),
+    AutoRoute(
+      page: FollowingRoute.page,
+      path: '/following1/:userId/:currentUserId',
+    ),
     AutoRoute(page: NewPostRoute.page, path: '/newpost/:userId'),
     AutoRoute(page: SelectOutfitRoute.page, path: '/selectoutfit/:userId'),
-    AutoRoute(page: SelectItemRoute.page, ),
+    AutoRoute(page: SelectItemRoute.page),
     AutoRoute(page: NewPostRoute.page, path: '/newpost/:userId'),
     AutoRoute(page: SelectOutfitRoute.page, path: '/selectoutfit'),
     AutoRoute(page: WardrobeRoute.page, path: '/wardrobe/:userId'),

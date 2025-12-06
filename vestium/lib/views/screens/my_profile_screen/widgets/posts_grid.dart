@@ -3,6 +3,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:vestium/app_router.dart';
 import 'dart:io';
 
+
 class PostsGrid extends StatelessWidget {
   final List<dynamic> posts;
   const PostsGrid({super.key, required this.posts});
@@ -34,9 +35,9 @@ class PostsGrid extends StatelessWidget {
       itemBuilder: (context, index) {
         final post = posts[index];
         final imagePath = post['imageUrl'];
-        
+         
         return GestureDetector(
-          onTap: () => context.pushRoute(MyPostsRoute(postId: post['id'])),
+          onTap: () => context.router.push(MyPostsRoute(postId: post['id'].toString())),
           child: ClipRRect(
             borderRadius: BorderRadius.circular(16),
             child: _buildPostImage(imagePath),
