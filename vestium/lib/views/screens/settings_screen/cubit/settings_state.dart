@@ -11,6 +11,7 @@ class SettingsState extends Equatable {
   final bool emailNotifications;
   final String? errorMessage;
   final bool saveSuccess;
+  final bool hasImageChanged; // Track if image was changed in edit mode
 
   const SettingsState({
     this.isLoading = false,
@@ -23,6 +24,7 @@ class SettingsState extends Equatable {
     this.emailNotifications = true,
     this.errorMessage,
     this.saveSuccess = false,
+    this.hasImageChanged = false,
   });
 
   SettingsState copyWith({
@@ -36,6 +38,7 @@ class SettingsState extends Equatable {
     bool? emailNotifications,
     String? errorMessage,
     bool? saveSuccess,
+    bool? hasImageChanged,
   }) {
     return SettingsState(
       isLoading: isLoading ?? this.isLoading,
@@ -48,6 +51,7 @@ class SettingsState extends Equatable {
       emailNotifications: emailNotifications ?? this.emailNotifications,
       errorMessage: errorMessage,
       saveSuccess: saveSuccess ?? this.saveSuccess,
+      hasImageChanged: hasImageChanged ?? this.hasImageChanged,
     );
   }
 
@@ -63,5 +67,6 @@ class SettingsState extends Equatable {
         emailNotifications,
         errorMessage,
         saveSuccess,
+        hasImageChanged,
       ];
 }

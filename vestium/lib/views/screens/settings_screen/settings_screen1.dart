@@ -44,7 +44,7 @@ class _SettingsScreen1State extends State<SettingsScreen1> {
   }
 
   void _syncControllers(SettingsState state) {
-    if (!state.isEditing) return;
+    // Always sync when entering edit mode or when values change
     _nameController.text = state.displayName;
     _usernameController.text = state.displayUsername;
     _bioController.text = state.displayBio;
@@ -52,15 +52,18 @@ class _SettingsScreen1State extends State<SettingsScreen1> {
 
   @override
   Widget build(BuildContext context) {
-    // UserRepo is provided higher in the tree via RepositoryProvider
     final userRepo = context.read<UserRepo>();
 
     return BlocProvider(
       create: (_) => SettingsCubit(userRepo, userId: widget.userId),
       child: BlocConsumer<SettingsCubit, SettingsState>(
         listener: (context, state) {
+          // Sync controllers whenever we enter edit mode
           if (state.isEditing) {
-            _syncControllers(state);
+            // Use addPostFrameCallback to ensure controllers are synced after build
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              _syncControllers(state);
+            });
           }
 
           if (state.errorMessage != null && state.errorMessage!.isNotEmpty) {
@@ -120,6 +123,7 @@ class _SettingsScreen1State extends State<SettingsScreen1> {
                                       _bioController.text.trim(),
                                     );
                                   },
+                                  onImagePick: cubit.pickProfileImage,
                                 )
                               : ProfileViewMode(
                                   displayName: state.displayName,
@@ -138,7 +142,7 @@ class _SettingsScreen1State extends State<SettingsScreen1> {
                           onTap: () {
                             context.router.push(
                               AccountManagerRoute(userId: widget.userId),
-                            ); // TODO: Navigate to account manager screen
+                            );
                           },
                         ),
                         const SizedBox(height: 24),
@@ -149,6 +153,9 @@ class _SettingsScreen1State extends State<SettingsScreen1> {
                           icon: Icons.category_outlined,
                           title: 'Manage Categories For Items',
                           onTap: () {
+                            context.router.push(
+                              ManageCategoriesRoute(),
+                            );
                            // TODO: Navigate to items categories screen
                           },
                         ),
@@ -157,6 +164,9 @@ class _SettingsScreen1State extends State<SettingsScreen1> {
                           icon: Icons.checkroom_outlined,
                           title: 'Manage Categories For Outfits',
                           onTap: () {
+                            context.router.push(
+                              ManageCategoriesRoute2(userId: widget.userId),
+                            );
                             // TODO: Navigate to outfits categories screen
                           },
                         ),
@@ -185,7 +195,9 @@ class _SettingsScreen1State extends State<SettingsScreen1> {
                           icon: Icons.help_outline,
                           title: 'Help Center',
                           onTap: () {
-                            // TODO: Navigate to help center screen
+                           context.router.push(
+                              HelpCenterRoute(),
+                            );
                           },
                         ),
                         const SizedBox(height: 24),

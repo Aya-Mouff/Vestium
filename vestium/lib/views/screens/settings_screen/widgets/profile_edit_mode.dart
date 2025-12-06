@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 
 class ProfileEditMode extends StatelessWidget {
@@ -7,6 +8,7 @@ class ProfileEditMode extends StatelessWidget {
   final TextEditingController bioController;
   final VoidCallback onCancel;
   final VoidCallback onSave;
+  final VoidCallback onImagePick;
 
   const ProfileEditMode({
     super.key,
@@ -16,6 +18,7 @@ class ProfileEditMode extends StatelessWidget {
     required this.bioController,
     required this.onCancel,
     required this.onSave,
+    required this.onImagePick,
   });
 
   @override
@@ -26,37 +29,44 @@ class ProfileEditMode extends StatelessWidget {
         children: [
           Stack(
             children: [
-              Container(
-                width: 80,
-                height: 80,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: const Color(0xFF795548),
-                  image: profileImage != null && profileImage!.isNotEmpty
-                      ? DecorationImage(
-                          image: AssetImage(profileImage!),
+              ClipOval(
+                child: Container(
+                  width: 80,
+                  height: 80,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: const Color(0xFF795548),
+                  ),
+                  child: profileImage != null && profileImage!.isNotEmpty
+                      ? Image(
+                          image: _getImageProvider(profileImage!),
                           fit: BoxFit.cover,
+                          width: 80,
+                          height: 80,
+                          errorBuilder: (context, error, stackTrace) {
+                            return const Center(
+                              child: Icon(
+                                Icons.person,
+                                size: 40,
+                                color: Colors.white,
+                              ),
+                            );
+                          },
                         )
-                      : null,
-                ),
-                child: profileImage == null || profileImage!.isEmpty
-                    ? const Center(
-                        child: Icon(
-                          Icons.person,
-                          size: 40,
-                          color: Colors.white,
+                      : const Center(
+                          child: Icon(
+                            Icons.person,
+                            size: 40,
+                            color: Colors.white,
+                          ),
                         ),
-                      )
-                    : null,
+                ),
               ),
               Positioned(
                 bottom: 0,
                 right: 0,
                 child: GestureDetector(
-                  onTap: () {
-                    // TODO_LINK: Open image picker / camera to change profile picture
-                    // You can navigate to a photo picker screen or use image_picker plugin
-                  },
+                  onTap: onImagePick,
                   child: Container(
                     width: 28,
                     height: 28,
@@ -126,6 +136,22 @@ class ProfileEditMode extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  ImageProvider _getImageProvider(String path) {
+    // Check if it's a file path
+    if (File(path).existsSync()) {
+      return FileImage(File(path));
+    }
+    // Check if it starts with common file path indicators
+    if (path.startsWith('/') || 
+        path.contains('data/user') || 
+        path.contains('storage/emulated') ||
+        path.contains('cache')) {
+      return FileImage(File(path));
+    }
+    // Otherwise treat as asset
+    return AssetImage(path);
   }
 
   Widget _buildField(

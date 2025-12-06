@@ -70,7 +70,7 @@ class _MyAppState extends State<MyApp> {
         );
       } else {
         // User is NOT logged in, navigate to login screen
-        widget.appRouter.replace(const LogInRoute());
+        widget.appRouter.replace(const SplashRoute());
       }
     });
   }

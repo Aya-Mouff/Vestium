@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 
 class ProfileViewMode extends StatelessWidget {
@@ -20,34 +21,50 @@ class ProfileViewMode extends StatelessWidget {
       padding: const EdgeInsets.all(20.0),
       child: Row(
         children: [
-          Container(
-            width: 70,
-            height: 70,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: const Color(0xFF795548),
-              image: profileImage != null && profileImage!.isNotEmpty
-                  ? DecorationImage(
-                      image: AssetImage(profileImage!),
+          ClipOval(
+            child: Container(
+              width: 70,
+              height: 70,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: const Color(0xFF795548),
+              ),
+              child: profileImage != null && profileImage!.isNotEmpty
+                  ? Image(
+                      image: _getImageProvider(profileImage!),
                       fit: BoxFit.cover,
+                      width: 70,
+                      height: 70,
+                      errorBuilder: (context, error, stackTrace) {
+                        return Center(
+                          child: Text(
+                            displayName.isNotEmpty
+                                ? displayName[0].toUpperCase()
+                                : '?',
+                            style: const TextStyle(
+                              fontSize: 28,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                              fontFamily: 'Inter',
+                            ),
+                          ),
+                        );
+                      },
                     )
-                  : null,
-            ),
-            child: profileImage == null || profileImage!.isEmpty
-                ? Center(
-                    child: Text(
-                      displayName.isNotEmpty
-                          ? displayName[0].toUpperCase()
-                          : '?',
-                      style: const TextStyle(
-                        fontSize: 28,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                        fontFamily: 'Inter',
+                  : Center(
+                      child: Text(
+                        displayName.isNotEmpty
+                            ? displayName[0].toUpperCase()
+                            : '?',
+                        style: const TextStyle(
+                          fontSize: 28,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                          fontFamily: 'Inter',
+                        ),
                       ),
                     ),
-                  )
-                : null,
+            ),
           ),
           const SizedBox(width: 16),
           Expanded(
@@ -93,5 +110,21 @@ class ProfileViewMode extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  ImageProvider _getImageProvider(String path) {
+    // Check if it's a file path
+    if (File(path).existsSync()) {
+      return FileImage(File(path));
+    }
+    // Check if it starts with common file path indicators
+    if (path.startsWith('/') || 
+        path.contains('data/user') || 
+        path.contains('storage/emulated') ||
+        path.contains('cache')) {
+      return FileImage(File(path));
+    }
+    // Otherwise treat as asset
+    return AssetImage(path);
   }
 }
