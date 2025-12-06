@@ -110,15 +110,28 @@ class SettingsCubit extends Cubit<SettingsState> {
     // TODO: save to preferences or DB
   }
 
-  Future<void> logout(BuildContext context) async {
-    // Clear in‑memory current user
-    CurrentUserService.clearCurrentUser();
-
-    // Optionally: if you also persist anything to disk, clear it there too.
-
-    // Navigate to login screen and clear navigation stack
-    context.router.replaceAll([
-      const LogInRoute(), // make sure this route exists in app_router.dart
-    ]);
+Future<void> logout(BuildContext context) async {
+    try {
+      // Clear current user and persist logout state
+      await CurrentUserService.clearCurrentUser();
+      
+      // Navigate to login screen and clear navigation stack
+      if (context.mounted) {
+        context.router.replaceAll([
+          const LogInRoute(),
+        ]);
+      }
+      
+      print('✅ Logout successful');
+    } catch (e) {
+      print('❌ Error during logout: $e');
+      
+      // Still navigate to login even if there's an error
+      if (context.mounted) {
+        context.router.replaceAll([
+          const LogInRoute(),
+        ]);
+      }
+    }
   }
 }
