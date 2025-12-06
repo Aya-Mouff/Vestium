@@ -413,6 +413,20 @@ class PostModel {
   }
 }
 
+// Create a new class to hold Post with counts
+class PostWithCounts {
+  final PostModel post;
+  final int likesCount;
+  final int commentsCount;
+  final bool isLikedByCurrentUser;
+
+  PostWithCounts({
+    required this.post,
+    required this.likesCount,
+    required this.commentsCount,
+    required this.isLikedByCurrentUser,
+  });
+}
 // ------------------------
 // COMMENT
 // ------------------------

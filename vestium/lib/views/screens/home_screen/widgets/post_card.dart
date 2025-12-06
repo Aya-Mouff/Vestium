@@ -1,3 +1,5 @@
+// post_card.dart
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'post_header.dart';
 import 'post_actions.dart';
@@ -32,17 +34,56 @@ class PostCard extends StatelessWidget {
 
           ClipRRect(
             borderRadius: BorderRadius.circular(0),
-            child: Image.asset(
-              post['imageUrl'],
+            child: _buildPostImage(post['imageUrl']),
+          ),
+
+          PostActions(
+            post: post, 
+            userId: userId, 
+            currentUserId: currentUserId, 
+            postId: post['id']
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildPostImage(String imageUrl) {
+    // Check if it's a file path
+    if (imageUrl.startsWith('/') || imageUrl.contains('.')) {
+      final file = File(imageUrl);
+      if (file.existsSync()) {
+        return Image.file(
+          file,
+          width: double.infinity,
+          height: 400,
+          fit: BoxFit.cover,
+          errorBuilder: (context, error, stackTrace) {
+            return Image.asset(
+              'assets/images/default_post.png',
               width: double.infinity,
               height: 400,
               fit: BoxFit.cover,
-            ),
-          ),
-
-          PostActions(post: post, userId: userId, currentUserId: currentUserId, postIndex: post['id'] - 1),
-        ],
-      ),
+            );
+          },
+        );
+      }
+    }
+    
+    // Otherwise treat it as an asset
+    return Image.asset(
+      imageUrl,
+      width: double.infinity,
+      height: 400,
+      fit: BoxFit.cover,
+      errorBuilder: (context, error, stackTrace) {
+        return Image.asset(
+          'assets/images/default_post.png',
+          width: double.infinity,
+          height: 400,
+          fit: BoxFit.cover,
+        );
+      },
     );
   }
 }

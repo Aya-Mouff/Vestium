@@ -1,3 +1,4 @@
+// home_screen_state.dart
 import 'package:equatable/equatable.dart';
 import '../../../../databases/db_models.dart';
 
@@ -13,11 +14,16 @@ class HomeLoading extends HomeState {}
 class HomeLoaded extends HomeState {
   final List<dynamic> posts;
   final User? currentUser;
+  final bool hasMorePosts; // Add this
 
-  HomeLoaded({required this.posts, this.currentUser});
+  HomeLoaded({
+    required this.posts,
+    this.currentUser,
+    this.hasMorePosts = true, // Default to true
+  });
 
   @override
-  List<Object?> get props => [posts, currentUser];
+  List<Object?> get props => [posts, currentUser, hasMorePosts];
 }
 
 class HomeUserLoaded extends HomeState {
