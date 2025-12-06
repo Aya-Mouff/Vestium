@@ -7,7 +7,6 @@ import 'cubit/select_outfit_state.dart';
 import 'widgets/select_outfit_app_bar.dart';
 import 'widgets/saved_outfits_grid.dart';
 import '../../../../repo/outfit_repo.dart';
-import 'widgets/gallery_empty_page.dart';
 import '../../../../databases/services/outfit_image_service.dart';
 
 import '../outfit_gallery_access/outfit_gallery_access_body.dart';

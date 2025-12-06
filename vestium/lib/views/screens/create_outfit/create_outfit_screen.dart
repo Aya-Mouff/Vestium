@@ -490,11 +490,13 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'dart:io';
-import 'dart:ui';
+// import 'dart:ui';
 import 'cubit/create_outfit_cubit.dart';
 import 'cubit/create_outfit_state.dart';
-import 'widgets/save_outfit_dialog.dart';
+import 'package:vestium/databases/services/outfit_creation_service.dart';
+//import 'widgets/save_outfit_dialog.dart';
 import '../../../databases/db_models.dart';
+import '../../../app_router.dart';
 
 /// Main Outfit Creator Screen
 @RoutePage()
@@ -538,25 +540,88 @@ class _OutfitCreatorScreenState extends State<OutfitCreatorScreen> {
     super.dispose();
   }
 
+  // void _handleSavePressed() {
+  //   showDialog(
+  //     context: context,
+  //     builder: (context) => SaveOutfitDialog(cubit: _createOutfitCubit),
+  //   ).then((success) {
+  //     if (success == true && mounted) {
+  //       ScaffoldMessenger.of(context).showSnackBar(
+  //         const SnackBar(
+  //           content: Text('Outfit saved successfully!'),
+  //           backgroundColor: Colors.green,
+  //         ),
+  //       );
+  //       Future.delayed(const Duration(seconds: 1), () {
+  //         if (mounted) {
+  //           context.router.maybePop();
+  //         }
+  //       });
+  //     }
+  //   });
+  // }
+
   void _handleSavePressed() {
-    showDialog(
-      context: context,
-      builder: (context) => SaveOutfitDialog(cubit: _createOutfitCubit),
-    ).then((success) {
-      if (success == true && mounted) {
+    if (_createOutfitCubit.state is CreateOutfitItemsLoaded) {
+      final state = _createOutfitCubit.state as CreateOutfitItemsLoaded;
+
+      if (state.placedItems.isEmpty) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('Outfit saved successfully!'),
-            backgroundColor: Colors.green,
+            content: Text('Please add at least one item to the outfit'),
+            backgroundColor: Colors.red,
           ),
         );
-        Future.delayed(const Duration(seconds: 1), () {
-          if (mounted) {
-            context.router.pop();
-          }
-        });
+        return;
       }
-    });
+
+      // Store data in service before navigation
+      OutfitCreationService.setCurrentOutfitData(
+        cubit: _createOutfitCubit,
+        placedItems: state.placedItems,
+      );
+
+      print(
+        '📦 Navigating to SaveOutfitScreen with ${state.placedItems.length} items',
+      );
+
+      // Navigate to SaveOutfitScreen
+      context.router
+          .push(SaveOutfitRoute())
+          .then((success) {
+            if (success == true && mounted) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Outfit saved successfully!'),
+                  backgroundColor: Colors.green,
+                ),
+              );
+              Future.delayed(const Duration(seconds: 1), () {
+                if (mounted) {
+                  context.router.maybePop();
+                  // Clear the service data after successful save
+                  OutfitCreationService.clear();
+                }
+              });
+            } else if (success == false) {
+              // Save failed, keep data in service for retry
+              print('⚠️ Save failed, keeping data in service for retry');
+            }
+          })
+          .catchError((error) {
+            print('❌ Navigation error: $error');
+            // Clear service on error to prevent stale data
+            OutfitCreationService.clear();
+          });
+    } else {
+      print('❌ Invalid state for saving outfit');
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Cannot save outfit in current state'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
   }
 
   @override
@@ -570,7 +635,7 @@ class _OutfitCreatorScreenState extends State<OutfitCreatorScreen> {
           elevation: 0,
           leading: IconButton(
             icon: const Icon(Icons.close, color: Color(0xFF2C2C2C)),
-            onPressed: () => context.router.pop(),
+            onPressed: () => context.router.maybePop(),
           ),
           title: const Text(
             'Create Outfit',
@@ -736,7 +801,7 @@ class _OutfitCreatorScreenState extends State<OutfitCreatorScreen> {
                                   borderRadius: BorderRadius.circular(12),
                                   boxShadow: [
                                     BoxShadow(
-                                      color: Colors.black.withOpacity(0.3),
+                                      color: Colors.black.withValues(alpha: .3),
                                       blurRadius: 10,
                                       spreadRadius: 2,
                                     ),
@@ -776,7 +841,7 @@ class _OutfitCreatorScreenState extends State<OutfitCreatorScreen> {
                                 context
                                     .read<CreateOutfitCubit>()
                                     .updateItemPosition(
-                                      placedItem.itemId!,
+                                      placedItem.itemId,
                                       Offset(newX, newY),
                                     );
                               }
@@ -797,7 +862,7 @@ class _OutfitCreatorScreenState extends State<OutfitCreatorScreen> {
                                 context
                                     .read<CreateOutfitCubit>()
                                     .updateItemPosition(
-                                      placedItem.itemId!,
+                                      placedItem.itemId,
                                       Offset(newX, newY),
                                     );
                               },
@@ -857,7 +922,7 @@ class _OutfitCreatorScreenState extends State<OutfitCreatorScreen> {
           borderRadius: BorderRadius.circular(12),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.1),
+              color: Colors.black.withValues(alpha: .1),
               blurRadius: 4,
               offset: const Offset(0, 2),
             ),
@@ -898,7 +963,7 @@ class _OutfitCreatorScreenState extends State<OutfitCreatorScreen> {
                   border: Border.all(color: const Color(0xFF6B5344), width: 2),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.3),
+                      color: Colors.black.withValues(alpha: .3),
                       blurRadius: 10,
                       spreadRadius: 2,
                     ),
@@ -931,7 +996,7 @@ class _OutfitCreatorScreenState extends State<OutfitCreatorScreen> {
                       _buildItemImage(item.imagePath),
                       if (isSelected)
                         Container(
-                          color: Colors.black.withOpacity(0.3),
+                          color: Colors.black.withValues(alpha: .3),
                           child: const Center(
                             child: Icon(
                               Icons.check_circle,
@@ -970,7 +1035,7 @@ class _OutfitCreatorScreenState extends State<OutfitCreatorScreen> {
                       _buildItemImage(item.imagePath),
                       if (isSelected)
                         Container(
-                          color: Colors.black.withOpacity(0.3),
+                          color: Colors.black.withValues(alpha: .3),
                           child: const Center(
                             child: Icon(
                               Icons.check_circle,
@@ -1037,7 +1102,7 @@ class _OutfitCreatorScreenState extends State<OutfitCreatorScreen> {
         child: Icon(
           Icons.photo,
           size: 32,
-          color: const Color(0xFFA1887F).withOpacity(0.5),
+          color: const Color(0xFFA1887F).withValues(alpha: .5),
         ),
       ),
     );

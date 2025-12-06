@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:vestium/views/screens/account_manager/cubit/account_manager_cubit.dart';
 
 class DeleteAccountDialog extends StatefulWidget {
-  const DeleteAccountDialog({Key? key}) : super(key: key);
+  const DeleteAccountDialog({super.key});
 
   @override
   State<DeleteAccountDialog> createState() => _DeleteAccountDialogState();

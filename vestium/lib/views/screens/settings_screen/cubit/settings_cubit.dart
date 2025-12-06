@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../app_router.dart';
 import '../../../../repo/user_repo.dart';
-import '../../../../databases/db_models.dart';
 import '../../../../databases/services/current_user_service.dart'; // <-- make sure this path is correct
 import 'settings_state.dart';
 

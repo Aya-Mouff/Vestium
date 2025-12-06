@@ -28,7 +28,7 @@ class EraserCanvasState extends State<EraserCanvas> {
   img.Image? _editableImage;
   img.Image? _maskImage;
 
-  List<EraserStroke> _strokes = [];
+  final List<EraserStroke> _strokes = [];
   Offset? _currentPoint;
   bool _isLoading = true;
   Size? _imageSize;

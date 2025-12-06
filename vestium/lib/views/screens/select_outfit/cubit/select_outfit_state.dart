@@ -1,6 +1,5 @@
 // select_outfit/cubit/select_outfit_state.dart
 import 'package:equatable/equatable.dart';
-import '../../../../repo/outfit_repo.dart';
 import '../../../../databases/db_models.dart'; // where OutfitModel is
 
 class SelectOutfitState extends Equatable {

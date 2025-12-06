@@ -8,7 +8,7 @@ import 'package:vestium/views/screens/account_manager/widgets/change_password_di
 import 'package:vestium/views/screens/account_manager/widgets/delete_account_dialog.dart';
 
 class AccountManagerScreen extends StatefulWidget {
-  const AccountManagerScreen({Key? key}) : super(key: key);
+  const AccountManagerScreen({super.key});
 
   @override
   State<AccountManagerScreen> createState() => _AccountManagerScreenState();

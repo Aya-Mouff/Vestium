@@ -5,8 +5,7 @@ import 'package:vestium/views/screens/account_manager/cubit/account_manager_cubi
 class ChangeFullNameDialog extends StatefulWidget {
   final String currentName;
 
-  const ChangeFullNameDialog({Key? key, required this.currentName})
-    : super(key: key);
+  const ChangeFullNameDialog({super.key, required this.currentName});
 
   @override
   State<ChangeFullNameDialog> createState() => _ChangeFullNameDialogState();

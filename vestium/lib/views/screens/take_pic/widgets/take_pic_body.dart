@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:auto_route/auto_route.dart';
-import 'package:vestium/app_router.dart';
 import '../cubit/take_pic_cubit.dart';
 import '../cubit/take_pic_state.dart';
 import 'take_pic_header.dart';

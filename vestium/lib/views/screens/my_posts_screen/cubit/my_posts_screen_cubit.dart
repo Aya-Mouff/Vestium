@@ -188,7 +188,7 @@ class MyPostsScreenCubit extends Cubit<MyPostsScreenState> {
       await _likeRepo.insert(like);
     } catch (e) {
       print('Error liking post: $e');
-      throw e;
+      rethrow;
     }
   }
 
@@ -206,7 +206,7 @@ class MyPostsScreenCubit extends Cubit<MyPostsScreenState> {
       }
     } catch (e) {
       print('Error unliking post: $e');
-      throw e;
+      rethrow;
     }
   }
 
@@ -215,7 +215,7 @@ class MyPostsScreenCubit extends Cubit<MyPostsScreenState> {
       await _postRepo.delete(postId);
     } catch (e) {
       print('Error deleting post: $e');
-      throw e;
+      rethrow;
     }
   }
 

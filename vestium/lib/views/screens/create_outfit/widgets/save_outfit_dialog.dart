@@ -121,7 +121,7 @@ class _SaveOutfitDialogState extends State<SaveOutfitDialog> {
 
                     // Season Selector
                     DropdownButtonFormField<String>(
-                      value: _selectedSeason,
+                      initialValue: _selectedSeason,
                       hint: const Text('Select Season (optional)'),
                       items: ['Spring', 'Summer', 'Fall', 'Winter']
                           .map(

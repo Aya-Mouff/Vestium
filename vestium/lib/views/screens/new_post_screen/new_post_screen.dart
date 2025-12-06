@@ -9,7 +9,6 @@ import 'cubit/new_post_state.dart';
 import 'widgets/new_post_app_bar.dart';
 import 'widgets/outfit_picker.dart';
 import 'widgets/caption_field.dart';
-import 'widgets/public_toggle.dart';
 
 @RoutePage()
 class NewPostScreen extends StatelessWidget {

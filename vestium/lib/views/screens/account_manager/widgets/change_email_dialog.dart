@@ -5,8 +5,7 @@ import 'package:vestium/views/screens/account_manager/cubit/account_manager_cubi
 class ChangeEmailDialog extends StatefulWidget {
   final String currentEmail;
 
-  const ChangeEmailDialog({Key? key, required this.currentEmail})
-    : super(key: key);
+  const ChangeEmailDialog({super.key, required this.currentEmail});
 
   @override
   State<ChangeEmailDialog> createState() => _ChangeEmailDialogState();

@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:vestium/views/screens/account_manager/cubit/account_manager_cubit.dart';
 
 class ChangePasswordDialog extends StatefulWidget {
-  const ChangePasswordDialog({Key? key}) : super(key: key);
+  const ChangePasswordDialog({super.key});
 
   @override
   State<ChangePasswordDialog> createState() => _ChangePasswordDialogState();
