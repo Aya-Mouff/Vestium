@@ -51,7 +51,7 @@ class FollowingCubit extends Cubit<FollowingState> {
         followingData.add({
           'id': followedUser.userId?.toString() ?? '',
           'userId': followedUser.userId, // Add this - the actual person's ID
-          'name': followedUser.fullName ?? '',
+          'name': followedUser.fullName ?? '',  
           'username': followedUser.username ?? '',
           'bio': followedUser.bio ?? '',
           'profileImage': followedUser.pfp ?? '',
