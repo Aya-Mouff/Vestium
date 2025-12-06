@@ -224,10 +224,9 @@ class OutfitCategory {
 // ------------------------
 class OutfitModel {
   int? outfitId;
-  int? userId; // FK → user
+  int? userId;
   String? outfitName;
   String? description;
-  int? categoryId; // FK → outfit_categories.category_id (nullable!)
   String? date;
   String? season;
 
@@ -236,7 +235,6 @@ class OutfitModel {
     this.userId,
     this.outfitName,
     this.description,
-    this.categoryId,
     this.date,
     this.season,
   });
@@ -246,7 +244,6 @@ class OutfitModel {
         userId: map['user_id'],
         outfitName: map['outfit_name'],
         description: map['description'],
-        categoryId: map['category_id'],
         date: map['date'],
         season: map['season'],
       );
@@ -256,7 +253,6 @@ class OutfitModel {
         'user_id': userId,
         'outfit_name': outfitName,
         'description': description,
-        'category_id': categoryId,
         'date': date,
         'season': season,
       };
@@ -282,6 +278,29 @@ class OutfitItem {
   Map<String, dynamic> toMap() => {
         'outfit_id': outfitId,
         'item_id': itemId,
+      };
+}
+
+// ------------------------
+// OUTFIT <-> CATEGORY JOIN
+// ------------------------
+class OutfitCategoryJoin {
+  int outfitId;
+  int categoryId;
+
+  OutfitCategoryJoin({
+    required this.outfitId,
+    required this.categoryId,
+  });
+
+  factory OutfitCategoryJoin.fromMap(Map<String, dynamic> map) => OutfitCategoryJoin(
+        outfitId: map['outfit_id'],
+        categoryId: map['category_id'],
+      );
+
+  Map<String, dynamic> toMap() => {
+        'outfit_id': outfitId,
+        'category_id': categoryId,
       };
 }
 
