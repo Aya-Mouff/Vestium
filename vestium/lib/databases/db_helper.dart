@@ -1,10 +1,11 @@
+// lib/databases/db_helper.dart
 import 'dart:async';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
 class DBHelper {
   static const _databaseName = "vestium_database.db";
-  static const _databaseVersion = 1; // Keep as 1 since no migration needed
+  static const _databaseVersion = 1; // Keep as 1
   static Database? _database;
 
   static Future<Database> getDatabase() async {
@@ -14,7 +15,6 @@ class DBHelper {
       join(await getDatabasesPath(), _databaseName),
       version: _databaseVersion,
       onConfigure: (db) async {
-        // Enable foreign key constraints
         await db.execute('PRAGMA foreign_keys = ON');
       },
       onCreate: (db, version) async {
@@ -34,7 +34,7 @@ class DBHelper {
           );
         ''');
 
-        // Follow relationships (composite PK) - both reference user(user_id)
+        // Follow relationships
         await db.execute('''
           CREATE TABLE followings_followers (
             following_id INTEGER,
@@ -54,25 +54,13 @@ class DBHelper {
           );
         ''');
 
-        // Insert initial categories for all users
-        await db.execute(
-          'INSERT INTO items_categories (category_name) VALUES ("Tops")',
-        );
-        await db.execute(
-          'INSERT INTO items_categories (category_name) VALUES ("Bottoms")',
-        );
-        await db.execute(
-          'INSERT INTO items_categories (category_name) VALUES ("Dresses")',
-        );
-        await db.execute(
-          'INSERT INTO items_categories (category_name) VALUES ("Outerwear")',
-        );
-        await db.execute(
-          'INSERT INTO items_categories (category_name) VALUES ("Shoes")',
-        );
-        await db.execute(
-          'INSERT INTO items_categories (category_name) VALUES ("Accessories")',
-        );
+        // Insert initial item categories
+        await db.execute('INSERT INTO items_categories (category_name) VALUES ("Tops")');
+        await db.execute('INSERT INTO items_categories (category_name) VALUES ("Bottoms")');
+        await db.execute('INSERT INTO items_categories (category_name) VALUES ("Dresses")');
+        await db.execute('INSERT INTO items_categories (category_name) VALUES ("Outerwear")');
+        await db.execute('INSERT INTO items_categories (category_name) VALUES ("Shoes")');
+        await db.execute('INSERT INTO items_categories (category_name) VALUES ("Accessories")');
 
         // Items
         await db.execute('''
@@ -88,7 +76,7 @@ class DBHelper {
           );
         ''');
 
-        // Item <-> Category join table (many-to-many) - ADD THIS
+        // Item <-> Category join table
         await db.execute('''
           CREATE TABLE item_categories_join (
             item_id INTEGER,
@@ -107,22 +95,30 @@ class DBHelper {
           );
         ''');
 
-        // Outfits
+        // Insert initial outfit categories
+        await db.execute('INSERT INTO outfit_categories (category_name) VALUES ("Casual")');
+        await db.execute('INSERT INTO outfit_categories (category_name) VALUES ("Formal")');
+        await db.execute('INSERT INTO outfit_categories (category_name) VALUES ("Workwear")');
+        await db.execute('INSERT INTO outfit_categories (category_name) VALUES ("Athletic")');
+        await db.execute('INSERT INTO outfit_categories (category_name) VALUES ("Party")');
+        await db.execute('INSERT INTO outfit_categories (category_name) VALUES ("Date Night")');
+        await db.execute('INSERT INTO outfit_categories (category_name) VALUES ("Vacation")');
+        await db.execute('INSERT INTO outfit_categories (category_name) VALUES ("Seasonal")');
+
+        // Outfits (CREATE WITHOUT category_id field)
         await db.execute('''
           CREATE TABLE outfits (
             outfit_id INTEGER PRIMARY KEY AUTOINCREMENT,
             user_id INTEGER,
             outfit_name TEXT,
             description TEXT,
-            category_id INTEGER,
             date TEXT,
             season TEXT,
-            FOREIGN KEY (user_id) REFERENCES user(user_id) ON DELETE CASCADE ON UPDATE CASCADE,
-            FOREIGN KEY (category_id) REFERENCES outfit_categories(category_id) ON DELETE SET NULL ON UPDATE CASCADE
+            FOREIGN KEY (user_id) REFERENCES user(user_id) ON DELETE CASCADE ON UPDATE CASCADE
           );
         ''');
 
-        // Outfit <-> Item join (composite PK)
+        // Outfit <-> Item join
         await db.execute('''
           CREATE TABLE outfit_item (
             outfit_id INTEGER,
@@ -133,7 +129,18 @@ class DBHelper {
           );
         ''');
 
-        // Posts (an outfit can have posts)
+        // Outfit <-> Category join (NEW - many-to-many relationship)
+        await db.execute('''
+          CREATE TABLE outfit_category_join (
+            outfit_id INTEGER,
+            category_id INTEGER,
+            PRIMARY KEY (outfit_id, category_id),
+            FOREIGN KEY (outfit_id) REFERENCES outfits(outfit_id) ON DELETE CASCADE ON UPDATE CASCADE,
+            FOREIGN KEY (category_id) REFERENCES outfit_categories(category_id) ON DELETE CASCADE ON UPDATE CASCADE
+          );
+        ''');
+
+        // Posts
         await db.execute('''
           CREATE TABLE posts (
             post_id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -169,10 +176,6 @@ class DBHelper {
             FOREIGN KEY (user_id) REFERENCES user(user_id) ON DELETE CASCADE ON UPDATE CASCADE
           );
         ''');
-      },
-      onUpgrade: (db, oldVersion, newVersion) async {
-        // No migration needed since app hasn't been released
-        // We'll implement migrations here when we do release updates
       },
     );
 

@@ -1,3 +1,4 @@
+// lib/repo/outfit_repo.dart
 import 'package:sqflite/sqflite.dart';
 import '../databases/db_helper.dart';
 import '../databases/db_models.dart';
@@ -15,15 +16,31 @@ class OutfitRepo {
     return res.map((m) => OutfitModel.fromMap(m)).toList();
   }
 
+  Future<OutfitModel?> getById(int id) async {
+    final db = await DBHelper.getDatabase();
+    final res = await db.query('outfits', where: 'outfit_id = ?', whereArgs: [id]);
+    if (res.isEmpty) return null;
+    return OutfitModel.fromMap(res.first);
+  }
+
   Future<bool> insert(OutfitModel outfit) async {
     final db = await DBHelper.getDatabase();
-    await db.insert('outfits', outfit.toMap(), conflictAlgorithm: ConflictAlgorithm.replace);
+    await db.insert(
+      'outfits',
+      outfit.toMap(),
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
     return true;
   }
 
   Future<bool> update(int id, OutfitModel outfit) async {
     final db = await DBHelper.getDatabase();
-    await db.update('outfits', outfit.toMap(), where: 'outfit_id = ?', whereArgs: [id]);
+    await db.update(
+      'outfits',
+      outfit.toMap(),
+      where: 'outfit_id = ?',
+      whereArgs: [id],
+    );
     return true;
   }
 
