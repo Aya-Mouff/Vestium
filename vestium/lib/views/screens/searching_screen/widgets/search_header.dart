@@ -16,7 +16,7 @@ class SearchHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: 412,
-      height: 130,
+      height: 150,
       color: Colors.white,
       padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
       child: Column(

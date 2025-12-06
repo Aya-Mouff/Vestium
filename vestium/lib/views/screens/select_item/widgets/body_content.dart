@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:auto_route/auto_route.dart';
 import '../../gallery_access/cubit/gallery_access_cubit.dart';
 import '../../gallery_access/cubit/gallery_access_state.dart';
 import '../cubit/select_item_state.dart';
 import '../cubit/select_item_cubit.dart';
-import 'package:vestium/app_router.dart';
 import 'gallery_grid_view.dart';
 import 'continue_button.dart';
+import '../../edit_item/cubit/edit_item_cubit.dart';
+import '../../edit_item/edit_item_screen.dart';
 
 class BodyContent extends StatelessWidget {
   const BodyContent({super.key});
@@ -69,9 +69,18 @@ class BodyContent extends StatelessWidget {
     
     if (imagePath != null) {
       // Navigate to EditItemScreen with the image path
-      context.router.push(
-        EditItemRoute(imagePath: imagePath),
-      );
+      // context.router.push(
+      //   EditItemRoute(imagePath: imagePath),
+      // );
+      Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => BlocProvider(
+                create: (_) => EditItemCubit(),
+                child: EditItemScreen(imagePath: imagePath),
+              ),
+            ),
+          );
     }
   }
 }

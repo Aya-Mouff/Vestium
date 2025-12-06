@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:auto_route/auto_route.dart';
+import '../../../../app_router.dart';
 
 class FollowingItem extends StatelessWidget {
   final String name;
@@ -6,8 +8,8 @@ class FollowingItem extends StatelessWidget {
   final String profileImage;
   final bool isFollowing;
   final VoidCallback onFollowTap;
-  final int personUserId; // Changed from userId to personUserId
-  final int currentUserId;
+  final int personUserId; // The ID of the person in the list
+  final int currentUserId; // The ID of the current logged-in user
 
   const FollowingItem({
     super.key,
@@ -16,12 +18,33 @@ class FollowingItem extends StatelessWidget {
     required this.profileImage,
     required this.isFollowing,
     required this.onFollowTap,
-    required this.personUserId, // Changed parameter name
+    required this.personUserId,
     required this.currentUserId,
   });
 
+  void _navigateToProfile(BuildContext context) {
+    if (personUserId == currentUserId) {
+      // Navigate to MyProfileScreen for current user
+      context.router.push(
+        MyProfileRoute(
+          userId: currentUserId,
+        ),
+      );
+    } else {
+      // Navigate to UserProfileScreen for other users
+      context.router.push(
+        UserProfileRoute(
+          userId: personUserId,
+          currentUserId: currentUserId,
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    final isCurrentUser = personUserId == currentUserId;
+
     return Container(
       width: 381.26,
       height: 80.13,
@@ -40,22 +63,26 @@ class FollowingItem extends StatelessWidget {
       ),
       child: Row(
         children: [
-          CircleAvatar(
-            radius: 24,
-            backgroundColor: const Color(0xFF8B6F5E),
-            backgroundImage:
-                profileImage.isNotEmpty ? AssetImage(profileImage) : null,
-            child: profileImage.isEmpty
-                ? Text(
-                    name.isNotEmpty ? name[0].toUpperCase() : '?',
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      fontFamily: 'Inter',
-                    ),
-                  )
-                : null,
+          // Profile Image - Make it clickable
+          GestureDetector(
+            onTap: () => _navigateToProfile(context),
+            child: CircleAvatar(
+              radius: 24,
+              backgroundColor: const Color(0xFF8B6F5E),
+              backgroundImage:
+                  profileImage.isNotEmpty ? AssetImage(profileImage) : null,
+              child: profileImage.isEmpty
+                  ? Text(
+                      name.isNotEmpty ? name[0].toUpperCase() : '?',
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        fontFamily: 'Inter',
+                      ),
+                    )
+                  : null,
+            ),
           ),
           const SizedBox(width: 12),
           Expanded(
@@ -63,29 +90,37 @@ class FollowingItem extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(
-                  name,
-                  style: const TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w600,
-                    color: Color(0xFF2C2C2C),
-                    fontFamily: 'Inter',
+                // Name - Make it clickable
+                GestureDetector(
+                  onTap: () => _navigateToProfile(context),
+                  child: Text(
+                    name,
+                    style: const TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w600,
+                      color: Color(0xFF2C2C2C),
+                      fontFamily: 'Inter',
+                    ),
                   ),
                 ),
                 const SizedBox(height: 4),
-                Text(
-                  '@$username',
-                  style: TextStyle(
-                    fontSize: 13,
-                    color: Colors.grey[600],
-                    fontFamily: 'Inter',
+                // Username - Make it clickable
+                GestureDetector(
+                  onTap: () => _navigateToProfile(context),
+                  child: Text(
+                    '@$username',
+                    style: TextStyle(
+                      fontSize: 13,
+                      color: Colors.grey[600],
+                      fontFamily: 'Inter',
+                    ),
                   ),
                 ),
               ],
             ),
           ),
-          // Check if the current user is viewing their own profile OR if the person is themselves
-          if (personUserId != currentUserId) // Changed to personUserId
+          // Only show follow button if it's not the current user
+          if (!isCurrentUser)
             InkWell(
               onTap: onFollowTap,
               borderRadius: BorderRadius.circular(8),

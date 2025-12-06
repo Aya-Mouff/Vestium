@@ -144,19 +144,20 @@ class _FollowersViewState extends State<_FollowersView> {
       itemCount: state.filteredFollowers.length,
       itemBuilder: (context, index) {
         final follower = state.filteredFollowers[index];
-        final followerUserId = follower['userId'] ?? int.tryParse(follower['id'] ?? '') ?? 0;
+        final followerId = int.tryParse(follower['id']?.toString() ?? '') ?? 0;
+        final followerUserId = follower['userId'] ?? followerId;
         
         return FollowerItem(
           name: follower['name'] ?? '',
           username: follower['username'] ?? '',
           profileImage: follower['profileImage'] ?? '',
           isFollowing: follower['isFollowing'] ?? false,
-          followerUserId: followerUserId, // Pass the follower's actual user ID
-          currentUserId: currentUserId,
+          followerUserId: followerUserId, // Pass the follower's ID
+          currentUserId: currentUserId, // Pass current user ID
           onFollowTap: () =>
               context.read<FollowersCubit>().toggleFollow(index),
         );
-      },
+      }
     );
   }
 }
