@@ -234,15 +234,8 @@ class MyProfileScreen extends StatelessWidget {
 
             return const SizedBox();
           },
-        ),
-          floatingActionButton: FloatingActionButton(
-        backgroundColor: const Color(0xFF8B6B61),
-        onPressed: () {
-          context.router.push(OutfitCreatorRoute(userId: userId));
-        },
-        child: const Icon(Icons.add, color: Colors.white),
       ),
-        bottomNavigationBar: CustomNavBar(
+      bottomNavigationBar: CustomNavBar(
           currentPage: 'profile',
           userId: userId,
         ),
