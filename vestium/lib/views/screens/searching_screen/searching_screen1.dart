@@ -64,12 +64,22 @@ class _SearchViewState extends State<_SearchView> {
     required int profileUserId,
     required int currentUserId,
   }) {
-    context.router.push(
-      UserProfileRoute(
-        userId: profileUserId,
-        currentUserId: currentUserId,
-      ),
-    );
+    if (profileUserId == currentUserId) {
+      // Navigate to MyProfileScreen for current user
+      context.router.push(
+        MyProfileRoute(
+          userId: currentUserId,
+        ),
+      );
+    } else {
+      // Navigate to UserProfileScreen for other users
+      context.router.push(
+        UserProfileRoute(
+          userId: profileUserId,
+          currentUserId: currentUserId,
+        ),
+      );
+    }
   }
 
   @override
@@ -189,6 +199,7 @@ class _SearchViewState extends State<_SearchView> {
           final user = state.filteredUsers[index];
           return SearchResultItem(
             user: user,
+            currentUserId: widget.userId, // Pass currentUserId
             onTapUser: () {
               cubit.addRecentFromUser(user);
 

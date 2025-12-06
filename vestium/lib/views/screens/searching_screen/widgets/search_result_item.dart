@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 
 class SearchResultItem extends StatelessWidget {
   final Map<String, dynamic> user;
+  final int currentUserId; // Add this parameter
   final VoidCallback onTapUser;
   final VoidCallback onToggleFollow;
 
   const SearchResultItem({
     super.key,
     required this.user,
+    required this.currentUserId, // Add this
     required this.onTapUser,
     required this.onToggleFollow,
   });
@@ -15,13 +17,15 @@ class SearchResultItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isFollowing = user['isFollowing'] == true;
+    final userId = user['userId'] as int? ?? int.tryParse(user['id'].toString()) ?? 0;
+    final isCurrentUser = userId == currentUserId;
 
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
       child: GestureDetector(
         onTap: onTapUser,
         child: Container(
-          height: 74.09,
+          height: 80.09,
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(12),
@@ -83,38 +87,41 @@ class SearchResultItem extends StatelessWidget {
                     ],
                   ),
                 ),
-                GestureDetector(
-                  onTap: onToggleFollow,
-                  child: Container(
-                    width: 72.39,
-                    height: 27.97,
-                    decoration: BoxDecoration(
-                      color: isFollowing
-                          ? Colors.transparent
-                          : const Color(0xFF795548),
-                      borderRadius: BorderRadius.circular(20),
-                      border: isFollowing
-                          ? Border.all(
-                              color: const Color(0xFF795548),
-                              width: 1.5,
-                            )
-                          : null,
-                    ),
-                    child: Center(
-                      child: Text(
-                        isFollowing ? 'Following' : 'Follow',
-                        style: TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w600,
-                          color: isFollowing
-                              ? const Color(0xFF795548)
-                              : Colors.white,
-                          fontFamily: 'Inter',
+                
+                // Only show follow button if it's not the current user
+                if (!isCurrentUser)
+                  GestureDetector(
+                    onTap: onToggleFollow,
+                    child: Container(
+                      width: 72.39,
+                      height: 27.97,
+                      decoration: BoxDecoration(
+                        color: isFollowing
+                            ? Colors.transparent
+                            : const Color(0xFF795548),
+                        borderRadius: BorderRadius.circular(20),
+                        border: isFollowing
+                            ? Border.all(
+                                color: const Color(0xFF795548),
+                                width: 1.5,
+                              )
+                            : null,
+                      ),
+                      child: Center(
+                        child: Text(
+                          isFollowing ? 'Following' : 'Follow',
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600,
+                            color: isFollowing
+                                ? const Color(0xFF795548)
+                                : Colors.white,
+                            fontFamily: 'Inter',
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
               ],
             ),
           ),

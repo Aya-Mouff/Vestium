@@ -21,23 +21,34 @@ class SearchCubit extends Cubit<SearchState> {
   Future<void> loadAllUsers() async {
     emit(state.copyWith(isLoading: true, errorMessage: null));
     try {
-      final users = await _userRepo.getAll(); // all DB users [file:6]
+      final users = await _userRepo.getAll(); // all DB users
+      
+      // Get all follow relations to check who current user is following
+      final allFollows = await _followRepo.getAll();
 
-      final allUsers = users
-          // .where((u) => u.userId != currentUserId)
-          .map((u) => {
-                'id': u.userId?.toString() ?? '',
-                'username': u.username ?? '',
-                'fullName': u.fullName ?? '',
-                'bio': u.bio ?? '',
-                'profileImage': u.pfp ?? '',
-                'followersCount': 0,
-                'followingCount': 0,
-                'isFollowing': false,
-              })
-          .toList();
+      final allUsers = users.map((u) {
+        final userId = u.userId ?? 0;
+        
+        // Check if current user is following this user
+        final isFollowing = allFollows.any((f) => 
+            f.followerId == currentUserId && f.followingId == userId);
+        
+        // Check if this is the current user
+        final isCurrentUser = userId == currentUserId;
 
-
+        return {
+          'id': userId.toString(),
+          'userId': userId, // Store as int for easier comparison
+          'username': u.username ?? '',
+          'fullName': u.fullName ?? '',
+          'bio': u.bio ?? '',
+          'profileImage': u.pfp ?? '',
+          'followersCount': 0,
+          'followingCount': 0,
+          'isFollowing': isFollowing && !isCurrentUser, // Can't follow yourself
+          'isCurrentUser': isCurrentUser,
+        };
+      }).toList();
 
       emit(
         state.copyWith(
@@ -48,7 +59,6 @@ class SearchCubit extends Cubit<SearchState> {
         ),
       );
     } catch (e) {
-       
       emit(
         state.copyWith(
           isLoading: false,
@@ -129,8 +139,11 @@ class SearchCubit extends Cubit<SearchState> {
     if (index < 0 || index >= state.filteredUsers.length) return;
 
     final user = Map<String, dynamic>.from(state.filteredUsers[index]);
-    final targetId = int.tryParse(user['id'].toString()) ?? 0;
+    final targetId = user['userId'] as int? ?? 0;
     if (targetId == 0) return;
+
+    // Don't allow following yourself
+    if (targetId == currentUserId) return;
 
     final isCurrentlyFollowing = user['isFollowing'] == true;
 
@@ -161,13 +174,13 @@ class SearchCubit extends Cubit<SearchState> {
 
     try {
       if (isCurrentlyFollowing) {
-        await _followRepo.delete(targetId, currentUserId); // unfollow [file:4]
+        await _followRepo.delete(targetId, currentUserId); // unfollow
       } else {
         final relation = FollowingFollower(
           followingId: targetId,
           followerId: currentUserId,
         );
-        await _followRepo.insert(relation); // follow [file:4]
+        await _followRepo.insert(relation); // follow
       }
     } catch (_) {
       // optional: revert if you want strict consistency

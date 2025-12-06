@@ -142,19 +142,20 @@ class _FollowingViewState extends State<_FollowingView> {
       itemCount: state.filteredFollowing.length,
       itemBuilder: (context, index) {
         final person = state.filteredFollowing[index];
-        final personUserId = person['userId'] ?? int.tryParse(person['id'] ?? '') ?? 0;
+        final personId = int.tryParse(person['id']?.toString() ?? '') ?? 0;
+        final personUserId = person['userId'] ?? personId;
         
         return FollowingItem(
           name: person['name'] ?? '',
           username: person['username'] ?? '',
           profileImage: person['profileImage'] ?? '',
           isFollowing: person['isFollowing'] ?? false,
-          personUserId: personUserId, // Pass the person's actual user ID
-          currentUserId: currentUserId,
+          personUserId: personUserId, // Pass the person's ID
+          currentUserId: currentUserId, // Pass current user ID
           onFollowTap: () =>
               context.read<FollowingCubit>().toggleFollow(index),
         );
-      },
+      }
     );
   }
 }

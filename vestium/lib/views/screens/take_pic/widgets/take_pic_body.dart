@@ -32,7 +32,7 @@ class _TakePicBodyState extends State<TakePicBody> {
         if (state.capturedImagePath != null && context.mounted) {
           // context.router.push(EditItemRoute(imagePath: state.capturedImagePath!));
           Navigator.push(
-            context,
+            context, 
             MaterialPageRoute(
               builder: (context) => BlocProvider(
                 create: (_) => EditItemCubit(),
