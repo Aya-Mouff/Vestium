@@ -17,17 +17,21 @@ class PostRepo {
   }
 
   /// Get posts by user ID
-  /// Now includes both posts with outfits AND gallery posts (outfit_id = NULL)
+  /// Includes both:
+  /// 1. Posts with outfits (linked through outfit's user_id)
+  /// 2. Gallery posts (posts with user_id but no outfit_id)
   Future<List<PostModel>> getByUserId(int userId) async {
     final db = await DBHelper.getDatabase();
 
-    // Use LEFT JOIN to include posts without outfits (gallery posts)
+    // Get posts in two ways:
+    // 1. Posts that have user_id directly (gallery posts)
+    // 2. Posts linked through outfits (outfit posts)
     final result = await db.rawQuery('''
-      SELECT p.* FROM posts p
+      SELECT DISTINCT p.* FROM posts p
       LEFT JOIN outfits o ON p.outfit_id = o.outfit_id
-      WHERE o.user_id = ? OR (p.outfit_id IS NULL)
+      WHERE p.user_id = ? OR o.user_id = ?
       ORDER BY p.date DESC
-    ''', [userId]);
+    ''', [userId, userId]);
 
     print('📊 Found ${result.length} posts for user $userId');
     
@@ -42,7 +46,7 @@ class PostRepo {
       post.toMap(),
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
-    print('✅ Post inserted with id: $id, outfitId: ${post.outfitId}, imagePath: ${post.imagePath}');
+    print('✅ Post inserted with id: $id, outfitId: ${post.outfitId}, userId: ${post.userId}, imagePath: ${post.imagePath}');
     return id;
   }
 
