@@ -24,6 +24,7 @@ dependencies:
   photo_manager: ^3.8.2
   cached_network_image: ^3.3.0
   image: ^3.3.0
+  focus_detector: ^2.0.0
 
 dev_dependencies:
   flutter_test:
