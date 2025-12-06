@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:permission_handler/permission_handler.dart';
-
 import 'cubit/outfit_gallery_access_cubit.dart';
 import 'cubit/outfit_gallery_access_state.dart';
 import 'widgets/outfit_gallery_icon_widget.dart';
@@ -83,23 +82,34 @@ class OutfitGalleryAccessBody extends StatelessWidget {
     // You can call Navigator.of(context).maybePop() if you ever push this screen.
   }
 
- Future<void> _onAllowAccessPressed(BuildContext context) async {
-  final path =
-      await context.read<OutfitGalleryAccessCubit>().requestGalleryAccess();
-
-  if (path != null && context.mounted) {
-    print('✅ Outfit gallery picked: $path');
-    Navigator.of(context).pop({
-      'id': null,             // no DB id yet
-      'imageUrl': path,       // file path from gallery
-      'name': 'Gallery outfit',
-    });
+  Future<void> _onAllowAccessPressed(BuildContext context) async {
+    final path = await context.read<OutfitGalleryAccessCubit>().requestGalleryAccess();
+    if (path != null && context.mounted) {
+      print('✅ Outfit gallery picked: $path');
+      Navigator.of(context).pop({
+        'id': null, // no DB id yet
+        'imageUrl': path, // file path from gallery
+        'name': 'Gallery outfit',
+      });
+    }
   }
-}
-
 
   @override
   Widget build(BuildContext context) {
+    // Get screen dimensions
+    final screenHeight = MediaQuery.of(context).size.height;
+    final screenWidth = MediaQuery.of(context).size.width;
+    
+    // Responsive values based on screen size
+    final horizontalPadding = screenWidth * 0.08; // 8% of screen width
+    final iconSpacing = screenHeight * 0.05; // 5% of screen height
+    final titleSpacing = screenHeight * 0.04; // 4% of screen height
+    final bottomSpacing = screenHeight * 0.04; // 4% of screen height
+    final buttonSpacing = screenHeight * 0.02; // 2% of screen height
+    
+    // Determine if screen is small
+    final isSmallScreen = screenHeight < 700;
+
     return BlocListener<OutfitGalleryAccessCubit, OutfitGalleryAccessState>(
       listener: (context, state) {
         if (state.errorMessage != null && context.mounted) {
@@ -111,7 +121,6 @@ class OutfitGalleryAccessBody extends StatelessWidget {
           );
           context.read<OutfitGalleryAccessCubit>().clearError();
         }
-
         if (state.permissionGranted == false &&
             !state.isLoading &&
             context.mounted) {
@@ -134,33 +143,60 @@ class OutfitGalleryAccessBody extends StatelessWidget {
           return Scaffold(
             backgroundColor: const Color(0xFFF5ECE7),
             body: SafeArea(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 32),
-                child: Column(
-                  children: [
-                    const Spacer(flex: 2),
-                    const OutfitGalleryIconWidget(),
-                    const SizedBox(height: 40),
-                    const OutfitGalleryTitleDescriptionWidget(),
-                    const SizedBox(height: 32),
-                    const OutfitGalleryPrivacyNoticeWidget(),
-                    const Spacer(flex: 3),
-                    Column(
-                      children: [
-                        OutfitGalleryAllowAccessButton(
-                          onPressed: () => _onAllowAccessPressed(context),
-                          isLoading: state.isLoading,
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  return SingleChildScrollView(
+                    physics: const ClampingScrollPhysics(),
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints(
+                        minHeight: constraints.maxHeight,
+                      ),
+                      child: IntrinsicHeight(
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: horizontalPadding.clamp(24.0, 48.0),
+                          ),
+                          child: Column(
+                            children: [
+                              // Top spacer - reduced on small screens
+                              SizedBox(height: isSmallScreen ? 20 : iconSpacing),
+                              
+                              const OutfitGalleryIconWidget(),
+                              
+                              SizedBox(height: iconSpacing.clamp(24.0, 40.0)),
+                              
+                              const OutfitGalleryTitleDescriptionWidget(),
+                              
+                              SizedBox(height: titleSpacing.clamp(20.0, 32.0)),
+                              
+                              const OutfitGalleryPrivacyNoticeWidget(),
+                              
+                              // Flexible spacer that grows to push buttons to bottom
+                              const Spacer(),
+                              
+                              // Buttons section
+                              Column(
+                                children: [
+                                  OutfitGalleryAllowAccessButton(
+                                    onPressed: () => _onAllowAccessPressed(context),
+                                    isLoading: state.isLoading,
+                                  ),
+                                  SizedBox(height: buttonSpacing.clamp(12.0, 16.0)),
+                                  OutfitGalleryMaybeLaterButton(
+                                    onPressed: () => _maybeLater(context),
+                                    isLoading: state.isLoading,
+                                  ),
+                                ],
+                              ),
+                              
+                              SizedBox(height: bottomSpacing.clamp(24.0, 32.0)),
+                            ],
+                          ),
                         ),
-                        const SizedBox(height: 16),
-                        OutfitGalleryMaybeLaterButton(
-                          onPressed: () => _maybeLater(context),
-                          isLoading: state.isLoading,
-                        ),
-                      ],
+                      ),
                     ),
-                    const SizedBox(height: 32),
-                  ],
-                ),
+                  );
+                },
               ),
             ),
           );
