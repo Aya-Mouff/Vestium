@@ -1,3 +1,193 @@
+// import 'package:bloc/bloc.dart';
+// import 'my_profile_screen_state.dart';
+// import '../../../../repo/user_repo.dart';
+// import '../../../../repo/outfit_repo.dart';
+// import '../../../../repo/post_repo.dart';
+// import '../../../../repo/follow_repo.dart';
+// import '../../../../repo/outfit_category_repo.dart';
+// import '../../../../databases/db_models.dart';
+// import '../../../../databases/services/user_profile_service.dart';
+// import '../../../../databases/services/outfit_image_service.dart';
+// import '../../../../databases/services/post_image_service.dart'; // Add this import
+// import 'dart:io';
+
+// class MyProfileCubit extends Cubit<MyProfileState> {
+//   final UserRepo userRepo = UserRepo();
+//   final OutfitRepo outfitRepo = OutfitRepo();
+//   final PostRepo postRepo = PostRepo();
+//   final FollowRepo followRepo = FollowRepo();
+//   final OutfitCategoryRepo outfitCategoryRepo = OutfitCategoryRepo();
+
+//   MyProfileCubit() : super(MyProfileInitial());
+
+//   Future<void> loadUserData(int userId) async {
+//     if (userId == -1) {
+//       emit(MyProfileAccessDenied());
+//       return;
+//     }
+
+//     emit(MyProfileLoading());
+
+//     try {
+//       // Fetch user from database
+//       final user = await userRepo.getById(userId);
+//       if (user == null) {
+//         emit(MyProfileError(message: 'User not found'));
+//         return;
+//       }
+
+//       // Get followers and following counts
+//       final followersCount = await followRepo.getFollowersCount(userId);
+//       final followingCount = await followRepo.getFollowingCount(userId);
+
+//       // Get user's outfits
+//       final userOutfits = await outfitRepo.getByUserId(userId);
+      
+//       // Get user's posts
+//       final userPosts = await postRepo.getByUserId(userId);
+      
+//       // Get all outfit categories to find which ones the user has
+//       final allCategories = await outfitCategoryRepo.getAll();
+//       final userOutfitCategories = <String>[];
+      
+//       // Extract unique categories from user's outfits
+//       for (final outfit in userOutfits) {
+//         if (outfit.categoryId != null) {
+//           final category = allCategories.firstWhere(
+//             (cat) => cat.categoryId == outfit.categoryId,
+//             orElse: () => OutfitCategory(categoryName: 'Uncategorized'),
+//           );
+//           final categoryName = category.categoryName ?? 'Uncategorized';
+//           if (!userOutfitCategories.contains(categoryName)) {
+//             userOutfitCategories.add(categoryName);
+//           }
+//         } else {
+//           // Add 'Uncategorized' if outfit has no category
+//           if (!userOutfitCategories.contains('Uncategorized')) {
+//             userOutfitCategories.add('Uncategorized');
+//           }
+//         }
+//       }
+
+//       // Get the valid profile image path
+//       final profileImagePath = await _getValidProfileImagePath(userId, user.pfp);
+
+//       // Convert User model to Map for compatibility with existing UI
+//       final currentUserMap = {
+//         'id': user.userId,
+//         'username': user.username ?? 'Unknown User',
+//         'fullName': user.fullName ?? 'Unknown',
+//         'bio': user.bio ?? '',
+//         'pfp': profileImagePath,
+//         'followersCount': followersCount,
+//         'followingCount': followingCount,
+//         'customOutfitCategories': userOutfitCategories,
+//       };
+
+//       // Convert outfits to format expected by UI, with proper image paths
+//       final outfitsList = await Future.wait(userOutfits.map((outfit) async {
+//         final category = allCategories.firstWhere(
+//           (cat) => cat.categoryId == outfit.categoryId,
+//           orElse: () => OutfitCategory(categoryName: 'Uncategorized'),
+//         );
+        
+//         // Get outfit image path from OutfitImageService
+//         final outfitImagePath = await OutfitImageService.getOutfitImagePath(outfit.outfitId ?? -1);
+        
+//         return {
+//           'id': outfit.outfitId,
+//           'userId': outfit.userId,
+//           'name': outfit.outfitName ?? 'Unnamed Outfit',
+//           'description': outfit.description ?? '',
+//           'category': category.categoryName ?? 'Uncategorized',
+//           'categoryId': outfit.categoryId,
+//           'season': outfit.season ?? '',
+//           'date': outfit.date ?? '',
+//           'imageUrl': outfitImagePath ?? 'assets/images/placeholder_outfit.png',
+//           'imagePath': outfitImagePath,
+//         };
+//       }));
+
+//       // Convert posts to format expected by UI, with proper image paths
+//       final postsList = await Future.wait(userPosts.map((post) async {
+//         // Get post image path from PostImageService
+//         final postImagePath = await PostImageService.getPostImagePath(post.postId ?? -1);
+        
+//         return {
+//           'id': post.postId,
+//           'outfitId': post.outfitId,
+//           'caption': post.caption ?? '',
+//           'date': post.date ?? '',
+//           'imageUrl': postImagePath ?? post.imagePath ?? 'assets/images/placeholder_post.png',
+//           'imagePath': postImagePath ?? post.imagePath,
+//         };
+//       }));
+
+//       // Ensure 'All' is not in the categories list
+//       final categoriesWithoutAll = userOutfitCategories.where((cat) => cat != 'All').toList();
+
+//       emit(
+//         MyProfileLoaded(
+//           currentUser: currentUserMap,
+//           outfits: outfitsList,
+//           filteredOutfits: List.from(outfitsList),
+//           posts: postsList,
+//           userOutfitCategories: categoriesWithoutAll,
+//           selectedCategory: 'All',
+//           showOutfits: false,
+//         ),
+//       );
+//     } catch (e) {
+//       emit(MyProfileError(message: e.toString()));
+//     }
+//   }
+
+//   /// Helper method to get the valid profile image path
+//   Future<String> _getValidProfileImagePath(int userId, String? pfpPath) async {
+//     // If a path is provided in the database, check if it's valid
+//     if (pfpPath != null && pfpPath.isNotEmpty) {
+//       // Check if it's an asset path
+//       if (pfpPath.startsWith('assets/')) {
+//         return pfpPath;
+//       }
+      
+//       // Check if it's a file path that exists
+//       final file = File(pfpPath);
+//       final fileExists = await file.exists();
+//       if (fileExists) {
+//         return pfpPath;
+//       }
+//     }
+    
+//     // If no valid path in database, check user_profiles directory
+//     final userProfilePath = await UserProfileService.getUserProfileImagePath(userId);
+//     if (userProfilePath != null) {
+//       return userProfilePath;
+//     }
+    
+//     // Fallback to default asset
+//     return 'assets/images/icons/person.jpg';
+//   }
+
+//   void toggleView(bool showOutfits) {
+//     if (state is MyProfileLoaded) {
+//       final s = state as MyProfileLoaded;
+//       emit(s.copyWith(showOutfits: showOutfits));
+//     }
+//   }
+
+//   void filterOutfits(String category) {
+//     if (state is MyProfileLoaded) {
+//       final s = state as MyProfileLoaded;
+//       final filtered = category == 'All'
+//           ? List.from(s.outfits)
+//           : s.outfits.where((o) => o['category'] == category).toList();
+//       emit(s.copyWith(filteredOutfits: filtered, selectedCategory: category));
+//     }
+//   }
+// }
+
+// ==========================================================================================
 import 'package:bloc/bloc.dart';
 import 'my_profile_screen_state.dart';
 import '../../../../repo/user_repo.dart';
@@ -5,10 +195,11 @@ import '../../../../repo/outfit_repo.dart';
 import '../../../../repo/post_repo.dart';
 import '../../../../repo/follow_repo.dart';
 import '../../../../repo/outfit_category_repo.dart';
-import '../../../../databases/db_models.dart';
+import '../../../../repo/outfit_category_join_repo.dart'; 
+// import 'package:vestium/databases/db_models.dart';
 import '../../../../databases/services/user_profile_service.dart';
 import '../../../../databases/services/outfit_image_service.dart';
-import '../../../../databases/services/post_image_service.dart'; // Add this import
+import '../../../../databases/services/post_image_service.dart';
 import 'dart:io';
 
 class MyProfileCubit extends Cubit<MyProfileState> {
@@ -17,6 +208,7 @@ class MyProfileCubit extends Cubit<MyProfileState> {
   final PostRepo postRepo = PostRepo();
   final FollowRepo followRepo = FollowRepo();
   final OutfitCategoryRepo outfitCategoryRepo = OutfitCategoryRepo();
+  final OutfitCategoryJoinRepo outfitCategoryJoinRepo = OutfitCategoryJoinRepo(); // ADD THIS
 
   MyProfileCubit() : super(MyProfileInitial());
 
@@ -47,23 +239,24 @@ class MyProfileCubit extends Cubit<MyProfileState> {
       final userPosts = await postRepo.getByUserId(userId);
       
       // Get all outfit categories to find which ones the user has
-      final allCategories = await outfitCategoryRepo.getAll();
-      final userOutfitCategories = <String>[];
+      // final allCategories = await outfitCategoryRepo.getAll();
+      final userOutfitCategories = <String>{'All'}; // Start with 'All'
       
-      // Extract unique categories from user's outfits
+      // For each outfit, get its categories from the join table
       for (final outfit in userOutfits) {
-        if (outfit.categoryId != null) {
-          final category = allCategories.firstWhere(
-            (cat) => cat.categoryId == outfit.categoryId,
-            orElse: () => OutfitCategory(categoryName: 'Uncategorized'),
-          );
-          final categoryName = category.categoryName ?? 'Uncategorized';
-          if (!userOutfitCategories.contains(categoryName)) {
-            userOutfitCategories.add(categoryName);
-          }
-        } else {
-          // Add 'Uncategorized' if outfit has no category
-          if (!userOutfitCategories.contains('Uncategorized')) {
+        if (outfit.outfitId != null) {
+          // Get categories for this outfit from outfit_category_join
+          final outfitCategories = await outfitCategoryJoinRepo.getCategoriesForOutfit(outfit.outfitId!);
+          
+          if (outfitCategories.isNotEmpty) {
+            // Add each category name
+            for (final category in outfitCategories) {
+              if (category.categoryName != null && category.categoryName!.isNotEmpty) {
+                userOutfitCategories.add(category.categoryName!);
+              }
+            }
+          } else {
+            // If no categories, mark as 'Uncategorized'
             userOutfitCategories.add('Uncategorized');
           }
         }
@@ -81,15 +274,25 @@ class MyProfileCubit extends Cubit<MyProfileState> {
         'pfp': profileImagePath,
         'followersCount': followersCount,
         'followingCount': followingCount,
-        'customOutfitCategories': userOutfitCategories,
+        'customOutfitCategories': userOutfitCategories.toList(),
       };
 
-      // Convert outfits to format expected by UI, with proper image paths
+      // Convert outfits to format expected by UI, with proper image paths and categories
       final outfitsList = await Future.wait(userOutfits.map((outfit) async {
-        final category = allCategories.firstWhere(
-          (cat) => cat.categoryId == outfit.categoryId,
-          orElse: () => OutfitCategory(categoryName: 'Uncategorized'),
-        );
+        // Get categories for this outfit from the join table
+        List<String> outfitCategoryNames = [];
+        if (outfit.outfitId != null) {
+          final outfitCategories = await outfitCategoryJoinRepo.getCategoriesForOutfit(outfit.outfitId!);
+          outfitCategoryNames = outfitCategories
+              .map((cat) => cat.categoryName ?? 'Uncategorized')
+              .where((name) => name.isNotEmpty)
+              .toList();
+        }
+        
+        // If no categories, mark as 'Uncategorized'
+        if (outfitCategoryNames.isEmpty) {
+          outfitCategoryNames = ['Uncategorized'];
+        }
         
         // Get outfit image path from OutfitImageService
         final outfitImagePath = await OutfitImageService.getOutfitImagePath(outfit.outfitId ?? -1);
@@ -99,8 +302,8 @@ class MyProfileCubit extends Cubit<MyProfileState> {
           'userId': outfit.userId,
           'name': outfit.outfitName ?? 'Unnamed Outfit',
           'description': outfit.description ?? '',
-          'category': category.categoryName ?? 'Uncategorized',
-          'categoryId': outfit.categoryId,
+          'categories': outfitCategoryNames, // CHANGED from 'category' to 'categories' (list)
+          'category': outfitCategoryNames.firstOrNull ?? 'Uncategorized', // Keep for backward compatibility
           'season': outfit.season ?? '',
           'date': outfit.date ?? '',
           'imageUrl': outfitImagePath ?? 'assets/images/placeholder_outfit.png',
@@ -123,8 +326,9 @@ class MyProfileCubit extends Cubit<MyProfileState> {
         };
       }));
 
-      // Ensure 'All' is not in the categories list
-      final categoriesWithoutAll = userOutfitCategories.where((cat) => cat != 'All').toList();
+      // Convert Set to List and ensure 'All' is first
+      final categoriesList = userOutfitCategories.toList()
+        ..sort((a, b) => a == 'All' ? -1 : b == 'All' ? 1 : a.compareTo(b));
 
       emit(
         MyProfileLoaded(
@@ -132,7 +336,7 @@ class MyProfileCubit extends Cubit<MyProfileState> {
           outfits: outfitsList,
           filteredOutfits: List.from(outfitsList),
           posts: postsList,
-          userOutfitCategories: categoriesWithoutAll,
+          userOutfitCategories: categoriesList,
           selectedCategory: 'All',
           showOutfits: false,
         ),
@@ -181,7 +385,11 @@ class MyProfileCubit extends Cubit<MyProfileState> {
       final s = state as MyProfileLoaded;
       final filtered = category == 'All'
           ? List.from(s.outfits)
-          : s.outfits.where((o) => o['category'] == category).toList();
+          : s.outfits.where((o) {
+              // Check if outfit has this category
+              final categories = o['categories'] as List<String>;
+              return categories.contains(category);
+            }).toList();
       emit(s.copyWith(filteredOutfits: filtered, selectedCategory: category));
     }
   }

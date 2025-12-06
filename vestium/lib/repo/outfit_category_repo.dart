@@ -9,6 +9,28 @@ class OutfitCategoryRepo {
     return res.map((m) => OutfitCategory.fromMap(m)).toList();
   }
 
+  Future<OutfitCategory?> getById(int id) async {
+    final db = await DBHelper.getDatabase();
+    final res = await db.query(
+      'outfit_categories',
+      where: 'category_id = ?',
+      whereArgs: [id],
+    );
+    if (res.isEmpty) return null;
+    return OutfitCategory.fromMap(res.first);
+  }
+
+  Future<OutfitCategory?> getByName(String name) async {
+    final db = await DBHelper.getDatabase();
+    final res = await db.query(
+      'outfit_categories',
+      where: 'category_name = ?',
+      whereArgs: [name],
+    );
+    if (res.isEmpty) return null;
+    return OutfitCategory.fromMap(res.first);
+  }
+
   Future<bool> insert(OutfitCategory cat) async {
     final db = await DBHelper.getDatabase();
     await db.insert('outfit_categories', cat.toMap(), conflictAlgorithm: ConflictAlgorithm.replace);
