@@ -6,8 +6,17 @@ class StatsRow extends StatelessWidget {
   final int outfitsCount;
   final int followers;
   final int following;
+  final int postsCount; // ADD THIS
   final int userId;
-  const StatsRow({super.key, required this.outfitsCount, required this.followers, required this.following, required this.userId});
+  
+  const StatsRow({
+    super.key, 
+    required this.outfitsCount, 
+    required this.followers, 
+    required this.following,
+    required this.postsCount, // ADD THIS
+    required this.userId
+  });
 
   Widget _buildStat(BuildContext context, String label, int value) {
     return Column(
@@ -15,11 +24,29 @@ class StatsRow extends StatelessWidget {
         Text(value.toString(), style: const TextStyle(fontWeight: FontWeight.w600)),
         const SizedBox(height: 4),
         if (label == "Followers")
-          TextButton(onPressed: () {context.pushRoute(FollowersRoute(userId: userId, currentUserId: userId));}, child: Text(label, style: const TextStyle(color: Colors.black54) )),
+          TextButton(
+            onPressed: () {
+              context.pushRoute(FollowersRoute(userId: userId, currentUserId: userId));
+            }, 
+            child: Text(label, style: const TextStyle(color: Colors.black54))
+          ),
         if (label == "Following")
-          TextButton(onPressed: () {context.pushRoute(FollowingRoute(userId: userId, currentUserId: userId));}, child: Text(label, style: const TextStyle(color: Colors.black54) )),
+          TextButton(
+            onPressed: () {
+              context.pushRoute(FollowingRoute(userId: userId, currentUserId: userId));
+            }, 
+            child: Text(label, style: const TextStyle(color: Colors.black54))
+          ),
         if (label == "Outfits")
-          TextButton(onPressed: () {}, child: Text(label, style: const TextStyle(color: Colors.black54) )),
+          TextButton(
+            onPressed: () {}, 
+            child: Text(label, style: const TextStyle(color: Colors.black54))
+          ),
+        if (label == "Posts") // ADD THIS
+          TextButton(
+            onPressed: () {}, 
+            child: Text(label, style: const TextStyle(color: Colors.black54))
+          ),
       ],
     );
   }
@@ -29,10 +56,14 @@ class StatsRow extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 24),
       padding: const EdgeInsets.symmetric(vertical: 16),
-      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(20)),
+      decoration: BoxDecoration(
+        color: Colors.white, 
+        borderRadius: BorderRadius.circular(20)
+      ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
+          _buildStat(context, 'Posts', postsCount), // ADD THIS - make it first
           _buildStat(context, 'Outfits', outfitsCount),
           _buildStat(context, 'Followers', followers),
           _buildStat(context, 'Following', following),

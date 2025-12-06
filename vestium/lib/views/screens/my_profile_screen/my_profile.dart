@@ -112,6 +112,7 @@ class MyProfileScreen extends StatelessWidget {
                         outfitsCount: state.outfits.length,
                         followers: state.currentUser['followersCount'],
                         following: state.currentUser['followingCount'],
+                        postsCount: state.posts.length,
                         userId: userId,
                       ),
                       const SizedBox(height: 12),

@@ -203,7 +203,7 @@ class CreateOutfitCubit extends Cubit<CreateOutfitState> {
         userId: _userId,
         outfitName: outfitName.trim(),
         description: description?.isNotEmpty == true ? description : null,
-        categoryId: categoryId,
+        // categoryId: categoryId,
         season: season ?? 'All',
         date: now,
       );
