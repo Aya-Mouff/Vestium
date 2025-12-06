@@ -4,7 +4,7 @@
 // AutoRouterGenerator
 // **************************************************************************
 
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, unused_element_parameter
 // coverage:ignore-file
 
 part of 'app_router.dart';
@@ -296,6 +296,12 @@ abstract class _$AppRouter extends RootStackRouter {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: const ResetPasswordScreen(),
+      );
+    },
+    SaveOutfitRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const SaveOutfitScreen(),
       );
     },
     SearchRoute.name: (routeData) {
@@ -1286,6 +1292,20 @@ class ResetPasswordRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'ResetPasswordRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [SaveOutfitScreen]
+class SaveOutfitRoute extends PageRouteInfo<void> {
+  const SaveOutfitRoute({List<PageRouteInfo>? children})
+      : super(
+          SaveOutfitRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'SaveOutfitRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }

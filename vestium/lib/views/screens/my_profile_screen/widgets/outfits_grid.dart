@@ -80,3 +80,4 @@ class OutfitsGrid extends StatelessWidget {
     }
   }
 }
+

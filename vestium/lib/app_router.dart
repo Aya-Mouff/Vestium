@@ -48,6 +48,7 @@ import 'package:vestium/views/screens/wardrobe/wardrobe_screen.dart';
 import 'views/screens/set_new_password_screen.dart';
 import 'views/screens/access_denied.dart';
 import 'package:vestium/views/screens/edit_item_details/edit_item_details_screen.dart';
+import 'package:vestium/views/screens/save_outfit/save_outfit_screen.dart';
 
 part 'app_router.gr.dart';
 
@@ -109,5 +110,6 @@ class AppRouter extends _$AppRouter {
     AutoRoute(page: WardrobeRoute.page, path: '/wardrobe/:userId'),
     AutoRoute(page: AccessDeniedRoute.page, path: '/access-denied'),
     AutoRoute(page: EditItemDetailsRoute.page, path: '/edit-item/:itemId'),
+    AutoRoute(page: SaveOutfitRoute.page),
   ];
 }
