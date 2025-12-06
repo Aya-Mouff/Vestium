@@ -278,4 +278,4 @@ class MyPostsScreenCubit extends Cubit<MyPostsScreenState> {
     
     return formattedPosts;
   }
-}
+}   
