@@ -1,3 +1,4 @@
+// post_actions.dart - Fixed version
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../cubit/home_screen_cubit.dart';
@@ -9,14 +10,14 @@ class PostActions extends StatelessWidget {
   final Map<String, dynamic> post;
   final int? userId;
   final int currentUserId;
-  final int postIndex;
+  final int postId;
 
   const PostActions({
     super.key,
     required this.post,
     required this.userId,
     required this.currentUserId,
-    required this.postIndex,
+    required this.postId,
   });
 
   @override
@@ -29,16 +30,10 @@ class PostActions extends StatelessWidget {
           Row(
             children: [
               // Like button
-              BlocSelector<HomeCubit, HomeState, bool>(
-                selector: (state) {
-                  if (state is HomeLoaded) {
-                    final postData = state.posts[postIndex];
-                    final likedBy = List<int>.from(postData['likedBy'] ?? []);
-                    return likedBy.contains(currentUserId);
-                  }
-                  return false;
-                },
-                builder: (context, isLiked) {
+              BlocBuilder<HomeCubit, HomeState>(
+                builder: (context, state) {
+                  final isLiked = post['isLiked'] as bool;
+                  
                   return IconButton(
                     icon: isLiked
                         ? const Icon(Icons.favorite, size: 24, color: Colors.red)
@@ -53,7 +48,8 @@ class PostActions extends StatelessWidget {
                         );
                         return;
                       }
-                      context.read<HomeCubit>().toggleLike(postIndex, currentUserId);
+                      // Fixed: using toggleLike method
+                      context.read<HomeCubit>().toggleLike(postId, currentUserId);
                     },
                     padding: EdgeInsets.zero,
                     constraints: const BoxConstraints(),
@@ -68,7 +64,7 @@ class PostActions extends StatelessWidget {
                 onPressed: () {
                   context.router.push(
                     CommentsRoute(
-                      postId: post['id'], // already int
+                      postId: postId,
                       userId: currentUserId,
                     ),
                   );
@@ -82,14 +78,10 @@ class PostActions extends StatelessWidget {
           const SizedBox(height: 8),
 
           // Likes count
-          BlocSelector<HomeCubit, HomeState, int>(
-            selector: (state) {
-              if (state is HomeLoaded) {
-                return state.posts[postIndex]['likesCount'] as int;
-              }
-              return post['likesCount'] as int;
-            },
-            builder: (context, likesCount) {
+          BlocBuilder<HomeCubit, HomeState>(
+            builder: (context, state) {
+              final likesCount = post['likesCount'] as int;
+              
               return Text(
                 '$likesCount likes',
                 style: const TextStyle(
@@ -104,17 +96,10 @@ class PostActions extends StatelessWidget {
           const SizedBox(height: 4),
 
           // Caption
-          RichText(
+          post['caption'] != '' 
+          ? RichText(
             text: TextSpan(
               children: [
-                TextSpan(
-                  text: '${post['username']} ',
-                  style: const TextStyle(
-                      fontFamily: 'Inter',
-                      fontWeight: FontWeight.w600,
-                      fontSize: 13,
-                      color: Colors.black),
-                ),
                 TextSpan(
                   text: post['caption'],
                   style: const TextStyle(
@@ -125,7 +110,8 @@ class PostActions extends StatelessWidget {
                 ),
               ],
             ),
-          ),
+          )
+          : const SizedBox.shrink(),
 
           const SizedBox(height: 8),
 
@@ -134,7 +120,7 @@ class PostActions extends StatelessWidget {
             onTap: () {
               context.router.push(
                 CommentsRoute(
-                  postId: post['id'], // already int
+                  postId: postId,
                   userId: currentUserId,
                 ),
               );
