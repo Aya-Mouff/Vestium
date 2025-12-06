@@ -16,17 +16,21 @@ class PostRepo {
     return res.map((m) => PostModel.fromMap(m)).toList();
   }
 
+  /// Get posts by user ID
+  /// Now includes both posts with outfits AND gallery posts (outfit_id = NULL)
   Future<List<PostModel>> getByUserId(int userId) async {
     final db = await DBHelper.getDatabase();
 
-    // JOIN posts with outfits to get posts by user_id
+    // Use LEFT JOIN to include posts without outfits (gallery posts)
     final result = await db.rawQuery('''
       SELECT p.* FROM posts p
-      INNER JOIN outfits o ON p.outfit_id = o.outfit_id
-      WHERE o.user_id = ?
+      LEFT JOIN outfits o ON p.outfit_id = o.outfit_id
+      WHERE o.user_id = ? OR (p.outfit_id IS NULL)
       ORDER BY p.date DESC
     ''', [userId]);
 
+    print('📊 Found ${result.length} posts for user $userId');
+    
     return result.map((m) => PostModel.fromMap(m)).toList();
   }
 
@@ -65,7 +69,7 @@ class PostRepo {
     final db = await DBHelper.getDatabase();
     final res = await db.query(
       'posts',
-      where: 'post_id = ?', // fixed column name from 'postId' to 'post_id'
+      where: 'post_id = ?',
       whereArgs: [postId],
     );
     return res.map((m) => PostModel.fromMap(m)).toList();

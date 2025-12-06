@@ -308,9 +308,61 @@ class OutfitCategoryJoin {
 // POST (With caption added)
 // ------------------------
 // In db_models.dart, update the PostModel class:
+// class PostModel {
+//   int? postId;
+//   int? outfitId;
+//   String? imagePath;
+//   String? caption;
+//   String? date;
+
+//   PostModel({
+//     this.postId,
+//     this.outfitId,
+//     this.imagePath,
+//     this.caption,
+//     this.date,
+//   });
+
+//   factory PostModel.fromMap(Map<String, dynamic> map) => PostModel(
+//         postId: map['post_id'],
+//         outfitId: map['outfit_id'],
+//         imagePath: map['image_path'],
+//         caption: map['caption'],
+//         date: map['date'],
+//       );
+
+//   Map<String, dynamic> toMap() => {
+//         'post_id': postId,
+//         'outfit_id': outfitId,
+//         'image_path': imagePath,
+//         'caption': caption,
+//         'date': date,
+//       };
+
+//   // Add this copyWith method:
+//   PostModel copyWith({
+//     int? postId,
+//     int? outfitId,
+//     String? imagePath,
+//     String? caption,
+//     String? date,
+//   }) {
+//     return PostModel(
+//       postId: postId ?? this.postId,
+//       outfitId: outfitId ?? this.outfitId,
+//       imagePath: imagePath ?? this.imagePath,
+//       caption: caption ?? this.caption,
+//       date: date ?? this.date,
+//     );
+//   }
+// }
+
+// Add this to your db_models.dart - Updated PostModel
+
 class PostModel {
   int? postId;
   int? outfitId;
+  int? userId;      // ← ADD THIS for gallery posts
   String? imagePath;
   String? caption;
   String? date;
@@ -318,6 +370,7 @@ class PostModel {
   PostModel({
     this.postId,
     this.outfitId,
+    this.userId,    // ← ADD THIS
     this.imagePath,
     this.caption,
     this.date,
@@ -326,6 +379,7 @@ class PostModel {
   factory PostModel.fromMap(Map<String, dynamic> map) => PostModel(
         postId: map['post_id'],
         outfitId: map['outfit_id'],
+        userId: map['user_id'],    // ← ADD THIS
         imagePath: map['image_path'],
         caption: map['caption'],
         date: map['date'],
@@ -334,15 +388,16 @@ class PostModel {
   Map<String, dynamic> toMap() => {
         'post_id': postId,
         'outfit_id': outfitId,
+        'user_id': userId,         // ← ADD THIS
         'image_path': imagePath,
         'caption': caption,
         'date': date,
       };
 
-  // Add this copyWith method:
   PostModel copyWith({
     int? postId,
     int? outfitId,
+    int? userId,               // ← ADD THIS
     String? imagePath,
     String? caption,
     String? date,
@@ -350,6 +405,7 @@ class PostModel {
     return PostModel(
       postId: postId ?? this.postId,
       outfitId: outfitId ?? this.outfitId,
+      userId: userId ?? this.userId,           // ← ADD THIS
       imagePath: imagePath ?? this.imagePath,
       caption: caption ?? this.caption,
       date: date ?? this.date,

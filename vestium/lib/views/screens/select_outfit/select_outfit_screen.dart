@@ -8,6 +8,7 @@ import 'widgets/select_outfit_app_bar.dart';
 import 'widgets/saved_outfits_grid.dart';
 import '../../../../repo/outfit_repo.dart';
 import 'widgets/gallery_empty_page.dart';
+import '../../../../databases/services/outfit_image_service.dart';
 
 import '../outfit_gallery_access/outfit_gallery_access_body.dart';
 import '../outfit_gallery_access/cubit/outfit_gallery_access_cubit.dart';
@@ -58,7 +59,7 @@ class SelectOutfitScreen extends StatelessWidget {
                       ),
                       BlocProvider(
                         create: (_) => OutfitGalleryAccessCubit(),
-                        child: const OutfitGalleryAccessBody(), // no callback
+                        child: const OutfitGalleryAccessBody(),
                       ),
                     ],
                   ),
@@ -69,7 +70,9 @@ class SelectOutfitScreen extends StatelessWidget {
                     width: double.infinity,
                     height: 48,
                     child: ElevatedButton(
-                      onPressed: state.selectedOutfit != null ? () => context.router.pop(state.selectedOutfit) : null,
+                      onPressed: state.selectedOutfit != null 
+                          ? () => _onContinue(context, state.selectedOutfit!)
+                          : null,
                       style: ElevatedButton.styleFrom(
                         backgroundColor: state.selectedOutfit != null
                             ? const Color(0xFF8B6B5C)
@@ -94,5 +97,36 @@ class SelectOutfitScreen extends StatelessWidget {
         },
       ),
     );
+  }
+
+  Future<void> _onContinue(BuildContext context, outfit) async {
+    try {
+      // Get the outfit's image path
+      String? imagePath = await OutfitImageService.getOutfitImagePath(outfit.outfitId!);
+      
+      print('📦 Returning outfit data: id=${outfit.outfitId}, name=${outfit.outfitName}, imagePath=$imagePath');
+      
+      // Return as Map with all necessary data
+      final result = {
+        'id': outfit.outfitId,
+        'outfitId': outfit.outfitId,
+        'outfit_id': outfit.outfitId,
+        'name': outfit.outfitName ?? 'Untitled',
+        'outfitName': outfit.outfitName ?? 'Untitled',
+        'imageUrl': imagePath,
+        'imagePath': imagePath,
+        'image_path': imagePath,
+        'description': outfit.description,
+        'season': outfit.season,
+        'date': outfit.date,
+      };
+      
+      context.router.pop(result);
+    } catch (e) {
+      print('❌ Error preparing outfit data: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error selecting outfit: $e')),
+      );
+    }
   }
 }
