@@ -35,8 +35,8 @@ import 'views/screens/my_profile_screen/my_profile.dart';
 import './views/screens/onboarding_screen1.dart';
 import './views/screens/onboarding_screen2.dart';
 import './views/screens/onboarding_screen3.dart';
-import './views/screens/manage_categories_screen1.dart';
-import './views/screens/manage_categories_screen2.dart';
+import './views/screens/manage_categories1/manage_categories_screen.dart';
+import './views/screens/manage_categories2/manage_categories2_screen.dart';
 import './views/screens/settings_screen/settings_screen1.dart';
 import './views/screens/searching_screen/searching_screen1.dart';
 import './views/screens/followers_screen/followers_screen.dart';
@@ -94,7 +94,7 @@ class AppRouter extends _$AppRouter {
     AutoRoute(page: OnboardingRoute3.page, path: '/onboarding3'),
     AutoRoute(
       page: ManageCategoriesRoute.page,
-      path: '/manage_categories1/:userId',
+      path: '/manage_categories1'
     ),
     AutoRoute(
       page: ManageCategoriesRoute2.page,
