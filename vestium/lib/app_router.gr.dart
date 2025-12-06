@@ -4,7 +4,7 @@
 // AutoRouterGenerator
 // **************************************************************************
 
-// ignore_for_file: type=lint, unused_element_parameter
+// ignore_for_file: type=lint
 // coverage:ignore-file
 
 part of 'app_router.dart';
@@ -87,7 +87,7 @@ abstract class _$AppRouter extends RootStackRouter {
       final pathParams = routeData.inheritedPathParams;
       final args = routeData.argsAs<EditOutfitRouteArgs>(
           orElse: () =>
-              EditOutfitRouteArgs(outfitId: pathParams.getString('outfitId')));
+              EditOutfitRouteArgs(outfitId: pathParams.getInt('outfitId')));
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: EditOutfitScreen(
@@ -631,7 +631,7 @@ class EditItemRouteArgs {
 class EditOutfitRoute extends PageRouteInfo<EditOutfitRouteArgs> {
   EditOutfitRoute({
     Key? key,
-    required String outfitId,
+    required int outfitId,
     List<PageRouteInfo>? children,
   }) : super(
           EditOutfitRoute.name,
@@ -657,7 +657,7 @@ class EditOutfitRouteArgs {
 
   final Key? key;
 
-  final String outfitId;
+  final int outfitId;
 
   @override
   String toString() {
