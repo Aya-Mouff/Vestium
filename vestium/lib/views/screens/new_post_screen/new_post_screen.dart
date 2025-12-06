@@ -51,17 +51,21 @@ class _NewPostViewState extends State<_NewPostView> {
     super.dispose();
   }
 
-  Future<void> _selectOutfit(BuildContext context) async {
-    final cubit = context.read<NewPostCubit>();
+Future _selectOutfit(BuildContext context) async {
+  final cubit = context.read<NewPostCubit>();
 
-    final result = await context.router.push(
-      SelectOutfitRoute(userId: cubit.userId),
-    );
+  final result = await context.router.push(
+    SelectOutfitRoute(userId: cubit.userId),
+  );
 
-    if (result != null && result is Map<String, dynamic>) {
-      cubit.setSelectedOutfit(result);
-    }
+  if (result != null && result is Map) {
+    final typed = Map<String, dynamic>.from(result);  // 👈 cast here
+    print('✅ NewPost got outfit: $typed');
+    cubit.setSelectedOutfit(typed);
   }
+}
+
+
 
   @override
   Widget build(BuildContext context) {

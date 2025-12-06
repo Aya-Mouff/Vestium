@@ -6,7 +6,7 @@ import 'new_post_state.dart';
 
 class NewPostCubit extends Cubit<NewPostState> {
   final PostRepo _postRepo;
-  final int userId; // kept in case you later add user_id to posts
+  final int userId;
 
   NewPostCubit(this._postRepo, {required this.userId})
       : super(const NewPostState());
@@ -24,7 +24,6 @@ class NewPostCubit extends Cubit<NewPostState> {
   }
 
   void togglePublic(bool value) {
-    // You currently don't store isPublic in PostModel, but we keep it in state
     emit(
       state.copyWith(
         isPublic: value,
@@ -35,6 +34,7 @@ class NewPostCubit extends Cubit<NewPostState> {
   }
 
   void setSelectedOutfit(Map<String, dynamic> outfit) {
+    print('✅ Cubit selected outfit: $outfit');
     emit(
       state.copyWith(
         selectedOutfit: outfit,
@@ -69,20 +69,25 @@ class NewPostCubit extends Cubit<NewPostState> {
     );
 
     try {
-      // Map selectedOutfit -> PostModel fields
       final outfit = state.selectedOutfit!;
 
       final post = PostModel(
-        // postId left null so SQLite can auto-generate if configured
         outfitId: outfit['id'] is int
             ? outfit['id'] as int
             : int.tryParse(outfit['id'].toString()),
-        imagePath: outfit['imageUrl'] as String?, // key from your UI Image.asset
+        imagePath: outfit['imageUrl'] as String?,
         caption: state.caption.isEmpty ? null : state.caption,
         date: DateTime.now().toIso8601String(),
       );
 
-      await _postRepo.insert(post);
+      print('📝 Creating new post: '
+          'outfitId=${post.outfitId}, '
+          'imagePath=${post.imagePath}, '
+          'caption=${post.caption}');
+
+      final newId = await _postRepo.insert(post);
+
+      print('✅ Post inserted into DB with id: $newId');
 
       emit(
         state.copyWith(
@@ -91,6 +96,7 @@ class NewPostCubit extends Cubit<NewPostState> {
         ),
       );
     } catch (e) {
+      print('❌ Failed to create post: $e');
       emit(
         state.copyWith(
           isLoading: false,

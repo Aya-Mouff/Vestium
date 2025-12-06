@@ -42,7 +42,7 @@ import './views/screens/searching_screen/searching_screen1.dart';
 import './views/screens/followers_screen/followers_screen.dart';
 import './views/screens/following_screen/following_screen.dart';
 import './views/screens/new_post_screen/new_post_screen.dart';
-import './views/screens/selected_outfit_screen.dart';
+import './views/screens/select_outfit/select_outfit_screen.dart';
 // import './views/screens/wardrobe_screen.dart';
 import 'package:vestium/views/screens/wardrobe/wardrobe_screen.dart';
 import 'views/screens/set_new_password_screen.dart';
