@@ -17,7 +17,6 @@ class EditButtons extends StatelessWidget {
           ],
         ),
         const SizedBox(height: 12),
-        const _HelperText(),
       ],
     );
   }
@@ -105,23 +104,5 @@ class _RemoveBgButton extends StatelessWidget {
 
   void _removeBackground(BuildContext context) { // FIXED: Added context parameter
     context.read<EditItemCubit>().startRemovingBg();
-  }
-}
-
-class _HelperText extends StatelessWidget {
-  const _HelperText();
-
-  @override
-  Widget build(BuildContext context) {
-    return Text(
-      'Drag corners to adjust crop area',
-      style: TextStyle(
-        fontFamily: 'Inter',
-        fontSize: 13,
-        fontWeight: FontWeight.w200,
-        color: const Color(0xFF795548).withAlpha((0.7 * 255).toInt()),
-        letterSpacing: 0.1,
-      ),
-    );
   }
 }

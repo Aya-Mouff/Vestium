@@ -6,6 +6,9 @@ import '../../../../repo/follow_repo.dart';
 import '../../../../databases/db_models.dart';
 import 'user_profile_screen_state.dart';
 import 'package:flutter/material.dart';
+import '../../../../databases/services/user_profile_service.dart';
+import '../../../../databases/services/post_image_service.dart';
+import 'dart:io';
 
 class UserProfileCubit extends Cubit<UserProfileState> {
   final UserRepo _userRepo;
@@ -49,9 +52,24 @@ class UserProfileCubit extends Cubit<UserProfileState> {
       final followersCount = await _followRepo.getFollowersCount(userId);
       final followingCount = await _followRepo.getFollowingCount(userId);
 
+      // 5. Get the valid profile image path using UserProfileService
+      final profileImagePath = await _getValidProfileImagePath(userId, user.pfp);
+
+      // 6. Get post image paths using PostImageService
+      final postsWithImages = await Future.wait(posts.map((post) async {
+        final postImagePath = await PostImageService.getPostImagePath(post.postId ?? -1);
+        // Use copyWith to update the imagePath
+        return post.copyWith(
+          imagePath: postImagePath ?? post.imagePath,
+        );
+      }));
+
+      // 7. Create updated user with correct profile image path
+      final updatedUser = user.copyWith(pfp: profileImagePath);
+
       emit(UserProfileLoaded(
-        user: user,
-        posts: posts,
+        user: updatedUser,
+        posts: postsWithImages,
         isFollowing: isFollowing,
         followersCount: followersCount,
         followingCount: followingCount,
@@ -59,6 +77,33 @@ class UserProfileCubit extends Cubit<UserProfileState> {
     } catch (e) {
       emit(UserProfileError(e.toString()));
     }
+  }
+
+  /// Helper method to get the valid profile image path
+  Future<String> _getValidProfileImagePath(int userId, String? pfpPath) async {
+    // If a path is provided in the database, check if it's valid
+    if (pfpPath != null && pfpPath.isNotEmpty) {
+      // Check if it's an asset path
+      if (pfpPath.startsWith('assets/')) {
+        return pfpPath;
+      }
+      
+      // Check if it's a file path that exists
+      final file = File(pfpPath);
+      final fileExists = await file.exists();
+      if (fileExists) {
+        return pfpPath;
+      }
+    }
+    
+    // If no valid path in database, check user_profiles directory
+    final userProfilePath = await UserProfileService.getUserProfileImagePath(userId);
+    if (userProfilePath != null) {
+      return userProfilePath;
+    }
+    
+    // Fallback to default asset
+    return 'assets/images/icons/person.jpg';
   }
 
   Future<void> toggleFollow(BuildContext context) async {
@@ -165,12 +210,22 @@ class UserProfileCubit extends Cubit<UserProfileState> {
     final current = state as UserProfileLoaded;
     
     try {
+      // If updating profile picture, save it using UserProfileService
+      String? updatedPfp = pfp;
+      if (pfp != null && !pfp.startsWith('assets/')) {
+        // This is a new profile image file, save it
+        updatedPfp = await UserProfileService.updateUserProfileImage(
+          current.user.userId!, 
+          pfp,
+        );
+      }
+      
       final updatedUser = await _userRepo.updateUserPartial(
         userId: current.user.userId!,
         username: username,
         fullName: fullName,
         bio: bio,
-        pfp: pfp,
+        pfp: updatedPfp ?? pfp,
       );
       
       // Keep the existing counts
@@ -213,9 +268,15 @@ class UserProfileCubit extends Cubit<UserProfileState> {
     final current = state as UserProfileLoaded;
     
     try {
+      // Save the post image using PostImageService
+      final savedImagePath = await PostImageService.savePostImage(
+        imagePath, 
+        userId: current.user.userId,
+      );
+      
       final newPost = PostModel(
         outfitId: outfitId,
-        imagePath: imagePath,
+        imagePath: savedImagePath, // Use the saved path
         caption: caption,
         date: DateTime.now().toIso8601String(),
       );
@@ -224,7 +285,16 @@ class UserProfileCubit extends Cubit<UserProfileState> {
       
       // Refresh posts list
       final updatedPosts = await _postRepo.getByUserId(current.user.userId!);
-      emit(current.copyWith(posts: updatedPosts));
+      
+      // Get updated post image paths using copyWith
+      final postsWithImages = await Future.wait(updatedPosts.map((post) async {
+        final postImagePath = await PostImageService.getPostImagePath(post.postId ?? -1);
+        return post.copyWith(
+          imagePath: postImagePath ?? post.imagePath,
+        );
+      }));
+      
+      emit(current.copyWith(posts: postsWithImages));
     } catch (e) {
       emit(UserProfileError('Failed to create post: ${e.toString()}'));
     }
@@ -237,11 +307,24 @@ class UserProfileCubit extends Cubit<UserProfileState> {
     final current = state as UserProfileLoaded;
     
     try {
+      // Delete the post image from storage
+      await PostImageService.deletePostImageById(postId);
+      
+      // Delete from database
       await _postRepo.delete(postId);
       
       // Refresh posts list
       final updatedPosts = await _postRepo.getByUserId(current.user.userId!);
-      emit(current.copyWith(posts: updatedPosts));
+      
+      // Get updated post image paths using copyWith
+      final postsWithImages = await Future.wait(updatedPosts.map((post) async {
+        final postImagePath = await PostImageService.getPostImagePath(post.postId ?? -1);
+        return post.copyWith(
+          imagePath: postImagePath ?? post.imagePath,
+        );
+      }));
+      
+      emit(current.copyWith(posts: postsWithImages));
     } catch (e) {
       emit(UserProfileError('Failed to delete post: ${e.toString()}'));
     }

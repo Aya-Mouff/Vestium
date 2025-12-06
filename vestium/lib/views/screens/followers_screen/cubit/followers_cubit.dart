@@ -1,5 +1,4 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import '../../../../repo/follow_repo.dart';
 import '../../../../repo/user_repo.dart';
 import '../../../../databases/db_models.dart';
@@ -37,11 +36,12 @@ class FollowersCubit extends Cubit<FollowersState> {
 
         followersData.add({
           'id': followerUser.userId?.toString() ?? '',
+          'userId': followerUser.userId, // Add this - the actual follower's ID
           'name': followerUser.fullName ?? '',
           'username': followerUser.username ?? '',
           'bio': followerUser.bio ?? '',
           'profileImage': followerUser.pfp ?? '',
-          'followersCount': 0, // fill if you track counts
+          'followersCount': 0,
           'followingCount': 0,
           'isFollowing': await _isCurrentUserFollowingBack(
             currentUserId: userId,

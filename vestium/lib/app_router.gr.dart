@@ -4,7 +4,7 @@
 // AutoRouterGenerator
 // **************************************************************************
 
-// ignore_for_file: type=lint, unused_element_parameter
+// ignore_for_file: type=lint
 // coverage:ignore-file
 
 part of 'app_router.dart';
@@ -63,6 +63,16 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    EditItemDetailsRoute.name: (routeData) {
+      final args = routeData.argsAs<EditItemDetailsRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: EditItemDetailsScreen(
+          key: args.key,
+          itemId: args.itemId,
+        ),
+      );
+    },
     EditItemRoute.name: (routeData) {
       final args = routeData.argsAs<EditItemRouteArgs>();
       return AutoRoutePage<dynamic>(
@@ -93,6 +103,7 @@ abstract class _$AppRouter extends RootStackRouter {
         child: FollowersScreen(
           key: args.key,
           userId: args.userId,
+          currentUserId: args.currentUserId,
         ),
       );
     },
@@ -103,6 +114,7 @@ abstract class _$AppRouter extends RootStackRouter {
         child: FollowingScreen(
           key: args.key,
           userId: args.userId,
+          currentUserId: args.currentUserId,
         ),
       );
     },
@@ -249,15 +261,12 @@ abstract class _$AppRouter extends RootStackRouter {
       final pathParams = routeData.inheritedPathParams;
       final args = routeData.argsAs<OutfitDetailsRouteArgs>(
           orElse: () => OutfitDetailsRouteArgs(
-                outfitId: pathParams.getString('outfitId'),
-                userId: pathParams.getInt('userId'),
-              ));
+              outfitId: pathParams.getString('outfitId')));
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: OutfitDetailsScreen(
           key: args.key,
           outfitId: args.outfitId,
-          // userId: args.userId,
         ),
       );
     },
@@ -290,7 +299,9 @@ abstract class _$AppRouter extends RootStackRouter {
       );
     },
     SearchRoute.name: (routeData) {
-      final args = routeData.argsAs<SearchRouteArgs>();
+      final pathParams = routeData.inheritedPathParams;
+      final args = routeData.argsAs<SearchRouteArgs>(
+          orElse: () => SearchRouteArgs(userId: pathParams.getInt('userId')));
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: SearchScreen(
@@ -328,7 +339,10 @@ abstract class _$AppRouter extends RootStackRouter {
       );
     },
     SettingsRoute1.name: (routeData) {
-      final args = routeData.argsAs<SettingsRoute1Args>();
+      final pathParams = routeData.inheritedPathParams;
+      final args = routeData.argsAs<SettingsRoute1Args>(
+          orElse: () =>
+              SettingsRoute1Args(userId: pathParams.getInt('userId')));
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: SettingsScreen1(
@@ -531,6 +545,44 @@ class CommentsRouteArgs {
 }
 
 /// generated route for
+/// [EditItemDetailsScreen]
+class EditItemDetailsRoute extends PageRouteInfo<EditItemDetailsRouteArgs> {
+  EditItemDetailsRoute({
+    Key? key,
+    required int itemId,
+    List<PageRouteInfo>? children,
+  }) : super(
+          EditItemDetailsRoute.name,
+          args: EditItemDetailsRouteArgs(
+            key: key,
+            itemId: itemId,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'EditItemDetailsRoute';
+
+  static const PageInfo<EditItemDetailsRouteArgs> page =
+      PageInfo<EditItemDetailsRouteArgs>(name);
+}
+
+class EditItemDetailsRouteArgs {
+  const EditItemDetailsRouteArgs({
+    this.key,
+    required this.itemId,
+  });
+
+  final Key? key;
+
+  final int itemId;
+
+  @override
+  String toString() {
+    return 'EditItemDetailsRouteArgs{key: $key, itemId: $itemId}';
+  }
+}
+
+/// generated route for
 /// [EditItemScreen]
 class EditItemRoute extends PageRouteInfo<EditItemRouteArgs> {
   EditItemRoute({
@@ -613,12 +665,14 @@ class FollowersRoute extends PageRouteInfo<FollowersRouteArgs> {
   FollowersRoute({
     Key? key,
     required int userId,
+    required int currentUserId,
     List<PageRouteInfo>? children,
   }) : super(
           FollowersRoute.name,
           args: FollowersRouteArgs(
             key: key,
             userId: userId,
+            currentUserId: currentUserId,
           ),
           initialChildren: children,
         );
@@ -633,15 +687,18 @@ class FollowersRouteArgs {
   const FollowersRouteArgs({
     this.key,
     required this.userId,
+    required this.currentUserId,
   });
 
   final Key? key;
 
   final int userId;
 
+  final int currentUserId;
+
   @override
   String toString() {
-    return 'FollowersRouteArgs{key: $key, userId: $userId}';
+    return 'FollowersRouteArgs{key: $key, userId: $userId, currentUserId: $currentUserId}';
   }
 }
 
@@ -651,12 +708,14 @@ class FollowingRoute extends PageRouteInfo<FollowingRouteArgs> {
   FollowingRoute({
     Key? key,
     required int userId,
+    required int currentUserId,
     List<PageRouteInfo>? children,
   }) : super(
           FollowingRoute.name,
           args: FollowingRouteArgs(
             key: key,
             userId: userId,
+            currentUserId: currentUserId,
           ),
           initialChildren: children,
         );
@@ -671,15 +730,18 @@ class FollowingRouteArgs {
   const FollowingRouteArgs({
     this.key,
     required this.userId,
+    required this.currentUserId,
   });
 
   final Key? key;
 
   final int userId;
 
+  final int currentUserId;
+
   @override
   String toString() {
-    return 'FollowingRouteArgs{key: $key, userId: $userId}';
+    return 'FollowingRouteArgs{key: $key, userId: $userId, currentUserId: $currentUserId}';
   }
 }
 
@@ -1095,19 +1157,14 @@ class OutfitDetailsRoute extends PageRouteInfo<OutfitDetailsRouteArgs> {
   OutfitDetailsRoute({
     Key? key,
     required String outfitId,
-    required int userId,
     List<PageRouteInfo>? children,
   }) : super(
           OutfitDetailsRoute.name,
           args: OutfitDetailsRouteArgs(
             key: key,
             outfitId: outfitId,
-            userId: userId,
           ),
-          rawPathParams: {
-            'outfitId': outfitId,
-            'userId': userId,
-          },
+          rawPathParams: {'outfitId': outfitId},
           initialChildren: children,
         );
 
@@ -1121,18 +1178,15 @@ class OutfitDetailsRouteArgs {
   const OutfitDetailsRouteArgs({
     this.key,
     required this.outfitId,
-    required this.userId,
   });
 
   final Key? key;
 
   final String outfitId;
 
-  final int userId;
-
   @override
   String toString() {
-    return 'OutfitDetailsRouteArgs{key: $key, outfitId: $outfitId, userId: $userId}';
+    return 'OutfitDetailsRouteArgs{key: $key, outfitId: $outfitId}';
   }
 }
 
@@ -1249,6 +1303,7 @@ class SearchRoute extends PageRouteInfo<SearchRouteArgs> {
             key: key,
             userId: userId,
           ),
+          rawPathParams: {'userId': userId},
           initialChildren: children,
         );
 
@@ -1353,6 +1408,7 @@ class SettingsRoute1 extends PageRouteInfo<SettingsRoute1Args> {
             key: key,
             userId: userId,
           ),
+          rawPathParams: {'userId': userId},
           initialChildren: children,
         );
 

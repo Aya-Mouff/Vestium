@@ -3,8 +3,27 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../cubit/item_details_cubit.dart';
 import '../cubit/item_details_state.dart';
 
-class ItemDescriptionField extends StatelessWidget {
+class ItemDescriptionField extends StatefulWidget {
   const ItemDescriptionField({super.key});
+
+  @override
+  State<ItemDescriptionField> createState() => _ItemDescriptionFieldState();
+}
+
+class _ItemDescriptionFieldState extends State<ItemDescriptionField> {
+  late TextEditingController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -23,11 +42,22 @@ class ItemDescriptionField extends StatelessWidget {
         ),
         const SizedBox(height: 8),
         BlocBuilder<ItemDetailsCubit, ItemDetailsState>(
+          // Only rebuild when description changes
+          buildWhen: (previous, current) => previous.description != current.description,
           builder: (context, state) {
+            // Sync controller text with state only when they differ
+            if (_controller.text != state.description) {
+              _controller.value = TextEditingValue(
+                text: state.description,
+                selection: TextSelection.collapsed(
+                  offset: state.description.length,
+                ),
+              );
+            }
             return TextField(
+              controller: _controller,
               onChanged: (value) =>
                   context.read<ItemDetailsCubit>().updateDescription(value),
-              controller: TextEditingController(text: state.description),
               maxLines: 4,
               style: const TextStyle(
                 fontFamily: 'Inter',

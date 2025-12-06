@@ -8,6 +8,8 @@ import 'take_pic_header.dart';
 import 'camera_preview_widget.dart';
 import 'camera_placeholder_widget.dart';
 import 'bottom_controls_widget.dart';
+import '../../edit_item/cubit/edit_item_cubit.dart';
+import '../../edit_item/edit_item_screen.dart';
 
 class TakePicBody extends StatefulWidget {
   const TakePicBody({super.key});
@@ -28,7 +30,16 @@ class _TakePicBodyState extends State<TakePicBody> {
     return BlocListener<TakePicCubit, TakePicState>(
       listener: (context, state) {
         if (state.capturedImagePath != null && context.mounted) {
-          context.router.push(EditItemRoute(imagePath: state.capturedImagePath!));
+          // context.router.push(EditItemRoute(imagePath: state.capturedImagePath!));
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => BlocProvider(
+                create: (_) => EditItemCubit(),
+                child: EditItemScreen(imagePath: state.capturedImagePath!),
+              ),
+            ),
+          );
           context.read<TakePicCubit>().clearCapturedImage();
         }
         

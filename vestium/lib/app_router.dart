@@ -43,9 +43,11 @@ import './views/screens/followers_screen/followers_screen.dart';
 import './views/screens/following_screen/following_screen.dart';
 import './views/screens/new_post_screen/new_post_screen.dart';
 import './views/screens/selected_outfit_screen.dart';
-import './views/screens/wardrobe_screen.dart';
+// import './views/screens/wardrobe_screen.dart';
+import 'package:vestium/views/screens/wardrobe/wardrobe_screen.dart';
 import 'views/screens/set_new_password_screen.dart';
 import 'views/screens/access_denied.dart';
+import 'package:vestium/views/screens/edit_item_details/edit_item_details_screen.dart';
 
 part 'app_router.gr.dart';
 
@@ -97,16 +99,15 @@ class AppRouter extends _$AppRouter {
     ),
     AutoRoute(page: SettingsRoute1.page, path: '/settings1/:userId'),
     AutoRoute(page: SearchRoute.page, path: '/search1/:userId'),
-    AutoRoute(page: FollowersRoute.page, path: '/followers1/:userId'),
-    AutoRoute(page: FollowingRoute.page, path: '/following1/:userId'),
+    AutoRoute(page: FollowersRoute.page, path: '/followers1/:userId/:currentUserId'),
+    AutoRoute(page: FollowingRoute.page, path: '/following1/:userId/:currentUserId'),
     AutoRoute(page: NewPostRoute.page, path: '/newpost/:userId'),
     AutoRoute(page: SelectOutfitRoute.page, path: '/selectoutfit/:userId'),
     AutoRoute(page: SelectItemRoute.page, ),
-    AutoRoute(page: FollowersRoute.page, path: '/followers/:userId'),
-    AutoRoute(page: FollowingRoute.page, path: '/following/:userId'),
     AutoRoute(page: NewPostRoute.page, path: '/newpost/:userId'),
     AutoRoute(page: SelectOutfitRoute.page, path: '/selectoutfit'),
-    AutoRoute(page: WardrobeRoute.page, path: '/wardrobe1/:userId'),
+    AutoRoute(page: WardrobeRoute.page, path: '/wardrobe/:userId'),
     AutoRoute(page: AccessDeniedRoute.page, path: '/access-denied'),
+    AutoRoute(page: EditItemDetailsRoute.page, path: '/edit-item/:itemId'),
   ];
 }

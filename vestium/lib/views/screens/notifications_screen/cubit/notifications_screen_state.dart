@@ -7,6 +7,7 @@ class NotificationItemData extends Equatable {
   final String type;
   final String createdAt;
   final String? sourcePostId;
+  final String? commentText; // Add this for comment notifications
 
   const NotificationItemData({
     required this.sourceUsername,
@@ -15,10 +16,11 @@ class NotificationItemData extends Equatable {
     required this.type,
     required this.createdAt,
     this.sourcePostId,
+    this.commentText,
   });
 
   @override
-  List<Object?> get props => [sourceUsername, sourceUserId, sourceProfileImage, type, createdAt, sourcePostId];
+  List<Object?> get props => [sourceUsername, sourceUserId, sourceProfileImage, type, createdAt, sourcePostId, commentText];
 }
 
 abstract class NotificationsState extends Equatable {

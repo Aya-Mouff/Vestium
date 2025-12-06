@@ -12,10 +12,12 @@ import 'widgets/following_item.dart';
 @RoutePage()
 class FollowingScreen extends StatelessWidget {
   final int userId;
+  final int currentUserId;
 
   const FollowingScreen({
     super.key,
     required this.userId,
+    required this.currentUserId,
   });
 
   @override
@@ -26,13 +28,22 @@ class FollowingScreen extends StatelessWidget {
         UserRepo(),
         userId: userId,
       )..loadFollowing(),
-      child: const _FollowingView(),
+      child: _FollowingView(
+        userId: userId,
+        currentUserId: currentUserId,
+      ),
     );
   }
 }
 
 class _FollowingView extends StatefulWidget {
-  const _FollowingView();
+  final int userId;
+  final int currentUserId;
+
+  const _FollowingView({
+    required this.userId,
+    required this.currentUserId,
+  });
 
   @override
   State<_FollowingView> createState() => _FollowingViewState();
@@ -85,7 +96,7 @@ class _FollowingViewState extends State<_FollowingView> {
             children: [
               FollowingSearchBar(controller: _searchController),
               Expanded(
-                child: _buildFollowingList(state),
+                child: _buildFollowingList(state, widget.userId, widget.currentUserId),
               ),
             ],
           ),
@@ -94,7 +105,7 @@ class _FollowingViewState extends State<_FollowingView> {
     );
   }
 
-  Widget _buildFollowingList(FollowingState state) {
+  Widget _buildFollowingList(FollowingState state, int userId, int currentUserId) {
     if (state.isLoading) {
       return const Center(child: CircularProgressIndicator());
     }
@@ -131,11 +142,15 @@ class _FollowingViewState extends State<_FollowingView> {
       itemCount: state.filteredFollowing.length,
       itemBuilder: (context, index) {
         final person = state.filteredFollowing[index];
+        final personUserId = person['userId'] ?? int.tryParse(person['id'] ?? '') ?? 0;
+        
         return FollowingItem(
           name: person['name'] ?? '',
           username: person['username'] ?? '',
           profileImage: person['profileImage'] ?? '',
           isFollowing: person['isFollowing'] ?? false,
+          personUserId: personUserId, // Pass the person's actual user ID
+          currentUserId: currentUserId,
           onFollowTap: () =>
               context.read<FollowingCubit>().toggleFollow(index),
         );

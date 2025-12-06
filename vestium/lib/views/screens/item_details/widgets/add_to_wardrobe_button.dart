@@ -87,6 +87,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:auto_route/auto_route.dart';
+import 'package:vestium/app_router.dart';
+import 'package:vestium/databases/services/current_user_service.dart'; // Add this import
 import '../cubit/item_details_cubit.dart';
 import '../cubit/item_details_state.dart';
 
@@ -110,9 +112,20 @@ class AddToWardrobeButton extends StatelessWidget {
             );
 
             // Navigate back to home or wardrobe screen after delay
-            Future.delayed(const Duration(milliseconds: 1500), () {
+            Future.delayed(const Duration(milliseconds: 500), () {
               if (context.mounted) {
-                context.router.popUntilRoot();
+                final userId = CurrentUserService.currentUserId;
+                
+                if (userId != null) {
+                  // Replace current stack with WardrobeRoute
+                  context.router.replace(
+                    WardrobeRoute(userId: userId),
+                  );
+                } else {
+                  // Fallback: pop to root
+                  print('⚠️ No user logged in, popping to root');
+                  context.router.popUntilRoot();
+                }
               }
             });
           }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:vestium/app_router.dart';
+import 'dart:io';
 
 class OutfitsGrid extends StatelessWidget {
   final List<dynamic> outfits;
@@ -34,17 +35,48 @@ class OutfitsGrid extends StatelessWidget {
       ),
       itemBuilder: (context, index) {
         final outfit = outfits[index];
+        final imagePath = outfit['imageUrl'];
+        
         return GestureDetector(
-          onTap: () => context.pushRoute( OutfitDetailsRoute(outfitId: outfit['id'], userId: userId)),
+          onTap: () => context.pushRoute(OutfitDetailsRoute(outfitId: outfit['id'])),
           child: ClipRRect(
             borderRadius: BorderRadius.circular(12),
-            child: Image.asset(
-              outfit['imageUrl'],
-              fit: BoxFit.cover,
-            ),
+            child: _buildOutfitImage(imagePath),
           ),
         );
       },
     );
+  }
+
+  Widget _buildOutfitImage(String imagePath) {
+    if (imagePath.startsWith('assets/')) {
+      // Asset image
+      return Image.asset(
+        imagePath,
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) {
+          return Container(
+            color: const Color(0xFFE9D9CF),
+            child: const Center(
+              child: Icon(Icons.photo, color: Color(0xFF7B5247), size: 40),
+            ),
+          );
+        },
+      );
+    } else {
+      // File image
+      return Image.file(
+        File(imagePath),
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) {
+          return Container(
+            color: const Color(0xFFE9D9CF),
+            child: const Center(
+              child: Icon(Icons.photo, color: Color(0xFF7B5247), size: 40),
+            ),
+          );
+        },
+      );
+    }
   }
 }
