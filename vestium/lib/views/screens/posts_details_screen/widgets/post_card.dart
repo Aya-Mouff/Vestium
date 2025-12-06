@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'dart:io';
 import '../../../../app_router.dart';
 import '../cubit/posts_details_screen_cubit.dart';
 import '../cubit/posts_details_screen_state.dart';
@@ -46,21 +47,21 @@ class PostCard extends StatelessWidget {
                 GestureDetector(
                   onTap: () {
                     context.router.push(UserProfileRoute(
-                        userId: int.parse(post['userId'].toString()),
-                        currentUserId: currentUserId,
+                      userId: int.parse(post['userId'].toString()),
+                      currentUserId: currentUserId,
                     ));
                   },
                   child: CircleAvatar(
                     radius: 18,
-                    backgroundImage: AssetImage(post['profileImage']),
+                    backgroundImage: _getProfileImage(post['profileImage']),
                   ),
                 ),
                 const SizedBox(width: 12),
                 GestureDetector(
                   onTap: () {
                     context.router.push(UserProfileRoute(
-                        userId: int.parse(post['userId'].toString()),
-                        currentUserId: currentUserId,
+                      userId: int.parse(post['userId'].toString()),
+                      currentUserId: currentUserId,
                     ));
                   },
                   child: Text(
@@ -82,12 +83,7 @@ class PostCard extends StatelessWidget {
               topLeft: Radius.circular(0),
               topRight: Radius.circular(0),
             ),
-            child: Image.asset(
-              post['imageUrl'],
-              width: double.infinity,
-              height: 400,
-              fit: BoxFit.cover,
-            ),
+            child: _buildPostImage(post['imageUrl']),
           ),
 
           // Action buttons and stats
@@ -167,16 +163,10 @@ class PostCard extends StatelessWidget {
                 ),
 
                 const SizedBox(height: 4),
-                RichText(
+                post['caption'] != ''
+                ? RichText(
                   text: TextSpan(
                     children: [
-                      TextSpan(
-                          text: '${post['username']} ',
-                          style: const TextStyle(
-                              fontFamily: 'Inter',
-                              fontWeight: FontWeight.w600,
-                              fontSize: 13,
-                              color: Colors.black)),
                       TextSpan(
                           text: post['caption'],
                           style: const TextStyle(
@@ -186,19 +176,119 @@ class PostCard extends StatelessWidget {
                               color: Colors.black)),
                     ],
                   ),
-                ),
+                )
+                : const SizedBox.shrink(),
 
                 const SizedBox(height: 8),
-                Text('View all ${post['commentsCount']} comments',
+                GestureDetector(
+                  onTap: () {
+                    context.router.push(CommentsRoute(
+                      postId: int.parse(post['id'].toString()),
+                      userId: currentUserId,
+                    ));
+                  },
+                  child: Text(
+                    'View all ${post['commentsCount']} comments',
                     style: TextStyle(
-                        fontFamily: 'Inter',
-                        fontSize: 13,
-                        color: Colors.grey.shade600)),
+                      fontFamily: 'Inter',
+                      fontSize: 13,
+                      color: Colors.grey.shade600,
+                    ),
+                  ),
+                ),
               ],
             ),
           ),
         ],
       ),
     );
+  }
+
+  // Helper method to create profile image
+  ImageProvider _getProfileImage(String imagePath) {
+    if (imagePath.startsWith('assets/')) {
+      // Asset image
+      return AssetImage(imagePath);
+    } else {
+      // File system image
+      final file = File(imagePath);
+      if (file.existsSync()) {
+        return FileImage(file);
+      } else {
+        // Fallback to default asset if file doesn't exist
+        return const AssetImage('assets/images/icons/person.jpg');
+      }
+    }
+  }
+
+  // Helper method to build post image widget
+  Widget _buildPostImage(String imageUrl) {
+    if (imageUrl.startsWith('assets/')) {
+      // Asset image
+      return Image.asset(
+        imageUrl,
+        width: double.infinity,
+        height: 400,
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) {
+          return Container(
+            width: double.infinity,
+            height: 400,
+            color: Colors.grey[300],
+            child: const Icon(Icons.broken_image, size: 50, color: Colors.grey),
+          );
+        },
+      );
+    } else {
+      // File system image
+      return FutureBuilder<bool>(
+        future: File(imageUrl).exists(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Container(
+              width: double.infinity,
+              height: 400,
+              color: Colors.grey[300],
+              child: const Center(child: CircularProgressIndicator()),
+            );
+          }
+          
+          if (snapshot.data == true) {
+            return Image.file(
+              File(imageUrl),
+              width: double.infinity,
+              height: 400,
+              fit: BoxFit.cover,
+              errorBuilder: (context, error, stackTrace) {
+                return Container(
+                  width: double.infinity,
+                  height: 400,
+                  color: Colors.grey[300],
+                  child: const Icon(Icons.broken_image, size: 50, color: Colors.grey),
+                );
+              },
+            );
+          } else {
+            // File doesn't exist, show default
+            return Container(
+              width: double.infinity,
+              height: 400,
+              color: Colors.grey[300],
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(Icons.image_not_supported, size: 50, color: Colors.grey),
+                  const SizedBox(height: 8),
+                  Text(
+                    'Image not found',
+                    style: TextStyle(color: Colors.grey[600]),
+                  ),
+                ],
+              ),
+            );
+          }
+        },
+      );
+    }
   }
 }
