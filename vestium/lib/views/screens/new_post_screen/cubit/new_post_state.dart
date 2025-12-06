@@ -8,6 +8,7 @@ class NewPostState extends Equatable {
   final String? errorMessage;
   final bool postSuccess;
 
+
   const NewPostState({
     this.isLoading = false,
     this.isPublic = true,
@@ -15,6 +16,7 @@ class NewPostState extends Equatable {
     this.caption = '',
     this.errorMessage,
     this.postSuccess = false,
+
   });
 
   NewPostState copyWith({

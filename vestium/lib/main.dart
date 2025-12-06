@@ -9,6 +9,7 @@ import './app_router.dart';
 import 'databases/db_helper.dart';
 import 'databases/services/current_user_service.dart';
 import 'repo/user_repo.dart';
+import 'repo/outfit_repo.dart';
 
 Future<void> initMyApp() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -18,23 +19,25 @@ Future<void> initMyApp() async {
     databaseFactory = databaseFactoryFfi;
   }
 
-  // Open / migrate DB
   await DBHelper.getDatabase();
-
-  // Load last logged-in user (if any)
   await CurrentUserService.loadLastUserFromDatabase();
 }
 
 void main() async {
-  final userRepo = UserRepo();
-
   await initMyApp();
 
   final appRouter = AppRouter();
 
   runApp(
-    RepositoryProvider<UserRepo>.value(
-      value: userRepo,
+    MultiRepositoryProvider(
+      providers: [
+        RepositoryProvider<UserRepo>(
+          create: (_) => UserRepo(),
+        ),
+        RepositoryProvider<OutfitRepo>(
+          create: (_) => OutfitRepo(),
+        ),
+      ],
       child: MyApp(appRouter: appRouter),
     ),
   );
