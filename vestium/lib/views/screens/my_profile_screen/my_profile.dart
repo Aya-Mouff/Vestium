@@ -234,8 +234,8 @@ class MyProfileScreen extends StatelessWidget {
 
             return const SizedBox();
           },
-        ),
-        bottomNavigationBar: CustomNavBar(
+      ),
+      bottomNavigationBar: CustomNavBar(
           currentPage: 'profile',
           userId: userId,
         ),

@@ -22,14 +22,14 @@ class CurrentUserService {
   static Future<void> loadLastUserFromDatabase() async {
     try {
       final users = await _userRepo.getAll();
-      
+
       if (users.isNotEmpty) {
         users.sort((a, b) {
           final dateA = DateTime.parse(a.dateCreated ?? '2000-01-01');
           final dateB = DateTime.parse(b.dateCreated ?? '2000-01-01');
           return dateB.compareTo(dateA);
         });
-        
+
         final latestUser = users.first;
         setCurrentUser(latestUser);
         print('✅ Loaded last user from database: ${latestUser.email}');
@@ -41,13 +41,29 @@ class CurrentUserService {
     }
   }
 
+  /// Update ONLY the in-memory cache (database already updated in cubit)
   static Future<User> updateCurrentUser(User updatedUser) async {
     if (_currentUser?.userId == null) {
       throw Exception('No current user to update');
     }
 
-    await _userRepo.update(_currentUser!.userId!, updatedUser);
+    // IMPORTANT: Do NOT call _userRepo.update() here
+    // Database is already updated in the cubit
+    // This method ONLY updates the in-memory cache
     _currentUser = updatedUser;
+    print('✅ CurrentUserService cache updated');
     return updatedUser;
+  }
+
+  /// Clear current user and database on account deletion
+  static Future<void> deleteAccountFromDatabase(int userId) async {
+    try {
+      await _userRepo.delete(userId);
+      _currentUser = null;
+      print('✅ Account deleted from database');
+    } catch (e) {
+      print('❌ Error deleting account: $e');
+      rethrow;
+    }
   }
 }
