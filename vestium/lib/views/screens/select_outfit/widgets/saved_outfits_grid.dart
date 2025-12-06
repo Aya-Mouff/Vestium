@@ -1,6 +1,7 @@
 // widgets/saved_outfits_grid.dart
 import 'package:flutter/material.dart';
 import '../../../../databases/db_models.dart';
+import '../../../../databases/services/outfit_image_service.dart';
 import 'saved_outfit_card.dart';
 import 'empty_state.dart';
 
@@ -48,10 +49,17 @@ class SavedOutfitsGrid extends StatelessWidget {
           final isSelected =
               selectedOutfit != null && selectedOutfit!.outfitId == outfit.outfitId;
 
-          return SavedOutfitCard(
-            outfit: outfit,
-            isSelected: isSelected,
-            onTap: () => onSelect(isSelected ? null : outfit),
+          return FutureBuilder<String?>(
+            future: OutfitImageService.getOutfitImagePath(outfit.outfitId!),
+            builder: (context, snapshot) {
+              return SavedOutfitCard(
+                outfit: outfit,
+                isSelected: isSelected,
+                onTap: () => onSelect(isSelected ? null : outfit),
+                imagePath: snapshot.data,
+                date: outfit.date,
+              );
+            },
           );
         },
       ),

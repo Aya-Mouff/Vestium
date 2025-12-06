@@ -106,11 +106,7 @@ Future _selectOutfit(BuildContext context) async {
                     controller: _captionController,
                     onChanged: cubit.setCaption,
                   ),
-                  const SizedBox(height: 20),
-                  PublicToggle(
-                    isPublic: state.isPublic,
-                    onChanged: cubit.togglePublic,
-                  ),
+                  
                 ],
               ),
             ),

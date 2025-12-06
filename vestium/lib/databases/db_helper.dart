@@ -3,7 +3,7 @@ import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
 class DBHelper {
-  static const _databaseName = "vestiumDatabase.db";
+  static const _databaseName = "vestiumDB.db";
   static const _databaseVersion = 1; // Keep as 1
   static Database? _database;
 
@@ -143,6 +143,7 @@ class DBHelper {
         await db.execute('''
           CREATE TABLE posts (
             post_id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id INTEGER,
             outfit_id INTEGER,
             image_path TEXT,
             caption TEXT,
