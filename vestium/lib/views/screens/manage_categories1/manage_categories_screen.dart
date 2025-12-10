@@ -1,7 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../../app_router.dart';
 import 'cubit/manage_categories_cubit.dart';
 import 'widgets/manage_categories_app_bar.dart';
 import 'widgets/manage_categories_add_field.dart';

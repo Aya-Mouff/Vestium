@@ -5,7 +5,6 @@ import 'package:image_picker/image_picker.dart';
 
 import '../../../../app_router.dart';
 import '../../../../repo/user_repo.dart';
-import '../../../../databases/db_models.dart';
 import '../../../../databases/services/current_user_service.dart';
 import 'settings_state.dart';
 

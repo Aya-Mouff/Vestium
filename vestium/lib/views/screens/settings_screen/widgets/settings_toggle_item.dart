@@ -40,7 +40,7 @@ class SettingsToggleItem extends StatelessWidget {
         ),
         trailing: Switch(
           value: value,
-          activeColor: const Color(0xFF795548),
+          activeThumbColor: const Color(0xFF795548),
           onChanged: onChanged,
         ),
       ),
