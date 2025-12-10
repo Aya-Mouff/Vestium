@@ -1,6 +1,5 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:vestium/views/screens/account_manager.dart';
 import 'package:vestium/views/screens/check_email_screen/check_email_page.dart';
 import 'package:vestium/views/screens/create_outfit/create_outfit_screen.dart';
 import 'package:vestium/views/screens/reset_password_screen/reset_password_page.dart';
@@ -49,7 +48,7 @@ import 'views/screens/set_new_password_screen.dart';
 import 'views/screens/access_denied.dart';
 import 'package:vestium/views/screens/edit_item_details/edit_item_details_screen.dart';
 import 'package:vestium/views/screens/save_outfit/save_outfit_screen.dart';
-
+import 'package:vestium/views/screens/account_manager/account_manager.dart';
 part 'app_router.gr.dart';
 
 @AutoRouterConfig(replaceInRouteName: 'Screen,Route')
