@@ -1,400 +1,287 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:equatable/equatable.dart';
 import 'package:vestium/databases/db_models.dart';
-import 'package:vestium/repo/user_repo.dart';
 import 'package:vestium/databases/services/current_user_service.dart';
+import 'package:vestium/repo/user_repo.dart';
 
-part 'account_manager_state.dart';
+import 'account_manager_state.dart';
 
 class AccountManagerCubit extends Cubit<AccountManagerState> {
+  final int userId;
   final UserRepo _userRepo;
 
-  AccountManagerCubit({required UserRepo userRepo})
-    : _userRepo = userRepo,
-      super(const AccountManagerInitial());
+  AccountManagerCubit({
+    required this.userId,
+    UserRepo? userRepo,
+  })  : _userRepo = userRepo ?? UserRepo(),
+        super(const AccountManagerState());
 
-  /// Load current user data
-  Future<void> loadUserData() async {
+  Future<void> init() async {
     try {
-      emit(const AccountManagerLoading(message: 'Loading user data...'));
+      emit(state.copyWith(status: AccountManagerStatus.loading));
 
-      final currentUser = CurrentUserService.currentUser;
-      if (currentUser == null) {
-        emit(const AccountManagerError(message: 'No user logged in'));
+      // Try current cached user first
+      User? user = CurrentUserService.currentUser;
+
+      // Fallback to DB by id
+      if (user == null && userId != -1) {
+        user = await _userRepo.getById(userId);
+      }
+
+      if (user == null) {
+        emit(state.copyWith(
+          status: AccountManagerStatus.error,
+          message: 'User not found',
+        ));
         return;
       }
 
-      emit(AccountManagerLoaded(user: currentUser));
+      emit(AccountManagerState(
+        fullName: user.fullName,
+        email: user.email,
+        status: AccountManagerStatus.initial,
+      ));
     } catch (e) {
-      emit(AccountManagerError(message: 'Error loading user: ${e.toString()}'));
+      emit(state.copyWith(
+        status: AccountManagerStatus.error,
+        message: 'Failed to load account info',
+      ));
     }
   }
 
-  /// Update user's full name
-  /// Flow: Validate → Database update → Cache update → Emit success
-  Future<void> updateFullName(String newFullName) async {
-    if (state is! AccountManagerLoaded) return;
-
-    final currentUser = (state as AccountManagerLoaded).user;
-
-    // Validation
-    final trimmedName = newFullName.trim();
-    if (trimmedName.isEmpty) {
-      emit(
-        const AccountManagerError(
-          message: 'Full name cannot be empty',
-          updateType: 'fullName',
-        ),
-      );
+  // -----------------------------
+  // Change full name
+  // -----------------------------
+  Future<void> changeFullName({required String newFullName}) async {
+    if (newFullName.trim().isEmpty) {
+      emit(state.copyWith(
+        status: AccountManagerStatus.error,
+        message: 'Full name cannot be empty',
+      ));
       return;
     }
 
+    emit(state.copyWith(status: AccountManagerStatus.loading, message: null));
+
     try {
-      // Show loading state
-      emit(
-        AccountManagerUpdating(
-          user: currentUser,
-          updateType: 'fullName',
-          message: 'Updating full name...',
-        ),
-      );
-
-      // Step 1: Update in database
-      final updatedUser = currentUser.copyWith(fullName: trimmedName);
-
-      if (updatedUser.userId == null) {
-        throw Exception('User ID is null, cannot update');
+      final currentId = CurrentUserService.currentUserId ?? userId;
+      if (currentId == null || currentId == -1) {
+        throw Exception('No current user');
       }
 
-      final success = await _userRepo.update(updatedUser.userId!, updatedUser);
-
-      if (!success) {
-        throw Exception('Database update failed');
-      }
-
-      print(
-        '✅ [DB] Full name updated in database: $trimmedName (User ID: ${updatedUser.userId})',
+      final updatedUser = await _userRepo.updateUserPartial(
+        userId: currentId,
+        fullName: newFullName.trim(),
       );
 
-      // Step 2: Update cache
+      // Update in-memory cache
       await CurrentUserService.updateCurrentUser(updatedUser);
-      print('✅ [Cache] CurrentUserService updated with new full name');
 
-      // Step 3: Emit success state
-      emit(
-        AccountManagerUpdateSuccess(
-          user: updatedUser,
-          updateType: 'fullName',
-          message: 'Full name updated successfully',
-        ),
-      );
-
-      // Step 4: Return to loaded state with updated user
-      emit(AccountManagerLoaded(user: updatedUser));
+      emit(state.copyWith(
+        fullName: updatedUser.fullName,
+        status: AccountManagerStatus.success,
+        message: 'Full name updated successfully',
+      ));
     } catch (e) {
-      print('❌ [Error] updateFullName failed: ${e.toString()}');
-      emit(
-        AccountManagerError(
-          message: 'Error updating full name: ${e.toString()}',
-          updateType: 'fullName',
-        ),
-      );
-      // Revert to previous state
-      emit(AccountManagerLoaded(user: currentUser));
+      emit(state.copyWith(
+        status: AccountManagerStatus.error,
+        message: 'Failed to update full name',
+      ));
     }
   }
 
-  /// Update user's email
-  /// Flow: Validate → Check availability → Database update → Cache update → Emit success
-  Future<void> updateEmail({
+  // -----------------------------
+  // Change email
+  // -----------------------------
+  Future<void> changeEmail({
     required String newEmail,
-    required String password,
+    required String currentPassword,
   }) async {
-    if (state is! AccountManagerLoaded) return;
+    newEmail = newEmail.trim();
 
-    final currentUser = (state as AccountManagerLoaded).user;
-
-    // Validation 1: Email format
-    if (!_isValidEmail(newEmail)) {
-      emit(
-        const AccountManagerError(
-          message: 'Invalid email format',
-          updateType: 'email',
-        ),
-      );
+    if (newEmail.isEmpty || !newEmail.contains('@')) {
+      emit(state.copyWith(
+        status: AccountManagerStatus.error,
+        message: 'Please enter a valid email',
+      ));
+      return;
+    }
+    if (currentPassword.isEmpty) {
+      emit(state.copyWith(
+        status: AccountManagerStatus.error,
+        message: 'Please enter your current password',
+      ));
       return;
     }
 
-    final trimmedEmail = newEmail.trim().toLowerCase();
-
-    // Validation 2: Check if email is same as current
-    if (trimmedEmail == currentUser.email?.toLowerCase()) {
-      emit(
-        const AccountManagerError(
-          message: 'New email must be different from current email',
-          updateType: 'email',
-        ),
-      );
-      return;
-    }
-
-    // Validation 3: Verify current password
-    if (password != currentUser.password) {
-      emit(
-        const AccountManagerError(
-          message: 'Incorrect password',
-          updateType: 'email',
-        ),
-      );
-      return;
-    }
+    emit(state.copyWith(status: AccountManagerStatus.loading, message: null));
 
     try {
-      emit(
-        AccountManagerUpdating(
-          user: currentUser,
-          updateType: 'email',
-          message: 'Updating email...',
-        ),
-      );
-
-      // Step 1: Check if new email is already in use by another user
-      final emailExists = await _userRepo.getByEmail(trimmedEmail);
-      if (emailExists != null && emailExists.userId != currentUser.userId) {
-        throw Exception('This email is already registered');
+      final currentId = CurrentUserService.currentUserId ?? userId;
+      if (currentId == null || currentId == -1) {
+        throw Exception('No current user');
       }
 
-      // Step 2: Update in database
-      final updatedUser = currentUser.copyWith(email: trimmedEmail);
-
-      if (updatedUser.userId == null) {
-        throw Exception('User ID is null, cannot update');
+      final user = await _userRepo.getById(currentId);
+      if (user == null) {
+        throw Exception('User not found');
       }
 
-      final success = await _userRepo.update(updatedUser.userId!, updatedUser);
-
-      if (!success) {
-        throw Exception('Database update failed');
+      // Verify password
+      if (user.password != currentPassword) {
+        emit(state.copyWith(
+          status: AccountManagerStatus.error,
+          message: 'Current password is incorrect',
+        ));
+        return;
       }
 
-      print(
-        '✅ [DB] Email updated in database: $trimmedEmail (User ID: ${updatedUser.userId})',
-      );
+      // Check if email already taken (and different from current)
+      if (newEmail != user.email) {
+        final available = await _userRepo.isEmailAvailable(newEmail);
+        if (!available) {
+          emit(state.copyWith(
+            status: AccountManagerStatus.error,
+            message: 'This email is already used by another account',
+          ));
+          return;
+        }
+      }
 
-      // Step 3: Update cache
+      final updatedUser = user.copyWith(email: newEmail);
+
+      await _userRepo.updateUserProfile(updatedUser);
       await CurrentUserService.updateCurrentUser(updatedUser);
-      print('✅ [Cache] CurrentUserService updated with new email');
 
-      // Step 4: Emit success state
-      emit(
-        AccountManagerUpdateSuccess(
-          user: updatedUser,
-          updateType: 'email',
-          message: 'Email updated successfully',
-        ),
-      );
-
-      // Step 5: Return to loaded state with updated user
-      emit(AccountManagerLoaded(user: updatedUser));
+      emit(state.copyWith(
+        email: updatedUser.email,
+        status: AccountManagerStatus.success,
+        message: 'Email updated successfully',
+      ));
     } catch (e) {
-      print('❌ [Error] updateEmail failed: ${e.toString()}');
-      emit(
-        AccountManagerError(
-          message: 'Error updating email: ${e.toString()}',
-          updateType: 'email',
-        ),
-      );
-      // Revert to previous state
-      emit(AccountManagerLoaded(user: currentUser));
+      emit(state.copyWith(
+        status: AccountManagerStatus.error,
+        message: 'Failed to update email',
+      ));
     }
   }
 
-  /// Update user's password
-  /// Flow: Validate → Database update → Cache update → Emit success
-  Future<void> updatePassword({
+  // -----------------------------
+  // Change password
+  // -----------------------------
+  Future<void> changePassword({
     required String currentPassword,
     required String newPassword,
     required String confirmPassword,
   }) async {
-    if (state is! AccountManagerLoaded) return;
-
-    final currentUser = (state as AccountManagerLoaded).user;
-
-    // Validation 1: Verify current password
-    if (currentPassword != currentUser.password) {
-      emit(
-        const AccountManagerError(
-          message: 'Current password is incorrect',
-          updateType: 'password',
-        ),
-      );
+    if (currentPassword.isEmpty ||
+        newPassword.isEmpty ||
+        confirmPassword.isEmpty) {
+      emit(state.copyWith(
+        status: AccountManagerStatus.error,
+        message: 'Please fill in all fields',
+      ));
       return;
     }
 
-    // Validation 2: Check if new password is same as current
-    if (newPassword == currentPassword) {
-      emit(
-        const AccountManagerError(
-          message: 'New password must be different from current password',
-          updateType: 'password',
-        ),
-      );
-      return;
-    }
-
-    // Validation 3: Check password length
     if (newPassword.length < 6) {
-      emit(
-        const AccountManagerError(
-          message: 'Password must be at least 6 characters',
-          updateType: 'password',
-        ),
-      );
+      emit(state.copyWith(
+        status: AccountManagerStatus.error,
+        message: 'New password must be at least 6 characters',
+      ));
       return;
     }
 
-    // Validation 4: Verify password confirmation
     if (newPassword != confirmPassword) {
-      emit(
-        const AccountManagerError(
-          message: 'Passwords do not match',
-          updateType: 'password',
-        ),
-      );
+      emit(state.copyWith(
+        status: AccountManagerStatus.error,
+        message: 'New password and confirmation do not match',
+      ));
       return;
     }
 
+    emit(state.copyWith(status: AccountManagerStatus.loading, message: null));
+
     try {
-      // Show loading state
-      emit(
-        AccountManagerUpdating(
-          user: currentUser,
-          updateType: 'password',
-          message: 'Updating password...',
-        ),
-      );
-
-      // Step 1: Update in database
-      final updatedUser = currentUser.copyWith(password: newPassword);
-
-      if (updatedUser.userId == null) {
-        throw Exception('User ID is null, cannot update');
+      final currentId = CurrentUserService.currentUserId ?? userId;
+      if (currentId == null || currentId == -1) {
+        throw Exception('No current user');
       }
 
-      final success = await _userRepo.update(updatedUser.userId!, updatedUser);
-
-      if (!success) {
-        throw Exception('Database update failed');
+      final user = await _userRepo.getById(currentId);
+      if (user == null) {
+        throw Exception('User not found');
       }
 
-      print(
-        '✅ [DB] Password updated in database (User ID: ${updatedUser.userId})',
-      );
+      if (user.password != currentPassword) {
+        emit(state.copyWith(
+          status: AccountManagerStatus.error,
+          message: 'Current password is incorrect',
+        ));
+        return;
+      }
 
-      // Step 2: Update cache
+      final updatedUser = user.copyWith(password: newPassword);
+
+      await _userRepo.updateUserProfile(updatedUser);
       await CurrentUserService.updateCurrentUser(updatedUser);
-      print('✅ [Cache] CurrentUserService updated with new password');
 
-      // Step 3: Emit success state
-      emit(
-        AccountManagerUpdateSuccess(
-          user: updatedUser,
-          updateType: 'password',
-          message: 'Password updated successfully',
-        ),
-      );
-
-      // Step 4: Return to loaded state with updated user
-      emit(AccountManagerLoaded(user: updatedUser));
+      emit(state.copyWith(
+        status: AccountManagerStatus.success,
+        message: 'Password updated successfully',
+      ));
     } catch (e) {
-      print('❌ [Error] updatePassword failed: ${e.toString()}');
-      emit(
-        AccountManagerError(
-          message: 'Error updating password: ${e.toString()}',
-          updateType: 'password',
-        ),
-      );
-      // Revert to previous state
-      emit(AccountManagerLoaded(user: currentUser));
+      emit(state.copyWith(
+        status: AccountManagerStatus.error,
+        message: 'Failed to update password',
+      ));
     }
   }
 
-  /// Delete user account
-  /// Flow: Validate password → Database delete → Clear cache → Emit success
+  // -----------------------------
+  // Delete account
+  // -----------------------------
   Future<void> deleteAccount({required String password}) async {
-    if (state is! AccountManagerLoaded) return;
-
-    final currentUser = (state as AccountManagerLoaded).user;
-
-    // Verify password before deletion
-    if (password != currentUser.password) {
-      emit(
-        const AccountManagerError(
-          message: 'Incorrect password',
-          updateType: 'delete',
-        ),
-      );
+    if (password.isEmpty) {
+      emit(state.copyWith(
+        status: AccountManagerStatus.error,
+        message: 'Please enter your password',
+      ));
       return;
     }
 
+    emit(state.copyWith(status: AccountManagerStatus.loading, message: null));
+
     try {
-      // Show loading state
-      emit(
-        AccountManagerUpdating(
-          user: currentUser,
-          updateType: 'delete',
-          message: 'Deleting account...',
-        ),
-      );
-
-      if (currentUser.userId == null) {
-        throw Exception('User ID is null, cannot delete account');
+      final currentId = CurrentUserService.currentUserId ?? userId;
+      if (currentId == null || currentId == -1) {
+        throw Exception('No current user');
       }
 
-      // Step 1: Delete from database
-      final success = await _userRepo.delete(currentUser.userId!);
-
-      if (!success) {
-        throw Exception('Database deletion failed');
+      final user = await _userRepo.getById(currentId);
+      if (user == null) {
+        throw Exception('User not found');
       }
 
-      print(
-        '✅ [DB] Account deleted from database (User ID: ${currentUser.userId})',
-      );
+      if (user.password != password) {
+        emit(state.copyWith(
+          status: AccountManagerStatus.error,
+          message: 'Password is incorrect',
+        ));
+        return;
+      }
 
-      // Step 2: Clear from cache
-      CurrentUserService.clearCurrentUser();
-      print('✅ [Cache] CurrentUserService cleared');
+      // Delete from DB + clear current user
+      await CurrentUserService.deleteAccountFromDatabase(currentId);
 
-      // Step 3: Emit success state
-      emit(
-        AccountManagerUpdateSuccess(
-          user: currentUser,
-          updateType: 'delete',
-          message: 'Account deleted successfully',
-        ),
-      );
-
-      // Step 4: Emit initial state so screen can navigate away
-      emit(const AccountManagerInitial());
+      emit(state.copyWith(
+        status: AccountManagerStatus.success,
+        message: 'Account deleted successfully',
+      ));
     } catch (e) {
-      print('❌ [Error] deleteAccount failed: ${e.toString()}');
-      emit(
-        AccountManagerError(
-          message: 'Error deleting account: ${e.toString()}',
-          updateType: 'delete',
-        ),
-      );
-      // Revert to previous state
-      emit(AccountManagerLoaded(user: currentUser));
+      emit(state.copyWith(
+        status: AccountManagerStatus.error,
+        message: 'Failed to delete account',
+      ));
     }
-  }
-
-  /// Validate email format
-  bool _isValidEmail(String email) {
-    final emailRegex = RegExp(
-      r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
-    );
-    return emailRegex.hasMatch(email);
   }
 }

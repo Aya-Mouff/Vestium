@@ -3,29 +3,26 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../cubit/account_manager_cubit.dart';
 import '../cubit/account_manager_state.dart';
 
-class ChangeEmailDialog extends StatefulWidget {
-  const ChangeEmailDialog({super.key});
+class ChangeFullNameDialog extends StatefulWidget {
+  const ChangeFullNameDialog({super.key});
 
   @override
-  State<ChangeEmailDialog> createState() => _ChangeEmailDialogState();
+  State<ChangeFullNameDialog> createState() => _ChangeFullNameDialogState();
 }
 
-class _ChangeEmailDialogState extends State<ChangeEmailDialog> {
-  late final TextEditingController _emailController;
-  final TextEditingController _passwordController = TextEditingController();
-  bool _obscurePassword = true;
+class _ChangeFullNameDialogState extends State<ChangeFullNameDialog> {
+  late final TextEditingController _fullNameController;
 
   @override
   void initState() {
     super.initState();
     final state = context.read<AccountManagerCubit>().state;
-    _emailController = TextEditingController(text: state.email ?? '');
+    _fullNameController = TextEditingController(text: state.fullName ?? '');
   }
 
   @override
   void dispose() {
-    _emailController.dispose();
-    _passwordController.dispose();
+    _fullNameController.dispose();
     super.dispose();
   }
 
@@ -34,6 +31,7 @@ class _ChangeEmailDialogState extends State<ChangeEmailDialog> {
     final cubit = context.read<AccountManagerCubit>();
 
     return Dialog(
+      insetPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: SingleChildScrollView(
         child: Padding(
@@ -42,7 +40,7 @@ class _ChangeEmailDialogState extends State<ChangeEmailDialog> {
             mainAxisSize: MainAxisSize.min,
             children: [
               const Text(
-                'Change Email',
+                'Change Full Name',
                 style: TextStyle(
                   fontFamily: 'CormorantGaramond',
                   fontSize: 18,
@@ -52,7 +50,7 @@ class _ChangeEmailDialogState extends State<ChangeEmailDialog> {
               ),
               const SizedBox(height: 8),
               const Text(
-                'Enter your new email and confirm with your password',
+                'Enter your new display name',
                 style: TextStyle(
                   fontFamily: 'inter',
                   fontSize: 14,
@@ -65,7 +63,7 @@ class _ChangeEmailDialogState extends State<ChangeEmailDialog> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text(
-                    'New Email',
+                    'Full Name',
                     style: TextStyle(
                       fontFamily: 'CormorantGaramond',
                       fontSize: 14,
@@ -75,67 +73,11 @@ class _ChangeEmailDialogState extends State<ChangeEmailDialog> {
                   ),
                   const SizedBox(height: 8),
                   TextField(
-                    controller: _emailController,
-                    keyboardType: TextInputType.emailAddress,
+                    controller: _fullNameController,
                     decoration: InputDecoration(
-                      hintText: 'newemail@example.com',
+                      hintText: 'Your name',
                       filled: true,
                       fillColor: const Color(0xFFF0EBE6),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide: const BorderSide(
-                          color: Color(0xFFA1887F),
-                          width: 1.5,
-                        ),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide: const BorderSide(
-                          color: Color(0xFFA1887F),
-                          width: 1.5,
-                        ),
-                      ),
-                      contentPadding: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 14,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 16),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    'Current Password',
-                    style: TextStyle(
-                      fontFamily: 'CormorantGaramond',
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                      color: Color(0xFF2C2C2C),
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  TextField(
-                    controller: _passwordController,
-                    obscureText: _obscurePassword,
-                    decoration: InputDecoration(
-                      filled: true,
-                      fillColor: const Color(0xFFF0EBE6),
-                      suffixIcon: IconButton(
-                        icon: Icon(
-                          _obscurePassword
-                              ? Icons.visibility_off
-                              : Icons.visibility,
-                          color: const Color(0xFFA1887F),
-                        ),
-                        onPressed: () {
-                          setState(() {
-                            _obscurePassword = !_obscurePassword;
-                          });
-                        },
-                      ),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                         borderSide: const BorderSide(
@@ -163,9 +105,8 @@ class _ChangeEmailDialogState extends State<ChangeEmailDialog> {
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () async {
-                    await cubit.changeEmail(
-                      newEmail: _emailController.text.trim(),
-                      currentPassword: _passwordController.text,
+                    await cubit.changeFullName(
+                      newFullName: _fullNameController.text.trim(),
                     );
                     if (context.mounted &&
                         cubit.state.status != AccountManagerStatus.error) {
@@ -180,7 +121,7 @@ class _ChangeEmailDialogState extends State<ChangeEmailDialog> {
                     ),
                   ),
                   child: const Text(
-                    'Change Email',
+                    'Save',
                     style: TextStyle(
                       fontFamily: 'CormorantGaramond',
                       fontSize: 16,
