@@ -165,9 +165,9 @@ class _SettingsScreen1State extends State<SettingsScreen1> {
                           title: 'Manage Categories For Outfits',
                           onTap: () {
                             context.router.push(
-                              ManageCategoriesRoute2(userId: widget.userId),
+                              ManageOutfitCategoriesRoute(userId: widget.userId),
                             );
-                            // TODO: Navigate to outfits categories screen
+                           // TODO: Navigate to outfits categories screen
                           },
                         ),
                         const SizedBox(height: 24),

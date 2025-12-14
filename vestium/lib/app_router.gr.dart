@@ -11,7 +11,7 @@ part of 'app_router.dart';
 
 abstract class _$AppRouter extends RootStackRouter {
   // ignore: unused_element
-  _$AppRouter();
+  _$AppRouter({super.navigatorKey});
 
   @override
   final Map<String, PageFactory> pagesMap = {
@@ -164,11 +164,11 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const ManageCategoriesScreen(),
       );
     },
-    ManageCategoriesRoute2.name: (routeData) {
-      final args = routeData.argsAs<ManageCategoriesRoute2Args>();
+    ManageOutfitCategoriesRoute.name: (routeData) {
+      final args = routeData.argsAs<ManageOutfitCategoriesRouteArgs>();
       return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: ManageCategoriesScreen2(
+        child: ManageOutfitCategoriesScreen(
           key: args.key,
           userId: args.userId,
         ),
@@ -884,29 +884,30 @@ class ManageCategoriesRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
-/// [ManageCategoriesScreen2]
-class ManageCategoriesRoute2 extends PageRouteInfo<ManageCategoriesRoute2Args> {
-  ManageCategoriesRoute2({
+/// [ManageOutfitCategoriesScreen]
+class ManageOutfitCategoriesRoute
+    extends PageRouteInfo<ManageOutfitCategoriesRouteArgs> {
+  ManageOutfitCategoriesRoute({
     Key? key,
     required int userId,
     List<PageRouteInfo>? children,
   }) : super(
-          ManageCategoriesRoute2.name,
-          args: ManageCategoriesRoute2Args(
+          ManageOutfitCategoriesRoute.name,
+          args: ManageOutfitCategoriesRouteArgs(
             key: key,
             userId: userId,
           ),
           initialChildren: children,
         );
 
-  static const String name = 'ManageCategoriesRoute2';
+  static const String name = 'ManageOutfitCategoriesRoute';
 
-  static const PageInfo<ManageCategoriesRoute2Args> page =
-      PageInfo<ManageCategoriesRoute2Args>(name);
+  static const PageInfo<ManageOutfitCategoriesRouteArgs> page =
+      PageInfo<ManageOutfitCategoriesRouteArgs>(name);
 }
 
-class ManageCategoriesRoute2Args {
-  const ManageCategoriesRoute2Args({
+class ManageOutfitCategoriesRouteArgs {
+  const ManageOutfitCategoriesRouteArgs({
     this.key,
     required this.userId,
   });
@@ -917,7 +918,7 @@ class ManageCategoriesRoute2Args {
 
   @override
   String toString() {
-    return 'ManageCategoriesRoute2Args{key: $key, userId: $userId}';
+    return 'ManageOutfitCategoriesRouteArgs{key: $key, userId: $userId}';
   }
 }
 

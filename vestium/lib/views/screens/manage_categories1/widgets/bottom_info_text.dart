@@ -1,7 +1,8 @@
+// manage_categories/widgets/bottom_info_text.dart
 import 'package:flutter/material.dart';
 
-class ManageCategoriesBottomText extends StatelessWidget {
-  const ManageCategoriesBottomText({super.key});
+class BottomInfoText extends StatelessWidget {
+  const BottomInfoText({super.key});
 
   @override
   Widget build(BuildContext context) {
