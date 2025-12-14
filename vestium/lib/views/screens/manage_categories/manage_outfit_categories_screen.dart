@@ -1,30 +1,30 @@
-// manage_categories/manage_categories_screen.dart
-import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'cubit/manage_categories_cubit.dart';
-import 'cubit/manage_categories_state.dart';
-import 'widgets/add_category_row.dart';
-import 'widgets/categories_list.dart';
+import 'cubit/manage_outfit_categories_cubit.dart';
+import 'cubit/manage_outfit_categories_state.dart';
+import 'widgets/add_outfit_category_row.dart';
+import 'widgets/outfit_categories_list.dart';
 import 'widgets/bottom_info_text.dart';
-import 'package:vestium/repo/item_category_repo.dart';
-import 'package:vestium/repo/item_category_join_repo.dart';
+import '../../../databases/services/outfit_category_service.dart';
 
 @RoutePage()
-class ManageCategoriesScreen extends StatelessWidget {
-  const ManageCategoriesScreen({super.key});
+class ManageOutfitCategoriesScreen extends StatelessWidget {
+  final int userId; // keep for router compatibility
+  const ManageOutfitCategoriesScreen({super.key, required this.userId});
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => ManageCategoriesCubit(ItemCategoryRepo(), ItemCategoryJoinRepo())..loadCategories(),
-      child: const _ManageCategoriesView(),
+      create: (_) => ManageOutfitCategoriesCubit(OutfitCategoryService())
+        ..loadCategories(),
+      child: const _ManageOutfitCategoriesView(),
     );
   }
 }
 
-class _ManageCategoriesView extends StatelessWidget {
-  const _ManageCategoriesView();
+class _ManageOutfitCategoriesView extends StatelessWidget {
+  const _ManageOutfitCategoriesView();
 
   @override
   Widget build(BuildContext context) {
@@ -37,11 +37,10 @@ class _ManageCategoriesView extends StatelessWidget {
           icon: const Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () {
             Navigator.pop(context);
-            // or context.router.pop();
           },
         ),
         title: const Text(
-          'Manage Categories For Items',
+          'Manage Categories For Outfits',
           style: TextStyle(
             color: Colors.black,
             fontSize: 16,
@@ -50,10 +49,10 @@ class _ManageCategoriesView extends StatelessWidget {
           ),
         ),
       ),
-      body: Column(
-        children: const [
-          AddCategoryRow(),
-          CategoriesList(),
+      body: const Column(
+        children: [
+          AddOutfitCategoryRow(),
+          OutfitCategoriesList(),
           BottomInfoText(),
         ],
       ),

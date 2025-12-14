@@ -3,12 +3,20 @@ import '../databases/db_helper.dart';
 import '../databases/db_models.dart';
 
 class OutfitCategoryRepo {
-  Future<List<OutfitCategory>> getAll() async {
+  Future<List<OutfitCategory>> getAll(int userId) async {
     final db = await DBHelper.getDatabase();
-    final res = await db.query('outfit_categories');
+    final res = await db.query('outfit_categories', where : 'user_id = ?', whereArgs: [userId],);
     return res.map((m) => OutfitCategory.fromMap(m)).toList();
   }
 
+
+  // Global (no filter) – used only for updateCategory checks
+  Future<List<OutfitCategory>> getAllGlobal() async {
+    final db = await DBHelper.getDatabase();
+    final res = await db.query('outfit_categories');
+    return res.map((m) => OutfitCategory.fromMap(m)).toList();
+  } 
+  
   Future<OutfitCategory?> getById(int id) async {
     final db = await DBHelper.getDatabase();
     final res = await db.query(

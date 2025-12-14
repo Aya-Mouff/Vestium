@@ -41,36 +41,34 @@ class MyProfileCubit extends Cubit<MyProfileState> {
 
       // Get user's outfits
       final userOutfits = await outfitRepo.getByUserId(userId);
-      
+
       // Get user's posts
       final userPosts = await postRepo.getByUserId(userId);
-      
-      // Get all outfit categories
-      final allCategories = await outfitCategoryService.getAllCategories();
+
+      // Collect outfit categories actually used by this user's outfits
       final userOutfitCategories = <String>{'All'}; // Start with 'All'
-      
-      // For each outfit, get its categories
+
       for (final outfit in userOutfits) {
         if (outfit.outfitId != null) {
-          // Get categories for this outfit
-          final outfitCategories = await outfitCategoryService.getCategoriesForOutfit(outfit.outfitId!);
-          
+          final outfitCategories =
+              await outfitCategoryService.getCategoriesForOutfit(outfit.outfitId!);
+
           if (outfitCategories.isNotEmpty) {
-            // Add each category name
             for (final category in outfitCategories) {
-              if (category.categoryName != null && category.categoryName!.isNotEmpty) {
+              if (category.categoryName != null &&
+                  category.categoryName!.isNotEmpty) {
                 userOutfitCategories.add(category.categoryName!);
               }
             }
           } else {
-            // If no categories, mark as 'Uncategorized'
             userOutfitCategories.add('Uncategorized');
           }
         }
       }
 
       // Get the valid profile image path
-      final profileImagePath = await _getValidProfileImagePath(userId, user.pfp);
+      final profileImagePath =
+          await _getValidProfileImagePath(userId, user.pfp);
 
       // Convert User model to Map for compatibility with existing UI
       final currentUserMap = {
@@ -84,58 +82,70 @@ class MyProfileCubit extends Cubit<MyProfileState> {
         'customOutfitCategories': userOutfitCategories.toList(),
       };
 
-      // Convert outfits to format expected by UI, with proper image paths and categories
-      final outfitsList = await Future.wait(userOutfits.map((outfit) async {
-        // Get categories for this outfit
+      // Convert outfits to format expected by UI
+      final outfitsList =
+          await Future.wait(userOutfits.map((outfit) async {
+        // Categories for this outfit
         List<String> outfitCategoryNames = [];
         if (outfit.outfitId != null) {
-          final outfitCategories = await outfitCategoryService.getCategoriesForOutfit(outfit.outfitId!);
+          final outfitCategories =
+              await outfitCategoryService.getCategoriesForOutfit(
+                  outfit.outfitId!);
           outfitCategoryNames = outfitCategories
               .map((cat) => cat.categoryName ?? 'Uncategorized')
               .where((name) => name.isNotEmpty)
               .toList();
         }
-        
-        // If no categories, mark as 'Uncategorized'
+
         if (outfitCategoryNames.isEmpty) {
           outfitCategoryNames = ['Uncategorized'];
         }
-        
-        // Get outfit image path from OutfitImageService
-        final outfitImagePath = await OutfitImageService.getOutfitImagePath(outfit.outfitId ?? -1);
-        
+
+        // Outfit image path
+        final outfitImagePath =
+            await OutfitImageService.getOutfitImagePath(outfit.outfitId ?? -1);
+
         return {
           'id': outfit.outfitId,
           'userId': outfit.userId,
           'name': outfit.outfitName ?? 'Unnamed Outfit',
           'description': outfit.description ?? '',
-          'categories': outfitCategoryNames, // CHANGED from 'category' to 'categories' (list)
-          'category': outfitCategoryNames.firstOrNull ?? 'Uncategorized', // Keep for backward compatibility
+          'categories': outfitCategoryNames,
+          'category':
+              outfitCategoryNames.isNotEmpty ? outfitCategoryNames.first : 'Uncategorized',
           'season': outfit.season ?? '',
           'date': outfit.date ?? '',
-          'imageUrl': outfitImagePath ?? 'assets/images/dummyData/floral-summer-dress.png',
+          'imageUrl': outfitImagePath ??
+              'assets/images/dummyData/floral-summer-dress.png',
           'imagePath': outfitImagePath,
         };
       }));
 
-      // Convert posts to format expected by UI, with proper image paths
-      final postsList = await Future.wait(userPosts.map((post) async {
-        // Get post image path from PostImageService
-        final postImagePath = await PostImageService.getPostImagePath(post.postId ?? -1);
-        
+      // Convert posts to format expected by UI
+      final postsList =
+          await Future.wait(userPosts.map((post) async {
+        final postImagePath =
+            await PostImageService.getPostImagePath(post.postId ?? -1);
+
         return {
           'id': post.postId,
           'outfitId': post.outfitId,
           'caption': post.caption ?? '',
           'date': post.date ?? '',
-          'imageUrl': postImagePath ?? post.imagePath ?? 'assets/images/dummyData/floral-summer-dress.png',
+          'imageUrl': postImagePath ??
+              post.imagePath ??
+              'assets/images/dummyData/floral-summer-dress.png',
           'imagePath': postImagePath ?? post.imagePath,
         };
       }));
 
-      // Convert Set to List and ensure 'All' is first
+      // Categories list with 'All' first
       final categoriesList = userOutfitCategories.toList()
-        ..sort((a, b) => a == 'All' ? -1 : b == 'All' ? 1 : a.compareTo(b));
+        ..sort((a, b) => a == 'All'
+            ? -1
+            : b == 'All'
+                ? 1
+                : a.compareTo(b));
 
       emit(
         MyProfileLoaded(
@@ -156,28 +166,24 @@ class MyProfileCubit extends Cubit<MyProfileState> {
 
   /// Helper method to get the valid profile image path
   Future<String> _getValidProfileImagePath(int userId, String? pfpPath) async {
-    // If a path is provided in the database, check if it's valid
     if (pfpPath != null && pfpPath.isNotEmpty) {
-      // Check if it's an asset path
       if (pfpPath.startsWith('assets/')) {
         return pfpPath;
       }
-      
-      // Check if it's a file path that exists
+
       final file = File(pfpPath);
       final fileExists = await file.exists();
       if (fileExists) {
         return pfpPath;
       }
     }
-    
-    // If no valid path in database, check user_profiles directory
-    final userProfilePath = await UserProfileService.getUserProfileImagePath(userId);
+
+    final userProfilePath =
+        await UserProfileService.getUserProfileImagePath(userId);
     if (userProfilePath != null) {
       return userProfilePath;
     }
-    
-    // Fallback to default asset
+
     return 'assets/images/icons/person.jpg';
   }
 
@@ -194,7 +200,6 @@ class MyProfileCubit extends Cubit<MyProfileState> {
       final filtered = category == 'All'
           ? List.from(s.outfits)
           : s.outfits.where((o) {
-              // Check if outfit has this category
               final categories = o['categories'] as List<String>;
               return categories.contains(category);
             }).toList();

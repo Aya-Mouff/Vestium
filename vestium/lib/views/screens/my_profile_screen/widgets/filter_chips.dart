@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:auto_route/auto_route.dart';
 import '../../../../app_router.dart';
 
+
+
+
 class FilterChips extends StatelessWidget {
   final List<String> categories;
   final String selectedCategory;
@@ -70,7 +73,7 @@ class FilterChips extends StatelessWidget {
         ),
         child: GestureDetector(
           onTap: () {
-            context.pushRoute(ManageCategoriesRoute2(userId: userId));
+            context.pushRoute(ManageOutfitCategoriesRoute(userId: userId));
           },
           child: const Icon(Icons.add, size: 16, color: Color(0xFF7B5247))
         ),

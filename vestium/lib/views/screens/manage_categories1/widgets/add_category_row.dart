@@ -1,44 +1,33 @@
+// manage_categories/widgets/add_category_row.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../cubit/manage_categories2_cubit.dart';
-import '../cubit/manage_categories2_state.dart';
+import '../cubit/manage_categories_cubit.dart';
+import '../cubit/manage_categories_state.dart';
 
-class ManageCategories2AddField extends StatefulWidget {
-  const ManageCategories2AddField({super.key});
+class AddCategoryRow extends StatefulWidget {
+  const AddCategoryRow({super.key});
 
   @override
-  State<ManageCategories2AddField> createState() =>
-      _ManageCategories2AddFieldState();
+  State<AddCategoryRow> createState() => _AddCategoryRowState();
 }
 
-class _ManageCategories2AddFieldState
-    extends State<ManageCategories2AddField> {
+class _AddCategoryRowState extends State<AddCategoryRow> {
   final TextEditingController _controller = TextEditingController();
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    final state = context.read<ManageCategories2Cubit>().state;
+    final state = context.read<ManageCategoriesCubit>().state;
     _controller.text = state.newCategoryName;
   }
 
   @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return BlocListener<ManageCategories2Cubit, ManageCategories2State>(
-      listenWhen: (previous, current) =>
-          previous.newCategoryName != current.newCategoryName,
+    return BlocListener<ManageCategoriesCubit, ManageCategoriesState>(
+      listenWhen: (p, c) => p.newCategoryName != c.newCategoryName,
       listener: (context, state) {
         if (_controller.text != state.newCategoryName) {
           _controller.text = state.newCategoryName;
-          _controller.selection = TextSelection.fromPosition(
-            TextPosition(offset: _controller.text.length),
-          );
         }
       },
       child: Padding(
@@ -54,6 +43,9 @@ class _ManageCategories2AddFieldState
                 ),
                 child: TextField(
                   controller: _controller,
+                  onChanged: (value) => context
+                      .read<ManageCategoriesCubit>()
+                      .onNewCategoryNameChanged(value),
                   style: const TextStyle(
                     fontFamily: 'Inter',
                     color: Colors.black,
@@ -66,14 +58,9 @@ class _ManageCategories2AddFieldState
                       fontFamily: 'Inter',
                     ),
                     border: InputBorder.none,
-                    contentPadding: EdgeInsets.symmetric(
-                      horizontal: 20,
-                      vertical: 12,
-                    ),
+                    contentPadding:
+                        EdgeInsets.symmetric(horizontal: 20, vertical: 12),
                   ),
-                  onChanged: (value) => context
-                      .read<ManageCategories2Cubit>()
-                      .newCategoryNameChanged(value),
                 ),
               ),
             ),
@@ -89,12 +76,18 @@ class _ManageCategories2AddFieldState
                 padding: EdgeInsets.zero,
                 icon: const Icon(Icons.add, color: Colors.white, size: 22),
                 onPressed: () =>
-                    context.read<ManageCategories2Cubit>().addCategory(),
+                    context.read<ManageCategoriesCubit>().addCategory(),
               ),
             ),
           ],
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 }

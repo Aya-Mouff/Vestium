@@ -15,15 +15,13 @@ class SaveOutfitCubit extends Cubit<SaveOutfitState> {
   final OutfitRepo _outfitRepo = OutfitRepo();
   final OutfitItemRepo _outfitItemRepo = OutfitItemRepo();
   final OutfitCategoryJoinRepo _outfitCategoryJoinRepo = OutfitCategoryJoinRepo();
-  // final CreateOutfitCubit _createOutfitCubit;
   final List<PlacedItemModel> _placedItems;
 
   SaveOutfitCubit({
     required CreateOutfitCubit createOutfitCubit,
     required List<PlacedItemModel> placedItems,
     OutfitCategoryService? outfitCategoryService,
-  }) :// _createOutfitCubit = createOutfitCubit,
-       _placedItems = placedItems,
+  }) : _placedItems = placedItems,
        _outfitCategoryService = outfitCategoryService ?? OutfitCategoryService(),
        super(const SaveOutfitInitial()) {
     _loadInitialData();
@@ -33,16 +31,19 @@ class SaveOutfitCubit extends Cubit<SaveOutfitState> {
     try {
       emit(const SaveOutfitLoading());
 
-      // Ensure initial categories exist
-      await _outfitCategoryService.ensureInitialCategories();
-      
-      // Load all categories
-      final allCategories = await _outfitCategoryService.getAllCategories();
+      // Get current user id
+      final userId = CurrentUserService.currentUserId;
+      if (userId == null) {
+        throw Exception('No user logged in');
+      }
 
-      emit(SaveOutfitDataLoaded(
-        allCategories: allCategories,
-        itemsCount: _placedItems.length,
-      ));
+      // Ensure initial categories exist for this user
+      await _outfitCategoryService.ensureInitialCategoriesForUser(userId);
+
+      // Load all categories for this user
+      final allCategories = await _outfitCategoryService.getAllCategoriesForUser(userId);
+
+      emit(SaveOutfitDataLoaded(allCategories: allCategories, itemsCount: _placedItems.length));
     } catch (e) {
       print('❌ Error loading outfit categories: $e');
       emit(SaveOutfitError('Failed to load categories: $e'));
@@ -73,11 +74,9 @@ class SaveOutfitCubit extends Cubit<SaveOutfitState> {
 
     List<int> updatedCategories;
     if (currentState.selectedCategoryIds.contains(categoryId)) {
-      updatedCategories = List.from(currentState.selectedCategoryIds)
-        ..remove(categoryId);
+      updatedCategories = List.from(currentState.selectedCategoryIds)..remove(categoryId);
     } else {
-      updatedCategories = List.from(currentState.selectedCategoryIds)
-        ..add(categoryId);
+      updatedCategories = List.from(currentState.selectedCategoryIds)..add(categoryId);
     }
 
     emit(currentState.copyWith(selectedCategoryIds: updatedCategories));
@@ -112,9 +111,7 @@ class SaveOutfitCubit extends Cubit<SaveOutfitState> {
       final outfit = OutfitModel(
         userId: currentUserId,
         outfitName: currentState.outfitName.trim(),
-        description: currentState.description.isNotEmpty 
-            ? currentState.description.trim() 
-            : null,
+        description: currentState.description.isNotEmpty ? currentState.description.trim() : null,
         season: currentState.selectedSeason ?? 'All',
         date: now,
       );
@@ -128,9 +125,7 @@ class SaveOutfitCubit extends Cubit<SaveOutfitState> {
         outfitId: outfitId,
         userId: currentUserId,
         outfitName: currentState.outfitName.trim(),
-        description: currentState.description.isNotEmpty 
-            ? currentState.description.trim() 
-            : null,
+        description: currentState.description.isNotEmpty ? currentState.description.trim() : null,
         season: currentState.selectedSeason ?? 'All',
         date: now,
       );
@@ -138,10 +133,7 @@ class SaveOutfitCubit extends Cubit<SaveOutfitState> {
       // Add items to outfit_item junction table
       print('📝 Adding ${_placedItems.length} items to outfit...');
       for (final placedItem in _placedItems) {
-        final outfitItem = OutfitItem(
-          outfitId: outfitId,
-          itemId: placedItem.itemId,
-        );
+        final outfitItem = OutfitItem(outfitId: outfitId, itemId: placedItem.itemId);
         await _outfitItemRepo.insert(outfitItem);
       }
       print('✅ All items added to outfit');
@@ -150,10 +142,7 @@ class SaveOutfitCubit extends Cubit<SaveOutfitState> {
       if (currentState.selectedCategoryIds.isNotEmpty) {
         print('🏷️  Adding ${currentState.selectedCategoryIds.length} categories...');
         for (final categoryId in currentState.selectedCategoryIds) {
-          final join = OutfitCategoryJoin(
-            outfitId: outfitId,
-            categoryId: categoryId,
-          );
+          final join = OutfitCategoryJoin(outfitId: outfitId, categoryId: categoryId);
           await _outfitCategoryJoinRepo.insert(join);
         }
         print('✅ Categories added to outfit');
@@ -163,28 +152,28 @@ class SaveOutfitCubit extends Cubit<SaveOutfitState> {
       String? savedOutfitImagePath;
       try {
         print('🎨 Creating composite outfit image...');
-        
+
         savedOutfitImagePath = await OutfitCompositeImageService.createCompositeImage(
           placedItems: _placedItems,
           outfitId: outfitId,
           userId: currentUserId,
         );
-        
+
         if (savedOutfitImagePath != null) {
           print('✅ Composite outfit image created and saved: $savedOutfitImagePath');
-          
+
           // If you want to create a post for the gallery, you can do it here
           // await _createOutfitPost(savedOutfit, savedOutfitImagePath, currentUserId);
         } else {
           print('⚠️  Could not create composite image, trying grid layout...');
-          
+
           // Try grid layout as fallback
           savedOutfitImagePath = await OutfitCompositeImageService.createGridCompositeImage(
             placedItems: _placedItems,
             outfitId: outfitId,
             userId: currentUserId,
           );
-          
+
           if (savedOutfitImagePath != null) {
             print('✅ Grid composite image saved: $savedOutfitImagePath');
           } else {
@@ -199,7 +188,6 @@ class SaveOutfitCubit extends Cubit<SaveOutfitState> {
       emit(SaveOutfitSaved(outfit: savedOutfit));
       print('🎉 Outfit saved successfully with ID: $outfitId');
       return true;
-
     } catch (e) {
       print('❌ Error saving outfit: $e');
       if (state is SaveOutfitDataLoaded) {
@@ -210,6 +198,4 @@ class SaveOutfitCubit extends Cubit<SaveOutfitState> {
       return false;
     }
   }
-
-
 }

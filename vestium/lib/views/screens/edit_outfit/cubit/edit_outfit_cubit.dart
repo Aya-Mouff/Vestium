@@ -619,6 +619,7 @@ class EditOutfitCubit extends Cubit<EditOutfitState> {
         );
         return;
       }
+      final userId = currentUser.userId!;
 
       // 2. Load the outfit
       final outfitId = int.tryParse(state.outfitId);
@@ -669,7 +670,7 @@ class EditOutfitCubit extends Cubit<EditOutfitState> {
       // 5. Load outfit image path if exists
       final imagePath = await OutfitImageService.getOutfitImagePath(outfitId);
       print('📸 Outfit image path loaded: ${imagePath ?? "No image found"}');
-      
+
       if (imagePath != null) {
         final file = File(imagePath);
         final exists = await file.exists();
@@ -679,13 +680,15 @@ class EditOutfitCubit extends Cubit<EditOutfitState> {
         }
       }
 
-      // 6. Load all available categories from database
-      await _categoryService.ensureInitialCategories();
-      final allCategories = await _categoryService.getAllCategories();
+      // 6. Load all available categories for this user from database
+      await _categoryService.ensureInitialCategoriesForUser(userId);
+      final allCategories =
+          await _categoryService.getAllCategoriesForUser(userId);
       print('🏷️ Loaded ${allCategories.length} categories from database');
 
       // 7. Load categories for this outfit (multiple categories support)
-      final outfitCategories = await _outfitCategoryJoinRepo.getCategoriesForOutfit(outfitId);
+      final outfitCategories =
+          await _outfitCategoryJoinRepo.getCategoriesForOutfit(outfitId);
       final selectedCategories = outfitCategories
           .map((c) => c.categoryName ?? '')
           .where((name) => name.isNotEmpty)
@@ -722,7 +725,7 @@ class EditOutfitCubit extends Cubit<EditOutfitState> {
       outfitMap['itemCount'] = itemsWithDetails.length;
       outfitMap['postCount'] = posts.length;
       outfitMap['hasPosts'] = hasPosts;
-      
+
       print('🗺️ Outfit map created with imageUrl: "${outfitMap['imageUrl']}"');
 
       // 11. Convert user to Map
@@ -790,13 +793,13 @@ class EditOutfitCubit extends Cubit<EditOutfitState> {
 
   void toggleCategory(String category) {
     final currentCategories = List<String>.from(state.selectedCategories);
-    
+
     if (currentCategories.contains(category)) {
       currentCategories.remove(category);
     } else {
       currentCategories.add(category);
     }
-    
+
     emit(state.copyWith(selectedCategories: currentCategories));
   }
 
@@ -864,14 +867,14 @@ class EditOutfitCubit extends Cubit<EditOutfitState> {
       // 3. Update categories (support multiple categories)
       if (state.selectedCategories.isNotEmpty) {
         final categoryIds = <int>[];
-        
+
         for (final categoryName in state.selectedCategories) {
           final category = await _categoryService.getCategoryByName(categoryName);
           if (category != null && category.categoryId != null) {
             categoryIds.add(category.categoryId!);
           }
         }
-        
+
         if (categoryIds.isNotEmpty) {
           await _categoryService.setOutfitCategories(outfitId, categoryIds);
           print('✅ Updated outfit categories to: ${state.selectedCategories}');

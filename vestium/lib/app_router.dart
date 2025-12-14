@@ -35,7 +35,7 @@ import './views/screens/onboarding_screen1.dart';
 import './views/screens/onboarding_screen2.dart';
 import './views/screens/onboarding_screen3.dart';
 import './views/screens/manage_categories1/manage_categories_screen.dart';
-import './views/screens/manage_categories2/manage_categories2_screen.dart';
+import 'views/screens/manage_categories/manage_outfit_categories_screen.dart';
 import './views/screens/settings_screen/settings_screen1.dart';
 import './views/screens/searching_screen/searching_screen1.dart';
 import './views/screens/followers_screen/followers_screen.dart';
@@ -95,10 +95,11 @@ class AppRouter extends _$AppRouter {
       page: ManageCategoriesRoute.page,
       path: '/manage_categories1'
     ),
-    AutoRoute(
-      page: ManageCategoriesRoute2.page,
-      path: '/manage_categories2/:userId',
-    ),
+   AutoRoute(
+  page: ManageOutfitCategoriesRoute.page,
+  path: '/manage_categories2/:userId', 
+),
+
     AutoRoute(page: SettingsRoute1.page, path: '/settings1/:userId'),
     AutoRoute(page: SearchRoute.page, path: '/search1/:userId'),
     AutoRoute(

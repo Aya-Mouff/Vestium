@@ -204,17 +204,20 @@ class ItemModel {
 // ------------------------
 class OutfitCategory {
   int? categoryId;
+  int? userId;
   String? categoryName;
 
-  OutfitCategory({this.categoryId, this.categoryName});
+  OutfitCategory({this.categoryId, this.userId, this.categoryName});
 
   factory OutfitCategory.fromMap(Map<String, dynamic> map) => OutfitCategory(
         categoryId: map['category_id'],
+        userId: map['user_id'],
         categoryName: map['category_name'],
       );
 
   Map<String, dynamic> toMap() => {
         'category_id': categoryId,
+        'user_id': userId,
         'category_name': categoryName,
       };
 }
