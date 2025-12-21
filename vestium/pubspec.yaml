@@ -25,6 +25,13 @@ dependencies:
   cached_network_image: ^3.3.0
   image: ^3.3.0
   focus_detector: ^2.0.0
+  connectivity_plus: ^5.0.0  # Check internet connection
+  http: ^1.1.0               # API calls
+  shared_preferences: ^2.2.2 # Store tokens
+  provider: ^6.1.1
+  firebase_core: ^2.24.2
+  firebase_messaging: ^14.7.10
+  flutter_local_notifications: ^15.1.1
 
 dev_dependencies:
   flutter_test:

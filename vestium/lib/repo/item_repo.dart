@@ -105,4 +105,40 @@ class ItemRepo {
     );
     return res.map((m) => ItemModel.fromMap(m)).toList();
   }
+
+  Future<int> insertWithId(ItemModel item) async {
+    final db = await DBHelper.getDatabase();
+    
+    // Check if item with this ID already exists
+    final existing = await db.query(
+      'items',
+      where: 'item_id = ?',
+      whereArgs: [item.itemId],
+    );
+    
+    if (existing.isNotEmpty) {
+      // Update existing
+      await db.update('items', item.toMap(), 
+        where: 'item_id = ?', whereArgs: [item.itemId]);
+      return item.itemId!;
+    } else {
+      // Insert new with specific ID
+      await db.insert('items', item.toMap());
+      return item.itemId!;
+    }
+  }
+
+  // NEW: Get items that need sync (without backend ID)
+  Future<List<ItemModel>> getUnsyncedItems(int userId) async {
+    final db = await DBHelper.getDatabase();
+    
+    // Assuming local-only items have IDs < 1000
+    final result = await db.query(
+      'items',
+      where: 'user_id = ? AND item_id < 1000',
+      whereArgs: [userId],
+    );
+    
+    return result.map((m) => ItemModel.fromMap(m)).toList();
+  }
 }
