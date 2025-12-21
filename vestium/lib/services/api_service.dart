@@ -212,4 +212,251 @@ class ApiService {
 
   bool get isLoggedIn => _accessToken != null;
   int? get userId => _userId;
+
+  static String get baseUrl => _baseUrl;
+  
+  // Make _authenticatedRequest public or create a public wrapper
+  Future<http.Response> authenticatedRequest(
+    Uri url, {
+    String method = 'GET',
+    Map<String, dynamic>? body,
+  }) async {
+    return await _authenticatedRequest(url, method: method, body: body);
+  }
+
+  // Sync endpoints
+  Future<Map<String, dynamic>> syncPull() async {
+    final response = await _authenticatedRequest(
+      Uri.parse('$_baseUrl/sync/pull'),
+      method: 'POST',
+    );
+
+    if (response.statusCode == 200) {
+      return json.decode(response.body);
+    } else {
+      throw Exception('Failed to pull sync data: ${response.body}');
+    }
+  }
+
+  Future<Map<String, dynamic>> syncPush(Map<String, dynamic> data) async {
+    final response = await _authenticatedRequest(
+      Uri.parse('$_baseUrl/sync/push'),
+      method: 'POST',
+      body: data,
+    );
+
+    if (response.statusCode == 200) {
+      return json.decode(response.body);
+    } else {
+      throw Exception('Failed to push sync data: ${response.body}');
+    }
+  }
+
+  Future<Map<String, dynamic>> syncStatus() async {
+    final response = await _authenticatedRequest(
+      Uri.parse('$_baseUrl/sync/status'),
+      method: 'GET',
+    );
+
+    if (response.statusCode == 200) {
+      return json.decode(response.body);
+    } else {
+      throw Exception('Failed to get sync status: ${response.body}');
+    }
+  }
+
+  // Item sync methods
+  Future<Map<String, dynamic>> createItemBackend(Map<String, dynamic> data) async {
+    final response = await _authenticatedRequest(
+      Uri.parse('$_baseUrl/items'),
+      method: 'POST',
+      body: data,
+    );
+
+    if (response.statusCode == 201) {
+      return json.decode(response.body);
+    } else {
+      throw Exception('Failed to create item: ${response.body}');
+    }
+  }
+
+  Future<Map<String, dynamic>> updateItemBackend(int itemId, Map<String, dynamic> data) async {
+    final response = await _authenticatedRequest(
+      Uri.parse('$_baseUrl/items/$itemId'),
+      method: 'PUT',
+      body: data,
+    );
+
+    if (response.statusCode == 200) {
+      return json.decode(response.body);
+    } else {
+      throw Exception('Failed to update item: ${response.body}');
+    }
+  }
+
+  Future<Map<String, dynamic>> deleteItemBackend(int itemId) async {
+    final response = await _authenticatedRequest(
+      Uri.parse('$_baseUrl/items/$itemId'),
+      method: 'DELETE',
+    );
+
+    if (response.statusCode == 200) {
+      return json.decode(response.body);
+    } else {
+      throw Exception('Failed to delete item: ${response.body}');
+    }
+  }
+
+  // Outfit sync methods
+  Future<Map<String, dynamic>> createOutfitBackend(Map<String, dynamic> data) async {
+    final response = await _authenticatedRequest(
+      Uri.parse('$_baseUrl/outfits'),
+      method: 'POST',
+      body: data,
+    );
+
+    if (response.statusCode == 201) {
+      return json.decode(response.body);
+    } else {
+      throw Exception('Failed to create outfit: ${response.body}');
+    }
+  }
+
+  Future<Map<String, dynamic>> updateOutfitBackend(int outfitId, Map<String, dynamic> data) async {
+    final response = await _authenticatedRequest(
+      Uri.parse('$_baseUrl/outfits/$outfitId'),
+      method: 'PUT',
+      body: data,
+    );
+
+    if (response.statusCode == 200) {
+      return json.decode(response.body);
+    } else {
+      throw Exception('Failed to update outfit: ${response.body}');
+    }
+  }
+
+  Future<Map<String, dynamic>> deleteOutfitBackend(int outfitId) async {
+    final response = await _authenticatedRequest(
+      Uri.parse('$_baseUrl/outfits/$outfitId'),
+      method: 'DELETE',
+    );
+
+    if (response.statusCode == 200) {
+      return json.decode(response.body);
+    } else {
+      throw Exception('Failed to delete outfit: ${response.body}');
+    }
+  }
+
+  // Post sync methods
+  Future<Map<String, dynamic>> createPostBackend(Map<String, dynamic> data) async {
+    final response = await _authenticatedRequest(
+      Uri.parse('$_baseUrl/posts'),
+      method: 'POST',
+      body: data,
+    );
+
+    if (response.statusCode == 201) {
+      return json.decode(response.body);
+    } else {
+      throw Exception('Failed to create post: ${response.body}');
+    }
+  }
+
+  Future<Map<String, dynamic>> updatePostBackend(int postId, Map<String, dynamic> data) async {
+    final response = await _authenticatedRequest(
+      Uri.parse('$_baseUrl/posts/$postId'),
+      method: 'PUT',
+      body: data,
+    );
+
+    if (response.statusCode == 200) {
+      return json.decode(response.body);
+    } else {
+      throw Exception('Failed to update post: ${response.body}');
+    }
+  }
+
+  Future<Map<String, dynamic>> deletePostBackend(int postId) async {
+    final response = await _authenticatedRequest(
+      Uri.parse('$_baseUrl/posts/$postId'),
+      method: 'DELETE',
+    );
+
+    if (response.statusCode == 200) {
+      return json.decode(response.body);
+    } else {
+      throw Exception('Failed to delete post: ${response.body}');
+    }
+  }
+
+  // Comment sync methods
+  Future<Map<String, dynamic>> createCommentBackend(int postId, String content) async {
+    final response = await _authenticatedRequest(
+      Uri.parse('$_baseUrl/posts/$postId/comments'),
+      method: 'POST',
+      body: {'content': content},
+    );
+
+    if (response.statusCode == 201) {
+      return json.decode(response.body);
+    } else {
+      throw Exception('Failed to create comment: ${response.body}');
+    }
+  }
+
+  // Like sync methods
+  Future<Map<String, dynamic>> likePostBackend(int postId) async {
+    final response = await _authenticatedRequest(
+      Uri.parse('$_baseUrl/posts/$postId/like'),
+      method: 'POST',
+    );
+
+    if (response.statusCode == 200) {
+      return json.decode(response.body);
+    } else {
+      throw Exception('Failed to like post: ${response.body}');
+    }
+  }
+
+  Future<Map<String, dynamic>> unlikePostBackend(int postId) async {
+    final response = await _authenticatedRequest(
+      Uri.parse('$_baseUrl/posts/$postId/like'),
+      method: 'DELETE',
+    );
+
+    if (response.statusCode == 200) {
+      return json.decode(response.body);
+    } else {
+      throw Exception('Failed to unlike post: ${response.body}');
+    }
+  }
+
+  // Follow sync methods
+  Future<Map<String, dynamic>> followUserBackend(int userId) async {
+    final response = await _authenticatedRequest(
+      Uri.parse('$_baseUrl/users/$userId/follow'),
+      method: 'POST',
+    );
+
+    if (response.statusCode == 201) {
+      return json.decode(response.body);
+    } else {
+      throw Exception('Failed to follow user: ${response.body}');
+    }
+  }
+
+  Future<Map<String, dynamic>> unfollowUserBackend(int userId) async {
+    final response = await _authenticatedRequest(
+      Uri.parse('$_baseUrl/users/$userId/unfollow'),
+      method: 'POST',
+    );
+
+    if (response.statusCode == 200) {
+      return json.decode(response.body);
+    } else {
+      throw Exception('Failed to unfollow user: ${response.body}');
+    }
+  }
 }

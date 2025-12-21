@@ -518,3 +518,61 @@ class ItemCategoryJoin {
         'category_id': categoryId,
       };
 }
+
+
+// lib/models/sync_queue_model.dart
+class SyncQueueModel {
+  int? queueId;
+  int userId;
+  String action; // 'create', 'update', 'delete'
+  String entityType; // 'item', 'outfit', 'post', 'comment', 'like', 'follow'
+  int? entityId; // Null for creates, ID for updates/deletes
+  String entityData; // JSON string of the entity
+  String createdAt;
+  bool processed;
+  String? processedAt;
+  int retryCount;
+
+  SyncQueueModel({
+    this.queueId,
+    required this.userId,
+    required this.action,
+    required this.entityType,
+    this.entityId,
+    required this.entityData,
+    String? createdAt,
+    this.processed = false,
+    this.processedAt,
+    this.retryCount = 0,
+  }) : createdAt = createdAt ?? DateTime.now().toIso8601String();
+
+  Map<String, dynamic> toMap() {
+    return {
+      'queue_id': queueId,
+      'user_id': userId,
+      'action': action,
+      'entity_type': entityType,
+      'entity_id': entityId,
+      'entity_data': entityData,
+      'created_at': createdAt,
+      'processed': processed ? 1 : 0,
+      'processed_at': processedAt,
+      'retry_count': retryCount,
+    };
+  }
+
+  factory SyncQueueModel.fromMap(Map<String, dynamic> map) {
+    return SyncQueueModel(
+      queueId: map['queue_id'],
+      userId: map['user_id'],
+      action: map['action'],
+      entityType: map['entity_type'],
+      entityId: map['entity_id'],
+      entityData: map['entity_data'],
+      createdAt: map['created_at'],
+      processed: map['processed'] == 1,
+      processedAt: map['processed_at'],
+      retryCount: map['retry_count'] ?? 0,
+    );
+  }
+}
