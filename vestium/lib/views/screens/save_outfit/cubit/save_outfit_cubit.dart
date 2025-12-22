@@ -9,7 +9,7 @@ import 'package:vestium/databases/services/current_user_service.dart';
 import 'package:vestium/views/screens/create_outfit/cubit/create_outfit_cubit.dart';
 import 'package:vestium/views/screens/create_outfit/cubit/create_outfit_state.dart';
 import 'package:vestium/databases/services/outfit_screenshot_service.dart';
-import 'package:vestium/databases/services/outfit_image_service.dart'; // ⭐ ADD THIS IMPORT
+import 'package:vestium/databases/services/outfit_image_service.dart';
 import 'save_outfit_state.dart';
 import 'dart:io';
 
@@ -48,19 +48,44 @@ class SaveOutfitCubit extends Cubit<SaveOutfitState> {
     try {
       emit(const SaveOutfitLoading());
 
-      await _outfitCategoryService.ensureInitialCategories();
-      final allCategories = await _outfitCategoryService.getAllCategories();
+      // Try to load categories, but don't fail if it errors
+      List<OutfitCategory> allCategories = [];
 
+      try {
+        final currentUserId = CurrentUserService.currentUserId;
+        if (currentUserId != null) {
+          await _outfitCategoryService.ensureInitialCategoriesForUser(
+            currentUserId,
+          );
+          allCategories = await _outfitCategoryService.getAllCategoriesForUser(
+            currentUserId,
+          );
+          print('✅ Loaded ${allCategories.length} categories');
+        }
+      } catch (e) {
+        print('⚠️ Category loading failed (continuing anyway): $e');
+        // Continue with empty categories list
+        allCategories = [];
+      }
+
+      // ⭐ IMPORTANT: Always emit SaveOutfitDataLoaded even if categories fail!
       emit(
         SaveOutfitDataLoaded(
           allCategories: allCategories,
           itemsCount: _placedItems.length,
-          preCapturedImagePath: _preCapturedImagePath,
+          preCapturedImagePath: _preCapturedImagePath, // This is now included!
         ),
       );
     } catch (e) {
-      print('❌ Error loading outfit categories: $e');
-      emit(SaveOutfitError('Failed to load categories: $e'));
+      print('❌ Unexpected error in _loadInitialData: $e');
+      // Still emit data loaded state to show the preview!
+      emit(
+        SaveOutfitDataLoaded(
+          allCategories: [],
+          itemsCount: _placedItems.length,
+          preCapturedImagePath: _preCapturedImagePath,
+        ),
+      );
     }
   }
 
@@ -88,9 +113,11 @@ class SaveOutfitCubit extends Cubit<SaveOutfitState> {
 
     List<int> updatedCategories;
     if (currentState.selectedCategoryIds.contains(categoryId)) {
-      updatedCategories = List.from(currentState.selectedCategoryIds)..remove(categoryId);
+      updatedCategories = List.from(currentState.selectedCategoryIds)
+        ..remove(categoryId);
     } else {
-      updatedCategories = List.from(currentState.selectedCategoryIds)..add(categoryId);
+      updatedCategories = List.from(currentState.selectedCategoryIds)
+        ..add(categoryId);
     }
 
     emit(currentState.copyWith(selectedCategoryIds: updatedCategories));
@@ -155,7 +182,10 @@ class SaveOutfitCubit extends Cubit<SaveOutfitState> {
       // Add items
       print('📦 Adding items to outfit...');
       for (final placedItem in _placedItems) {
-        final outfitItem = OutfitItem(outfitId: outfitId, itemId: placedItem.itemId);
+        final outfitItem = OutfitItem(
+          outfitId: outfitId,
+          itemId: placedItem.itemId,
+        );
         await _outfitItemRepo.insert(outfitItem);
         print('   ✓ Item ${placedItem.itemId} linked');
       }
@@ -164,7 +194,10 @@ class SaveOutfitCubit extends Cubit<SaveOutfitState> {
       if (currentState.selectedCategoryIds.isNotEmpty) {
         print('🏷️ Adding categories...');
         for (final categoryId in currentState.selectedCategoryIds) {
-          final join = OutfitCategoryJoin(outfitId: outfitId, categoryId: categoryId);
+          final join = OutfitCategoryJoin(
+            outfitId: outfitId,
+            categoryId: categoryId,
+          );
           await _outfitCategoryJoinRepo.insert(join);
           print('   ✓ Category $categoryId linked');
         }
