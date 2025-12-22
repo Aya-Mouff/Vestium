@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:vestium/databases/db_models.dart';
 import 'package:vestium/databases/services/outfit_category_service.dart';
@@ -7,23 +8,39 @@ import 'package:vestium/repo/outfit_category_join_repo.dart';
 import 'package:vestium/databases/services/current_user_service.dart';
 import 'package:vestium/views/screens/create_outfit/cubit/create_outfit_cubit.dart';
 import 'package:vestium/views/screens/create_outfit/cubit/create_outfit_state.dart';
-import 'package:vestium/databases/services/outfit_composite_image_service.dart'; // NEW IMPORT
+import 'package:vestium/databases/services/outfit_screenshot_service.dart';
+import 'package:vestium/databases/services/outfit_image_service.dart'; // ⭐ ADD THIS IMPORT
 import 'save_outfit_state.dart';
+import 'dart:io';
 
 class SaveOutfitCubit extends Cubit<SaveOutfitState> {
   final OutfitCategoryService _outfitCategoryService;
   final OutfitRepo _outfitRepo = OutfitRepo();
   final OutfitItemRepo _outfitItemRepo = OutfitItemRepo();
-  final OutfitCategoryJoinRepo _outfitCategoryJoinRepo = OutfitCategoryJoinRepo();
+  final OutfitCategoryJoinRepo _outfitCategoryJoinRepo =
+      OutfitCategoryJoinRepo();
   final List<PlacedItemModel> _placedItems;
+  final GlobalKey? _canvasKey;
+  final String? _preCapturedImagePath;
 
   SaveOutfitCubit({
     required CreateOutfitCubit createOutfitCubit,
     required List<PlacedItemModel> placedItems,
+    GlobalKey? canvasKey,
+    String? preCapturedImagePath,
     OutfitCategoryService? outfitCategoryService,
   }) : _placedItems = placedItems,
-       _outfitCategoryService = outfitCategoryService ?? OutfitCategoryService(),
+       _canvasKey = canvasKey,
+       _preCapturedImagePath = preCapturedImagePath,
+       _outfitCategoryService =
+           outfitCategoryService ?? OutfitCategoryService(),
        super(const SaveOutfitInitial()) {
+    print('🔧 SaveOutfitCubit initialized with:');
+    print('   - Items: ${placedItems.length}');
+    print('   - Canvas key: ${canvasKey != null ? "PRESENT ✅" : "MISSING ❌"}');
+    print(
+      '   - Pre-captured image: ${preCapturedImagePath != null ? "PRESENT ✅" : "NOT PROVIDED ❌"}',
+    );
     _loadInitialData();
   }
 
@@ -31,19 +48,16 @@ class SaveOutfitCubit extends Cubit<SaveOutfitState> {
     try {
       emit(const SaveOutfitLoading());
 
-      // Get current user id
-      final userId = CurrentUserService.currentUserId;
-      if (userId == null) {
-        throw Exception('No user logged in');
-      }
+      await _outfitCategoryService.ensureInitialCategories();
+      final allCategories = await _outfitCategoryService.getAllCategories();
 
-      // Ensure initial categories exist for this user
-      await _outfitCategoryService.ensureInitialCategoriesForUser(userId);
-
-      // Load all categories for this user
-      final allCategories = await _outfitCategoryService.getAllCategoriesForUser(userId);
-
-      emit(SaveOutfitDataLoaded(allCategories: allCategories, itemsCount: _placedItems.length));
+      emit(
+        SaveOutfitDataLoaded(
+          allCategories: allCategories,
+          itemsCount: _placedItems.length,
+          preCapturedImagePath: _preCapturedImagePath,
+        ),
+      );
     } catch (e) {
       print('❌ Error loading outfit categories: $e');
       emit(SaveOutfitError('Failed to load categories: $e'));
@@ -83,6 +97,8 @@ class SaveOutfitCubit extends Cubit<SaveOutfitState> {
   }
 
   Future<bool> saveOutfit() async {
+    print('\n🎯 ============ SAVE OUTFIT STARTED ============');
+
     try {
       if (state is! SaveOutfitDataLoaded) {
         throw Exception('Invalid state for saving outfit');
@@ -90,7 +106,6 @@ class SaveOutfitCubit extends Cubit<SaveOutfitState> {
 
       final currentState = state as SaveOutfitDataLoaded;
 
-      // Validation
       if (currentState.outfitName.trim().isEmpty) {
         throw Exception('Please enter an outfit name');
       }
@@ -106,90 +121,142 @@ class SaveOutfitCubit extends Cubit<SaveOutfitState> {
         throw Exception('No user logged in');
       }
 
-      // Create outfit model
+      print('👤 User ID: $currentUserId');
+      print('📝 Outfit Name: ${currentState.outfitName}');
+      print('🏷️ Categories: ${currentState.selectedCategoryIds.length}');
+      print('👔 Items: ${_placedItems.length}');
+
       final now = DateTime.now().toIso8601String();
       final outfit = OutfitModel(
         userId: currentUserId,
         outfitName: currentState.outfitName.trim(),
-        description: currentState.description.isNotEmpty ? currentState.description.trim() : null,
+        description: currentState.description.isNotEmpty
+            ? currentState.description.trim()
+            : null,
         season: currentState.selectedSeason ?? 'All',
         date: now,
       );
 
-      // Insert outfit into database
+      // Insert outfit
       final outfitId = await _outfitRepo.insert(outfit);
-      print('✅ Outfit "${currentState.outfitName}" inserted with ID: $outfitId');
+      print('✅ Outfit inserted with ID: $outfitId');
 
-      // Get the inserted outfit
       final savedOutfit = OutfitModel(
         outfitId: outfitId,
         userId: currentUserId,
         outfitName: currentState.outfitName.trim(),
-        description: currentState.description.isNotEmpty ? currentState.description.trim() : null,
+        description: currentState.description.isNotEmpty
+            ? currentState.description.trim()
+            : null,
         season: currentState.selectedSeason ?? 'All',
         date: now,
       );
 
-      // Add items to outfit_item junction table
-      print('📝 Adding ${_placedItems.length} items to outfit...');
+      // Add items
+      print('📦 Adding items to outfit...');
       for (final placedItem in _placedItems) {
         final outfitItem = OutfitItem(outfitId: outfitId, itemId: placedItem.itemId);
         await _outfitItemRepo.insert(outfitItem);
+        print('   ✓ Item ${placedItem.itemId} linked');
       }
-      print('✅ All items added to outfit');
 
-      // Add categories to outfit_category_join table
+      // Add categories
       if (currentState.selectedCategoryIds.isNotEmpty) {
-        print('🏷️  Adding ${currentState.selectedCategoryIds.length} categories...');
+        print('🏷️ Adding categories...');
         for (final categoryId in currentState.selectedCategoryIds) {
           final join = OutfitCategoryJoin(outfitId: outfitId, categoryId: categoryId);
           await _outfitCategoryJoinRepo.insert(join);
+          print('   ✓ Category $categoryId linked');
         }
-        print('✅ Categories added to outfit');
       }
 
-      // === CREATE AND SAVE COMPOSITE OUTFIT IMAGE ===
+      // === IMAGE HANDLING - USE PRE-CAPTURED IMAGE IF AVAILABLE ===
+      print('\n📸 ============ IMAGE HANDLING PHASE ============');
+
       String? savedOutfitImagePath;
-      try {
-        print('🎨 Creating composite outfit image...');
 
-        savedOutfitImagePath = await OutfitCompositeImageService.createCompositeImage(
-          placedItems: _placedItems,
-          outfitId: outfitId,
-          userId: currentUserId,
-        );
+      if (_preCapturedImagePath != null) {
+        print('✅ Using pre-captured image from outfit creation:');
+        print('   Temp path: $_preCapturedImagePath');
 
-        if (savedOutfitImagePath != null) {
-          print('✅ Composite outfit image created and saved: $savedOutfitImagePath');
+        // Check if file exists
+        final tempFile = File(_preCapturedImagePath);
+        if (await tempFile.exists()) {
+          print(
+            '✅ Temp file exists (${(await tempFile.length()) / 1024} KB), saving as permanent outfit image...',
+          );
 
-          // If you want to create a post for the gallery, you can do it here
-          // await _createOutfitPost(savedOutfit, savedOutfitImagePath, currentUserId);
-        } else {
-          print('⚠️  Could not create composite image, trying grid layout...');
-
-          // Try grid layout as fallback
-          savedOutfitImagePath = await OutfitCompositeImageService.createGridCompositeImage(
-            placedItems: _placedItems,
+          savedOutfitImagePath = await OutfitImageService.saveOutfitImage(
+            _preCapturedImagePath,
             outfitId: outfitId,
             userId: currentUserId,
           );
 
-          if (savedOutfitImagePath != null) {
-            print('✅ Grid composite image saved: $savedOutfitImagePath');
-          } else {
-            print('⚠️  Could not create any outfit image');
+          print('🎉 Image saved via OutfitImageService: $savedOutfitImagePath');
+
+          if (state is SaveOutfitDataLoaded) {
+            final currentState = state as SaveOutfitDataLoaded;
+            emit(
+              currentState.copyWith(preCapturedImagePath: savedOutfitImagePath),
+            );
           }
+
+          // Clean up the temp file
+          try {
+            await tempFile.delete();
+            print('✅ Temp file deleted');
+          } catch (e) {
+            print('⚠️ Could not delete temp file: $e');
+          }
+        } else {
+          print(
+            '⚠️ Pre-captured image file not found at: $_preCapturedImagePath',
+          );
         }
-      } catch (e) {
-        print('⚠️  Error creating outfit image: $e');
-        // Don't fail the entire save if image creation fails
+      } else {
+        print('⚠️ No pre-captured image provided');
+        print(
+          'Canvas key status: ${_canvasKey != null ? "AVAILABLE ✅" : "NULL ❌"}',
+        );
+
+        if (_canvasKey != null) {
+          print('📸 Attempting to capture screenshot now...');
+          try {
+            savedOutfitImagePath =
+                await OutfitScreenshotService.captureAndCropOutfit(
+                  canvasKey: _canvasKey,
+                  outfitId: outfitId,
+                  userId: currentUserId,
+                  padding: 20.0,
+                  quality: 3.0,
+                );
+
+            if (savedOutfitImagePath != null) {
+              print('🎉 Screenshot captured: $savedOutfitImagePath');
+            } else {
+              print('⚠️ Screenshot capture returned null');
+            }
+          } catch (screenshotError) {
+            print('❌ Error capturing screenshot: $screenshotError');
+          }
+        } else {
+          print('❌ No canvas key - cannot capture screenshot');
+        }
       }
 
+      print('📸 Image handling complete');
+      print('   Final image path: ${savedOutfitImagePath ?? "NONE"}');
+      print('============ IMAGE HANDLING END ============\n');
+
       emit(SaveOutfitSaved(outfit: savedOutfit));
-      print('🎉 Outfit saved successfully with ID: $outfitId');
+      print('🎉 Outfit saved successfully!');
+      print('============ SAVE OUTFIT COMPLETE ============\n');
       return true;
-    } catch (e) {
-      print('❌ Error saving outfit: $e');
+    } catch (e, stackTrace) {
+      print('❌ ERROR in saveOutfit():');
+      print('   Error: $e');
+      print('   Stack: $stackTrace');
+
       if (state is SaveOutfitDataLoaded) {
         final currentState = state as SaveOutfitDataLoaded;
         emit(currentState.copyWith(isSaving: false));

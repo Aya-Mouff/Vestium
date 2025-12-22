@@ -12,13 +12,21 @@ class OutfitRepo {
 
   Future<List<OutfitModel>> getByUserId(int userId) async {
     final db = await DBHelper.getDatabase();
-    final res = await db.query('outfits', where: 'user_id = ?', whereArgs: [userId]);
+    final res = await db.query(
+      'outfits',
+      where: 'user_id = ?',
+      whereArgs: [userId],
+    );
     return res.map((m) => OutfitModel.fromMap(m)).toList();
   }
 
   Future<OutfitModel?> getById(int id) async {
     final db = await DBHelper.getDatabase();
-    final res = await db.query('outfits', where: 'outfit_id = ?', whereArgs: [id]);
+    final res = await db.query(
+      'outfits',
+      where: 'outfit_id = ?',
+      whereArgs: [id],
+    );
     if (res.isEmpty) return null;
     return OutfitModel.fromMap(res.first);
   }
@@ -58,5 +66,22 @@ class OutfitRepo {
     final db = await DBHelper.getDatabase();
     await db.delete('outfits', where: 'outfit_id = ?', whereArgs: [id]);
     return true;
+  }
+
+  // In OutfitRepo.dart
+  Future<void> updateOutfitImage(int outfitId, String imagePath) async {
+    try {
+      final db = await DBHelper.getDatabase();
+      await db.update(
+        'outfits',
+        {'image_path': imagePath},
+        where: 'outfit_id = ?',
+        whereArgs: [outfitId],
+      );
+      print('📊 Database updated: outfit $outfitId -> image $imagePath');
+    } catch (e) {
+      print('❌ Error updating outfit image in database: $e');
+      rethrow;
+    }
   }
 }

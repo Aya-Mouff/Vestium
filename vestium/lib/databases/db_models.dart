@@ -197,6 +197,16 @@ class ItemModel {
       date: date ?? this.date,
     );
   }
+
+  static ItemModel empty() {
+    return ItemModel(
+      itemId: -1,
+      userId: -1,
+      itemName: 'Empty Item',
+      imagePath: null,
+      
+    );
+  }
 }
 
 // ------------------------

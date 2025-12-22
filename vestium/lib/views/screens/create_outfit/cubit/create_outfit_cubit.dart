@@ -10,12 +10,13 @@ import 'package:vestium/repo/item_category_repo.dart';
 import 'package:vestium/repo/item_category_join_repo.dart';
 import 'create_outfit_state.dart';
 
-/// Cubit for managing outfit creation workflow
+/// Cubit for managing outfit creation workflow with layering support
 class CreateOutfitCubit extends Cubit<CreateOutfitState> {
   final ItemCategoryService _itemCategoryService;
   final OutfitRepo _outfitRepo = OutfitRepo();
   final OutfitItemRepo _outfitItemRepo = OutfitItemRepo();
   final int _userId;
+  int _nextZIndex = 0; // Track next available z-index
 
   CreateOutfitCubit({
     required int userId,
@@ -35,7 +36,6 @@ class CreateOutfitCubit extends Cubit<CreateOutfitState> {
     try {
       emit(const CreateOutfitLoading());
 
-      // Fetch items from database for current user using ItemCategoryService
       final items = await _itemCategoryService.getItemsByUserId(_userId);
 
       print('✅ Loaded ${items.length} items for user $_userId');
@@ -61,12 +61,11 @@ class CreateOutfitCubit extends Cubit<CreateOutfitState> {
 
     final currentState = state as CreateOutfitItemsLoaded;
 
-    // Check if item already exists
     final exists = currentState.placedItems.any(
       (pi) => pi.itemId == item.itemId,
     );
     if (exists) {
-      print('⚠️  Item ${item.itemName} already in outfit');
+      print('⚠️ Item ${item.itemName} already in outfit');
       return;
     }
 
@@ -77,28 +76,27 @@ class CreateOutfitCubit extends Cubit<CreateOutfitState> {
         50 + (currentState.placedItems.length * 15).toDouble(),
         50 + (currentState.placedItems.length * 15).toDouble(),
       ),
+      zIndex: _nextZIndex++,
+      scale: 1.0, // Default scale
     );
 
     final updatedPlacedItems = [...currentState.placedItems, newPlacedItem];
 
     emit(currentState.copyWith(placedItems: updatedPlacedItems));
-    print(
-      '✅ Added ${item.itemName} to outfit (total: ${updatedPlacedItems.length})',
-    );
+    print('✅ Added ${item.itemName} to outfit (z-index: ${newPlacedItem.zIndex})');
   }
 
-  /// Add an item to the outfit with specific position (for drag and drop)
+  /// Add an item to the outfit with specific position
   void addItemToOutfitWithPosition(ItemModel item, Offset position) {
     if (state is! CreateOutfitItemsLoaded) return;
 
     final currentState = state as CreateOutfitItemsLoaded;
 
-    // Check if item already exists
     final exists = currentState.placedItems.any(
       (pi) => pi.itemId == item.itemId,
     );
     if (exists) {
-      print('⚠️  Item ${item.itemName} already in outfit');
+      print('⚠️ Item ${item.itemName} already in outfit');
       return;
     }
 
@@ -106,12 +104,14 @@ class CreateOutfitCubit extends Cubit<CreateOutfitState> {
       itemId: item.itemId!,
       item: item,
       position: position,
+      zIndex: _nextZIndex++,
+      scale: 1.0, // Default scale
     );
 
     final updatedPlacedItems = [...currentState.placedItems, newPlacedItem];
 
     emit(currentState.copyWith(placedItems: updatedPlacedItems));
-    print('✅ Added ${item.itemName} to outfit at position $position');
+    print('✅ Added ${item.itemName} at $position (z-index: ${newPlacedItem.zIndex})');
   }
 
   /// Update item position on the canvas
@@ -128,6 +128,64 @@ class CreateOutfitCubit extends Cubit<CreateOutfitState> {
     }).toList();
 
     emit(currentState.copyWith(placedItems: updatedPlacedItems));
+  }
+
+  /// Update item scale (zoom individual item)
+  void updateItemScale(int itemId, double newScale) {
+    if (state is! CreateOutfitItemsLoaded) return;
+
+    final currentState = state as CreateOutfitItemsLoaded;
+
+    final updatedPlacedItems = currentState.placedItems.map((placedItem) {
+      if (placedItem.itemId == itemId) {
+        // Clamp scale between 0.3x and 3.0x
+        final clampedScale = newScale.clamp(0.3, 3.0);
+        return placedItem.copyWith(scale: clampedScale);
+      }
+      return placedItem;
+    }).toList();
+
+    emit(currentState.copyWith(placedItems: updatedPlacedItems));
+    print('✅ Updated item $itemId scale to ${newScale.toStringAsFixed(2)}x');
+  }
+
+  /// Bring item to front (increase z-index to be on top)
+  void bringItemToFront(int itemId) {
+    if (state is! CreateOutfitItemsLoaded) return;
+
+    final currentState = state as CreateOutfitItemsLoaded;
+
+    final updatedPlacedItems = currentState.placedItems.map((placedItem) {
+      if (placedItem.itemId == itemId) {
+        return placedItem.copyWith(zIndex: _nextZIndex++);
+      }
+      return placedItem;
+    }).toList();
+
+    emit(currentState.copyWith(placedItems: updatedPlacedItems));
+    print('✅ Brought item $itemId to front (new z-index: ${_nextZIndex - 1})');
+  }
+
+  /// Send item to back (decrease z-index to be behind others)
+  void sendItemToBack(int itemId) {
+    if (state is! CreateOutfitItemsLoaded) return;
+
+    final currentState = state as CreateOutfitItemsLoaded;
+
+    // Find minimum z-index and set this item below it
+    final minZIndex = currentState.placedItems.isEmpty
+        ? 0
+        : currentState.placedItems.map((p) => p.zIndex).reduce((a, b) => a < b ? a : b);
+
+    final updatedPlacedItems = currentState.placedItems.map((placedItem) {
+      if (placedItem.itemId == itemId) {
+        return placedItem.copyWith(zIndex: minZIndex - 1);
+      }
+      return placedItem;
+    }).toList();
+
+    emit(currentState.copyWith(placedItems: updatedPlacedItems));
+    print('✅ Sent item $itemId to back (new z-index: ${minZIndex - 1})');
   }
 
   /// Remove an item from the outfit
@@ -155,6 +213,8 @@ class CreateOutfitCubit extends Cubit<CreateOutfitState> {
           itemId: newItem.itemId!,
           item: newItem,
           position: placedItem.position,
+          zIndex: placedItem.zIndex, // Preserve z-index
+          scale: placedItem.scale, // Preserve scale
         );
       }
       return placedItem;
@@ -169,6 +229,7 @@ class CreateOutfitCubit extends Cubit<CreateOutfitState> {
     if (state is! CreateOutfitItemsLoaded) return;
 
     final currentState = state as CreateOutfitItemsLoaded;
+    _nextZIndex = 0; // Reset z-index counter
     emit(currentState.copyWith(placedItems: const []));
     print('✅ Outfit cleared');
   }
@@ -197,22 +258,18 @@ class CreateOutfitCubit extends Cubit<CreateOutfitState> {
 
       emit(const CreateOutfitSaving());
 
-      // Create outfit model
       final now = DateTime.now().toIso8601String();
       final outfit = OutfitModel(
         userId: _userId,
         outfitName: outfitName.trim(),
         description: description?.isNotEmpty == true ? description : null,
-        // categoryId: categoryId,
         season: season ?? 'All',
         date: now,
       );
 
-      // Insert outfit into database
       await _outfitRepo.insert(outfit);
       print('✅ Outfit "$outfitName" inserted into database');
 
-      // Get the inserted outfit to get its ID
       final allOutfits = await _outfitRepo.getByUserId(_userId);
       final savedOutfit = allOutfits.lastWhere(
         (o) => o.outfitName == outfit.outfitName && o.date == outfit.date,
@@ -223,41 +280,33 @@ class CreateOutfitCubit extends Cubit<CreateOutfitState> {
         throw Exception('Failed to get outfit ID');
       }
 
-      // Add items to outfit_item junction table
-      print(
-        '📝 Adding ${currentState.placedItems.length} items to outfit ${savedOutfit.outfitId}...',
-      );
-      for (int i = 0; i < currentState.placedItems.length; i++) {
-        final placedItem = currentState.placedItems[i];
+      // Add items to outfit_item junction table (sorted by z-index)
+      final sortedItems = currentState.sortedPlacedItems;
+      print('📝 Adding ${sortedItems.length} items to outfit ${savedOutfit.outfitId}...');
+      
+      for (int i = 0; i < sortedItems.length; i++) {
+        final placedItem = sortedItems[i];
         final outfitItem = OutfitItem(
           outfitId: savedOutfit.outfitId!,
           itemId: placedItem.itemId,
         );
         await _outfitItemRepo.insert(outfitItem);
-        print(
-          '  ✅ Item ${i + 1}/${currentState.placedItems.length}: itemId ${placedItem.itemId} (${placedItem.item.itemName}) added to outfit',
-        );
+        print('  ✅ Item ${i + 1}/${sortedItems.length}: ${placedItem.item.itemName} (z-index: ${placedItem.zIndex})');
       }
 
-      print(
-        '✅ Successfully added all ${currentState.placedItems.length} items to outfit ${savedOutfit.outfitId}',
-      );
-
-      // Save outfit image using the first item's image as the outfit image
+      // Save outfit image
       try {
-        final firstItemImagePath =
-            currentState.placedItems.first.item.imagePath;
+        final firstItemImagePath = sortedItems.first.item.imagePath;
         if (firstItemImagePath != null && firstItemImagePath.isNotEmpty) {
           await OutfitImageService.saveOutfitImage(
             firstItemImagePath,
             outfitId: savedOutfit.outfitId!,
             userId: _userId,
           );
-          print('✅ Outfit image saved for outfit ${savedOutfit.outfitId}');
+          print('✅ Outfit image saved');
         }
       } catch (e) {
-        print('⚠️  Warning: Could not save outfit image: $e');
-        // Don't fail the entire save if image save fails
+        print('⚠️ Warning: Could not save outfit image: $e');
       }
 
       emit(CreateOutfitSaved(outfit: savedOutfit));
@@ -281,5 +330,39 @@ class CreateOutfitCubit extends Cubit<CreateOutfitState> {
         showAvailableItems: !currentState.showAvailableItems,
       ),
     );
+  }
+
+  void centerAllItems(Size canvasSize) {
+    if (state is! CreateOutfitItemsLoaded) return;
+
+    final currentState = state as CreateOutfitItemsLoaded;
+    if (currentState.placedItems.isEmpty) return;
+
+    const itemWidth = 100.0;
+    const itemHeight = 120.0;
+
+    final centerX = canvasSize.width / 2;
+    final centerY = canvasSize.height / 2;
+
+    final totalWidth =
+        (currentState.placedItems.length * itemWidth) +
+        ((currentState.placedItems.length - 1) * 20);
+
+    double startX = centerX - (totalWidth / 2);
+
+    final updatedPlacedItems = <PlacedItemModel>[];
+
+    for (int i = 0; i < currentState.placedItems.length; i++) {
+      final placedItem = currentState.placedItems[i];
+      final newPosition = Offset(
+        startX + (i * (itemWidth + 20)),
+        centerY - (itemHeight / 2),
+      );
+
+      updatedPlacedItems.add(placedItem.copyWith(position: newPosition));
+    }
+
+    emit(currentState.copyWith(placedItems: updatedPlacedItems));
+    print('✅ All items centered');
   }
 }
