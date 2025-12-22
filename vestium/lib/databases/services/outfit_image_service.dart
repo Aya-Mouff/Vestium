@@ -1,21 +1,63 @@
 import 'dart:io';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
+import 'package:vestium/repo/outfit_repo.dart';
 
 class OutfitImageService {
   /// Save an outfit image to the app's directory
   /// Returns the path where the image was saved
-  static Future<String> saveOutfitImage(String sourcePath, {int? outfitId, int? userId}) async {
+  // static Future<String> saveOutfitImage(String sourcePath, {int? outfitId, int? userId}) async {
+  //   try {
+  //     // Get the application documents directory
+  //     final appDir = await getApplicationDocumentsDirectory();
+
+  //     // Create a 'outfit_images' subdirectory if it doesn't exist
+  //     final outfitsDir = Directory(p.join(appDir.path, 'outfit_images'));
+  //     if (!await outfitsDir.exists()) {
+  //       await outfitsDir.create(recursive: true);
+  //     }
+
+  //     // Generate a unique filename
+  //     final String filename;
+  //     if (outfitId != null) {
+  //       // Use outfitId for the filename
+  //       filename = 'outfit_${outfitId}_image${p.extension(sourcePath)}';
+  //     } else {
+  //       // Generate unique filename with timestamp and user ID if provided
+  //       final timestamp = DateTime.now().millisecondsSinceEpoch;
+  //       final userIdPart = userId != null ? '_user$userId' : '';
+  //       filename = 'outfit${userIdPart}_$timestamp${p.extension(sourcePath)}';
+  //     }
+
+  //     final newPath = p.join(outfitsDir.path, filename);
+
+  //     // Copy the file from temp location to persistent location
+  //     final sourceFile = File(sourcePath);
+  //     await sourceFile.copy(newPath);
+
+  //     print('✅ Outfit image saved: $newPath');
+  //     return newPath;
+  //   } catch (e) {
+  //     print('❌ Error saving outfit image: $e');
+  //     rethrow;
+  //   }
+  // }
+
+  static Future<String> saveOutfitImage(
+    String sourcePath, {
+    int? outfitId,
+    int? userId,
+  }) async {
     try {
       // Get the application documents directory
       final appDir = await getApplicationDocumentsDirectory();
-      
+
       // Create a 'outfit_images' subdirectory if it doesn't exist
       final outfitsDir = Directory(p.join(appDir.path, 'outfit_images'));
       if (!await outfitsDir.exists()) {
         await outfitsDir.create(recursive: true);
       }
-      
+
       // Generate a unique filename
       final String filename;
       if (outfitId != null) {
@@ -27,18 +69,44 @@ class OutfitImageService {
         final userIdPart = userId != null ? '_user$userId' : '';
         filename = 'outfit${userIdPart}_$timestamp${p.extension(sourcePath)}';
       }
-      
+
       final newPath = p.join(outfitsDir.path, filename);
-      
+
       // Copy the file from temp location to persistent location
       final sourceFile = File(sourcePath);
       await sourceFile.copy(newPath);
-      
+
       print('✅ Outfit image saved: $newPath');
+
+      // ⭐⭐⭐ CRITICAL FIX: UPDATE THE DATABASE IF outfitId IS PROVIDED ⭐⭐⭐
+      if (outfitId != null) {
+        await _updateOutfitImageInDatabase(outfitId, newPath);
+      }
+
       return newPath;
     } catch (e) {
       print('❌ Error saving outfit image: $e');
       rethrow;
+    }
+  }
+
+  // ⭐⭐⭐ ADD THIS METHOD TO UPDATE DATABASE ⭐⭐⭐
+  static Future<void> _updateOutfitImageInDatabase(
+    int outfitId,
+    String imagePath,
+  ) async {
+    try {
+      print('💾 Updating database for outfit $outfitId with image: $imagePath');
+      
+      final outfitRepo = OutfitRepo();
+
+      // Update the outfit record with the image path
+      await outfitRepo.updateOutfitImage(outfitId, imagePath);
+
+      print('✅ Database updated successfully');
+    } catch (e) {
+      print('❌ Error updating database with outfit image: $e');
+      // Don't rethrow - we still want to return the file path even if DB update fails
     }
   }
 
@@ -47,21 +115,21 @@ class OutfitImageService {
     try {
       final appDir = await getApplicationDocumentsDirectory();
       final outfitsDir = Directory(p.join(appDir.path, 'outfit_images'));
-      
+
       if (!await outfitsDir.exists()) {
         return null;
       }
-      
+
       // Look for files with pattern outfit_{outfitId}_image*
       final files = await outfitsDir.list().toList();
-      
+
       for (final file in files) {
         final fileName = p.basename(file.path);
         if (fileName.startsWith('outfit_${outfitId}_image')) {
           return file.path;
         }
       }
-      
+
       return null;
     } catch (e) {
       print('❌ Error getting outfit image path: $e');
@@ -74,23 +142,23 @@ class OutfitImageService {
     try {
       final appDir = await getApplicationDocumentsDirectory();
       final outfitsDir = Directory(p.join(appDir.path, 'outfit_images'));
-      
+
       if (!await outfitsDir.exists()) {
         return [];
       }
-      
+
       final files = await outfitsDir.list().toList();
       final userOutfitImages = <String>[];
-      
+
       for (final file in files) {
         final fileName = p.basename(file.path);
         // Check if file belongs to user (contains _user{userId} or we need to check outfitId)
-        if (fileName.contains('_user$userId') || 
+        if (fileName.contains('_user$userId') ||
             await _isOutfitOwnedByUser(file.path, userId)) {
           userOutfitImages.add(file.path);
         }
       }
-      
+
       return userOutfitImages;
     } catch (e) {
       print('❌ Error getting user outfit images: $e');
@@ -104,7 +172,7 @@ class OutfitImageService {
     // Extract outfitId from filename
     final fileName = p.basename(imagePath);
     final match = RegExp(r'outfit_(\d+)_image').firstMatch(fileName);
-    
+
     if (match != null) {
       final outfitId = int.tryParse(match.group(1)!);
       if (outfitId != null) {
@@ -143,13 +211,21 @@ class OutfitImageService {
   }
 
   /// Update an outfit image - replaces old one if exists
-  static Future<String> updateOutfitImage(int outfitId, String newImagePath, {int? userId}) async {
+  static Future<String> updateOutfitImage(
+    int outfitId,
+    String newImagePath, {
+    int? userId,
+  }) async {
     try {
       // First, delete any existing image for this outfit
       await deleteOutfitImageById(outfitId);
-      
+
       // Save the new image
-      return await saveOutfitImage(newImagePath, outfitId: outfitId, userId: userId);
+      return await saveOutfitImage(
+        newImagePath,
+        outfitId: outfitId,
+        userId: userId,
+      );
     } catch (e) {
       print('❌ Error updating outfit image: $e');
       rethrow;
@@ -178,11 +254,11 @@ class OutfitImageService {
     try {
       final appDir = await getApplicationDocumentsDirectory();
       final outfitsDir = Directory(p.join(appDir.path, 'outfit_images'));
-      
+
       if (!await outfitsDir.exists()) {
         return [];
       }
-      
+
       final files = await outfitsDir.list().toList();
       return files.map((file) => file.path).toList();
     } catch (e) {
@@ -196,9 +272,9 @@ class OutfitImageService {
     try {
       final tempDir = await getTemporaryDirectory();
       final cutoffDate = DateTime.now().subtract(Duration(days: daysOld));
-      
+
       final files = await tempDir.list().toList();
-      
+
       for (final file in files) {
         final fileName = p.basename(file.path);
         if (fileName.startsWith('outfit_temp_')) {
@@ -215,36 +291,39 @@ class OutfitImageService {
   }
 
   /// Copy an outfit image (useful for creating new outfits based on existing ones)
-  static Future<String> copyOutfitImage(int sourceOutfitId, int newOutfitId) async {
+  static Future<String> copyOutfitImage(
+    int sourceOutfitId,
+    int newOutfitId,
+  ) async {
     try {
       final sourcePath = await getOutfitImagePath(sourceOutfitId);
       if (sourcePath == null) {
         throw Exception('Source outfit image not found');
       }
-      
+
       final sourceFile = File(sourcePath);
       if (!await sourceFile.exists()) {
         throw Exception('Source image file not found');
       }
-      
+
       // Read the source file
       final bytes = await sourceFile.readAsBytes();
-      
+
       // Get directory for new image
       final appDir = await getApplicationDocumentsDirectory();
       final outfitsDir = Directory(p.join(appDir.path, 'outfit_images'));
       if (!await outfitsDir.exists()) {
         await outfitsDir.create(recursive: true);
       }
-      
+
       // Create new filename
       final extension = p.extension(sourcePath);
       final newFilename = 'outfit_${newOutfitId}_image$extension';
       final newPath = p.join(outfitsDir.path, newFilename);
-      
+
       // Write the copied image
       await File(newPath).writeAsBytes(bytes);
-      
+
       print('✅ Outfit image copied from $sourceOutfitId to $newOutfitId');
       return newPath;
     } catch (e) {
