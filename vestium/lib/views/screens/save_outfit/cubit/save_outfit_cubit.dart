@@ -88,11 +88,9 @@ class SaveOutfitCubit extends Cubit<SaveOutfitState> {
 
     List<int> updatedCategories;
     if (currentState.selectedCategoryIds.contains(categoryId)) {
-      updatedCategories = List.from(currentState.selectedCategoryIds)
-        ..remove(categoryId);
+      updatedCategories = List.from(currentState.selectedCategoryIds)..remove(categoryId);
     } else {
-      updatedCategories = List.from(currentState.selectedCategoryIds)
-        ..add(categoryId);
+      updatedCategories = List.from(currentState.selectedCategoryIds)..add(categoryId);
     }
 
     emit(currentState.copyWith(selectedCategoryIds: updatedCategories));
@@ -157,10 +155,7 @@ class SaveOutfitCubit extends Cubit<SaveOutfitState> {
       // Add items
       print('📦 Adding items to outfit...');
       for (final placedItem in _placedItems) {
-        final outfitItem = OutfitItem(
-          outfitId: outfitId,
-          itemId: placedItem.itemId,
-        );
+        final outfitItem = OutfitItem(outfitId: outfitId, itemId: placedItem.itemId);
         await _outfitItemRepo.insert(outfitItem);
         print('   ✓ Item ${placedItem.itemId} linked');
       }
@@ -169,10 +164,7 @@ class SaveOutfitCubit extends Cubit<SaveOutfitState> {
       if (currentState.selectedCategoryIds.isNotEmpty) {
         print('🏷️ Adding categories...');
         for (final categoryId in currentState.selectedCategoryIds) {
-          final join = OutfitCategoryJoin(
-            outfitId: outfitId,
-            categoryId: categoryId,
-          );
+          final join = OutfitCategoryJoin(outfitId: outfitId, categoryId: categoryId);
           await _outfitCategoryJoinRepo.insert(join);
           print('   ✓ Category $categoryId linked');
         }

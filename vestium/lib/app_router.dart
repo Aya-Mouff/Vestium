@@ -1,6 +1,5 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:vestium/views/screens/account_manager.dart';
 import 'package:vestium/views/screens/check_email_screen/check_email_page.dart';
 import 'package:vestium/views/screens/create_outfit/create_outfit_screen.dart';
 import 'package:vestium/views/screens/reset_password_screen/reset_password_page.dart';
@@ -36,7 +35,7 @@ import './views/screens/onboarding_screen1.dart';
 import './views/screens/onboarding_screen2.dart';
 import './views/screens/onboarding_screen3.dart';
 import './views/screens/manage_categories1/manage_categories_screen.dart';
-import './views/screens/manage_categories2/manage_categories2_screen.dart';
+import 'views/screens/manage_categories/manage_outfit_categories_screen.dart';
 import './views/screens/settings_screen/settings_screen1.dart';
 import './views/screens/searching_screen/searching_screen1.dart';
 import './views/screens/followers_screen/followers_screen.dart';
@@ -49,7 +48,7 @@ import 'views/screens/set_new_password_screen.dart';
 import 'views/screens/access_denied.dart';
 import 'package:vestium/views/screens/edit_item_details/edit_item_details_screen.dart';
 import 'package:vestium/views/screens/save_outfit/save_outfit_screen.dart';
-
+import 'package:vestium/views/screens/account_manager/account_manager.dart';
 part 'app_router.gr.dart';
 
 @AutoRouterConfig(replaceInRouteName: 'Screen,Route')
@@ -96,10 +95,11 @@ class AppRouter extends _$AppRouter {
       page: ManageCategoriesRoute.page,
       path: '/manage_categories1'
     ),
-    AutoRoute(
-      page: ManageCategoriesRoute2.page,
-      path: '/manage_categories2/:userId',
-    ),
+   AutoRoute(
+  page: ManageOutfitCategoriesRoute.page,
+  path: '/manage_categories2/:userId', 
+),
+
     AutoRoute(page: SettingsRoute1.page, path: '/settings1/:userId'),
     AutoRoute(page: SearchRoute.page, path: '/search1/:userId'),
     AutoRoute(

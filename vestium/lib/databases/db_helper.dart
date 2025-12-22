@@ -90,7 +90,10 @@ class DBHelper {
         await db.execute('''
           CREATE TABLE outfit_categories (
             category_id INTEGER PRIMARY KEY AUTOINCREMENT,
-            category_name TEXT
+            user_id INTEGER,
+            category_name TEXT,
+            FOREIGN KEY (user_id) REFERENCES user(user_id) ON DELETE CASCADE ON UPDATE CASCADE
+
           );
         ''');
 

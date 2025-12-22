@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class ManageCategories2BottomText extends StatelessWidget {
-  const ManageCategories2BottomText({super.key});
+class BottomInfoText extends StatelessWidget {
+  const BottomInfoText({super.key});
 
   @override
   Widget build(BuildContext context) {

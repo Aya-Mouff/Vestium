@@ -1,94 +1,131 @@
 // lib/services/outfit_category_service.dart
 import 'package:vestium/repo/outfit_category_repo.dart';
 import 'package:vestium/repo/outfit_category_join_repo.dart';
-import '../db_models.dart';
+import '../../databases/db_models.dart';
 
 class OutfitCategoryService {
   final OutfitCategoryRepo _categoryRepo = OutfitCategoryRepo();
   final OutfitCategoryJoinRepo _joinRepo = OutfitCategoryJoinRepo();
 
-  // Initial categories that are created by default
+  // Initial categories that are created by default for each user
   static List<String> getInitialCategories() {
     return [
       "Casual",
-      "Formal", 
+      "Formal",
       "Workwear",
       "Athletic",
       "Party",
       "Date Night",
       "Vacation",
-      "Seasonal"
+      "Seasonal",
     ];
   }
 
-  // Ensure all initial categories exist in the database
-  Future<void> ensureInitialCategories() async {
-    final existingCategories = await getAllCategories();
-    final existingNames = existingCategories.map((c) => c.categoryName ?? '').toList();
-    
+  // ========== PER-USER CATEGORY HELPERS ==========
+
+  // Get all categories for a specific user
+  Future<List<OutfitCategory>> getAllCategoriesForUser(int userId) async {
+    return await _categoryRepo.getAll(userId); // uses user_id filter in repo
+  }
+
+  // Global (no filter) – only for internal checks like updateCategory
+  Future<List<OutfitCategory>> getAllCategoriesGlobal() async {
+    return await _categoryRepo.getAllGlobal();
+  }
+
+  // Ensure initial categories exist for this user
+  Future<void> ensureInitialCategoriesForUser(int userId) async {
+    final existingCategories = await getAllCategoriesForUser(userId);
+    final existingNames = existingCategories
+        .map((c) => (c.categoryName ?? '').toLowerCase())
+        .toList();
+
     for (final categoryName in getInitialCategories()) {
-      if (!existingNames.contains(categoryName)) {
-        await createCategory(categoryName);
+      if (!existingNames.contains(categoryName.toLowerCase())) {
+        await createCategoryForUser(userId, categoryName);
       }
     }
   }
 
-  // Get all categories
-  Future<List<OutfitCategory>> getAllCategories() async {
-    return await _categoryRepo.getAll();
-  }
-
-  // Create a new category
-  Future<bool> createCategory(String categoryName) async {
+  // Create a new category for this user
+  Future<bool> createCategoryForUser(int userId, String categoryName) async {
     if (categoryName.isEmpty || categoryName.length > 50) {
       throw Exception('Category name must be between 1 and 50 characters');
     }
-    
-    // Check if category already exists
-    final existingCategories = await getAllCategories();
-    final exists = existingCategories.any((c) => 
-      c.categoryName?.toLowerCase() == categoryName.toLowerCase()
+
+    // Check if category already exists for this user
+    final existingCategories = await getAllCategoriesForUser(userId);
+    final exists = existingCategories.any(
+      (c) => c.categoryName?.toLowerCase() == categoryName.toLowerCase(),
     );
-    
+
     if (exists) {
       throw Exception('Category "$categoryName" already exists');
     }
-    
+
+    final category = OutfitCategory(
+      userId: userId,
+      categoryName: categoryName,
+    );
+    return await _categoryRepo.insert(category);
+  }
+
+  // ========== (OPTIONAL) LEGACY GLOBAL CREATE – AVOID USING ==========
+
+  Future<bool> createCategory(String categoryName) async {
+    // This version does NOT set userId; prefer createCategoryForUser()
     final category = OutfitCategory(categoryName: categoryName);
     return await _categoryRepo.insert(category);
   }
 
-  // Update an existing category
+  // ========== UPDATE / DELETE (WORK FOR ANY CATEGORY ID) ==========
+
   Future<bool> updateCategory(int categoryId, String newName) async {
-    // Check if category exists
-    final allCategories = await getAllCategories();
-    final categoryExists = allCategories.any((c) => c.categoryId == categoryId);
-    
+    // Load all categories (all users) to find this one
+    final allCategories = await getAllCategoriesGlobal();
+    final categoryExists =
+        allCategories.any((c) => c.categoryId == categoryId);
+
     if (!categoryExists) {
       throw Exception('Category not found');
     }
-    
-    // Check if new name already exists
-    final nameExists = allCategories.any((c) => 
-      c.categoryId != categoryId && 
-      c.categoryName?.toLowerCase() == newName.toLowerCase()
+
+    // Find this category and its user
+    final thisCategory = allCategories.firstWhere(
+      (c) => c.categoryId == categoryId,
+      orElse: () => OutfitCategory(),
     );
-    
-    if (nameExists) {
-      throw Exception('Category "$newName" already exists');
+    final userId = thisCategory.userId;
+
+    // Ensure name is unique for that user
+    if (userId != null) {
+      final userCategories = await getAllCategoriesForUser(userId);
+      final nameExists = userCategories.any(
+        (c) =>
+            c.categoryId != categoryId &&
+            c.categoryName?.toLowerCase() == newName.toLowerCase(),
+      );
+      if (nameExists) {
+        throw Exception('Category "$newName" already exists');
+      }
     }
-    
-    final category = OutfitCategory(categoryId: categoryId, categoryName: newName);
+
+    final category = OutfitCategory(
+      categoryId: categoryId,
+      userId: userId,
+      categoryName: newName,
+    );
     return await _categoryRepo.update(categoryId, category);
   }
 
-  // Delete a category
   Future<bool> deleteCategory(int categoryId) async {
     // First delete all joins for this category
     await _joinRepo.deleteByCategoryId(categoryId);
     // Then delete the category
     return await _categoryRepo.delete(categoryId);
   }
+
+  // ========== JOIN / COUNTS (NO CHANGE) ==========
 
   // Get categories for a specific outfit
   Future<List<OutfitCategory>> getCategoriesForOutfit(int outfitId) async {
@@ -114,10 +151,7 @@ class OutfitCategoryService {
   // Set all categories for an outfit (replaces existing)
   Future<bool> setOutfitCategories(int outfitId, List<int> categoryIds) async {
     try {
-      // Remove existing categories
       await _joinRepo.deleteByOutfitId(outfitId);
-      
-      // Add new categories
       for (final categoryId in categoryIds) {
         await addCategoryToOutfit(outfitId, categoryId);
       }
@@ -146,7 +180,7 @@ class OutfitCategoryService {
     return outfits.length;
   }
 
-  // Get category by name
+  // Get category by name (global; if you need user specific, add userId)
   Future<OutfitCategory?> getCategoryByName(String name) async {
     return await _categoryRepo.getByName(name);
   }
