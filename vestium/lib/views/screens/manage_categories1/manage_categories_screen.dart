@@ -3,7 +3,6 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'cubit/manage_categories_cubit.dart';
-import 'cubit/manage_categories_state.dart';
 import 'widgets/add_category_row.dart';
 import 'widgets/categories_list.dart';
 import 'widgets/bottom_info_text.dart';
