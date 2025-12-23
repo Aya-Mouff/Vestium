@@ -85,10 +85,19 @@ def create_post():
         caption = data.get('caption', '').strip()
         outfit_id = data.get('outfit_id')
         
+         # Normalize outfit_id to int or None
+        if outfit_id == '' or outfit_id is None:
+            outfit_id = None
+        else:
+            outfit_id = int(outfit_id) 
+
         # Either outfit_id or image is required
         if not outfit_id and (not image_file or not image_file.filename):
             return jsonify({'success': False, 'error': 'Either outfit_id or image is required'}), 400
         
+        # Ensure outfit variable always exists
+        outfit = None
+
         # If outfit_id provided, verify it belongs to user
         if outfit_id:
             outfit = Outfit.query.get(outfit_id)
@@ -110,12 +119,19 @@ def create_post():
             
             # Cleanup temp file
             ImageService.cleanup_temp_file(temp_path)
-        
+
+
+        # Decide final image_path:
+         # - If new image uploaded: use image_url
+        # - Else if outfit post: use outfit.image_path
+        # - Else: None (should not happen because of earlier validation)
+        image_path = image_url or (outfit.image_path if outfit else None)
+
         # Create post
         post = Post(
             user_id=current_user_id if image_url else None,  # Gallery post has user_id
             outfit_id=outfit_id,
-            image_path=image_url or outfit.image_path if outfit else None,
+            image_path=image_path,
             caption=caption,
             date=db.func.now()
         )

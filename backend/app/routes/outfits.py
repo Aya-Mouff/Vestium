@@ -54,51 +54,61 @@ def create_outfit():
     """Create a new outfit"""
     try:
         current_user_id = int(get_jwt_identity())
-        
-        # Check if we have form data or JSON
+
+        # Expect multipart/form-data when sending image
         if request.is_json:
-            data = request.get_json()
-            image_file = None
+            # If someone sends JSON, reject because image would be missing
+            return jsonify({
+                'success': False,
+                'error': 'Outfit image is required and must be sent as form-data'
+            }), 400
+
+        # Parse form-data
+        data = request.form.to_dict()
+
+        # Handle JSON fields from form-data
+        if 'item_ids' in data:
+            import json
+            data['item_ids'] = json.loads(data['item_ids'])
         else:
-            data = request.form.to_dict()
-            # Handle JSON fields
-            if 'item_ids' in data:
-                import json
-                data['item_ids'] = json.loads(data['item_ids'])
-            if 'categories' in data:
-                import json
-                data['categories'] = json.loads(data['categories'])
-            image_file = request.files.get('image')
-        
+            data['item_ids'] = []
+
+        if 'categories' in data:
+            import json
+            data['categories'] = json.loads(data['categories'])
+        else:
+            data['categories'] = []
+
+        image_file = request.files.get('image')
+
         # Validate required fields
         if not data.get('name'):
             return jsonify({'success': False, 'error': 'Outfit name is required'}), 400
-        
+
         if not data.get('item_ids') or len(data['item_ids']) == 0:
             return jsonify({'success': False, 'error': 'At least one item is required'}), 400
-        
+
+        # NEW: require image
+        if not image_file or not image_file.filename:
+            return jsonify({'success': False, 'error': 'Outfit image is required'}), 400
+
         # Verify all items belong to user
         for item_id in data['item_ids']:
             item = Item.query.get(item_id)
             if not item or item.user_id != current_user_id:
-                return jsonify({'success': False, 'error': f'Item {item_id} not found or not owned by you'}), 400
-        
-        image_url = None
-        
-        # Handle image upload if provided
-        if image_file and image_file.filename:
-            if not ImageService.allowed_file(image_file.filename):
-                return jsonify({'success': False, 'error': 'Invalid image format'}), 400
-            
-            # Save temp file
-            temp_path = ImageService.save_temp_file(image_file, current_user_id, 'outfits')
-            
-            # Upload to Supabase
-            image_url = supabase_service.upload_outfit_image(temp_path, current_user_id)
-            
-            # Cleanup temp file
-            ImageService.cleanup_temp_file(temp_path)
-        
+                return jsonify({
+                    'success': False,
+                    'error': f'Item {item_id} not found or not owned by you'
+                }), 400
+
+        # Handle image upload (now guaranteed to exist)
+        if not ImageService.allowed_file(image_file.filename):
+            return jsonify({'success': False, 'error': 'Invalid image format'}), 400
+
+        temp_path = ImageService.save_temp_file(image_file, current_user_id, 'outfits')
+        image_url = supabase_service.upload_outfit_image(temp_path, current_user_id)
+        ImageService.cleanup_temp_file(temp_path)
+
         # Create outfit
         outfit = Outfit(
             user_id=current_user_id,
@@ -108,43 +118,46 @@ def create_outfit():
             image_path=image_url,
             date=db.func.now()
         )
-        
+
         db.session.add(outfit)
         db.session.commit()
-        
+
         # Add items
         for item_id in data['item_ids']:
             outfit_item = OutfitItem(outfit_id=outfit.outfit_id, item_id=item_id)
             db.session.add(outfit_item)
-        
+
         # Add categories
         for category_name in data.get('categories', []):
-            if category_name.strip():
-                # Find or create category for this user
+            if category_name and category_name.strip():
+                category_name_clean = category_name.strip()
                 category = OutfitCategory.query.filter_by(
-                    category_name=category_name.strip(),
+                    category_name=category_name_clean,
                     user_id=current_user_id
                 ).first()
-                
+
                 if not category:
                     category = OutfitCategory(
                         user_id=current_user_id,
-                        category_name=category_name.strip()
+                        category_name=category_name_clean
                     )
                     db.session.add(category)
                     db.session.commit()
-                
-                join = OutfitCategoryJoin(outfit_id=outfit.outfit_id, category_id=category.category_id)
+
+                join = OutfitCategoryJoin(
+                    outfit_id=outfit.outfit_id,
+                    category_id=category.category_id
+                )
                 db.session.add(join)
-        
+
         db.session.commit()
-        
+
         return jsonify({
             'success': True,
             'message': 'Outfit created successfully',
             'outfit': outfit.to_dict()
         }), 201
-        
+
     except Exception as e:
         db.session.rollback()
         return jsonify({'success': False, 'error': str(e)}), 500
