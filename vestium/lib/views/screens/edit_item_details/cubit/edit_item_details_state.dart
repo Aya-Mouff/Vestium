@@ -15,7 +15,7 @@ class EditItemDetailsState extends Equatable {
   final String selectedSeason;
   final List<String> allCategories;
   final List<String> selectedCategories;
-
+  final String? editedImagePath;
   const EditItemDetailsState({
     this.isLoading = false,
     this.isSubmitting = false,
@@ -29,6 +29,7 @@ class EditItemDetailsState extends Equatable {
     this.selectedSeason = '',
     this.allCategories = const [],
     this.selectedCategories = const [],
+    this.editedImagePath,
   });
 
   factory EditItemDetailsState.initial() => const EditItemDetailsState();
@@ -46,6 +47,7 @@ class EditItemDetailsState extends Equatable {
     String? selectedSeason,
     List<String>? allCategories,
     List<String>? selectedCategories,
+    String? editedImagePath,
   }) {
     return EditItemDetailsState(
       isLoading: isLoading ?? this.isLoading,
@@ -60,6 +62,7 @@ class EditItemDetailsState extends Equatable {
       selectedSeason: selectedSeason ?? this.selectedSeason,
       allCategories: allCategories ?? this.allCategories,
       selectedCategories: selectedCategories ?? this.selectedCategories,
+      editedImagePath: editedImagePath ?? this.editedImagePath,
     );
   }
 
@@ -67,17 +70,18 @@ class EditItemDetailsState extends Equatable {
 
   @override
   List<Object?> get props => [
-        isLoading,
-        isSubmitting,
-        isDeleting,
-        itemSaved,
-        itemDeleted,
-        errorMessage,
-        item,
-        name,
-        description,
-        selectedSeason,
-        allCategories,
-        selectedCategories,
-      ];
+    isLoading,
+    isSubmitting,
+    isDeleting,
+    itemSaved,
+    itemDeleted,
+    errorMessage,
+    item,
+    name,
+    description,
+    selectedSeason,
+    allCategories,
+    selectedCategories,
+    editedImagePath,
+  ];
 }

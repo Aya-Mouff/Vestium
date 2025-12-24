@@ -21,7 +21,7 @@ class EditItemActionButtons extends StatelessWidget {
               duration: Duration(seconds: 2),
             ),
           );
-          
+
           Future.delayed(const Duration(milliseconds: 1500), () {
             if (context.mounted) {
               context.router.maybePop(true);
@@ -38,7 +38,7 @@ class EditItemActionButtons extends StatelessWidget {
               duration: Duration(seconds: 2),
             ),
           );
-          
+
           Future.delayed(const Duration(milliseconds: 1500), () {
             if (context.mounted) {
               context.router.maybePop(true);
@@ -72,7 +72,9 @@ class EditItemActionButtons extends StatelessWidget {
                           if (!state.isValid) {
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
-                                content: Text('Please enter item name and select at least one category'),
+                                content: Text(
+                                  'Please enter item name and select at least one category',
+                                ),
                                 backgroundColor: Color(0xFF795548),
                               ),
                             );
@@ -109,9 +111,9 @@ class EditItemActionButtons extends StatelessWidget {
                         ),
                 ),
               ),
-              
+
               const SizedBox(height: 16),
-              
+
               // Delete button
               SizedBox(
                 width: double.infinity,
@@ -120,10 +122,7 @@ class EditItemActionButtons extends StatelessWidget {
                       ? null
                       : () => _showDeleteConfirmation(context),
                   style: OutlinedButton.styleFrom(
-                    side: const BorderSide(
-                      color: Color(0xFF795548),
-                      width: 1,
-                    ),
+                    side: const BorderSide(color: Color(0xFF795548), width: 1),
                     padding: const EdgeInsets.symmetric(vertical: 18),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(16),
@@ -160,7 +159,7 @@ class EditItemActionButtons extends StatelessWidget {
   Future<void> _showDeleteConfirmation(BuildContext context) async {
     // Store context locally before async gap
     final localContext = context;
-    
+
     final result = await showDialog<bool>(
       context: localContext,
       builder: (context) => AlertDialog(
@@ -186,20 +185,14 @@ class EditItemActionButtons extends StatelessWidget {
             onPressed: () => Navigator.pop(context, false),
             child: const Text(
               'Cancel',
-              style: TextStyle(
-                fontFamily: 'Inter',
-                color: Color(0xFF795548),
-              ),
+              style: TextStyle(fontFamily: 'Inter', color: Color(0xFF795548)),
             ),
           ),
           TextButton(
             onPressed: () => Navigator.pop(context, true),
             child: const Text(
               'Delete',
-              style: TextStyle(
-                fontFamily: 'Inter',
-                color: Colors.red,
-              ),
+              style: TextStyle(fontFamily: 'Inter', color: Colors.red),
             ),
           ),
         ],
@@ -210,14 +203,19 @@ class EditItemActionButtons extends StatelessWidget {
     if (result == true && localContext.mounted) {
       final cubit = localContext.read<EditItemDetailsCubit>();
       final deleteResult = await cubit.deleteItem();
-      
-      if (deleteResult.isBlocked && deleteResult.blockingOutfits != null && localContext.mounted) {
+
+      if (deleteResult.isBlocked &&
+          deleteResult.blockingOutfits != null &&
+          localContext.mounted) {
         _showBlockedDialog(localContext, deleteResult.blockingOutfits!);
       }
     }
   }
 
-  void _showBlockedDialog(BuildContext context, List<Map<String, dynamic>> outfitDetails) {
+  void _showBlockedDialog(
+    BuildContext context,
+    List<Map<String, dynamic>> outfitDetails,
+  ) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -243,17 +241,19 @@ class EditItemActionButtons extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 12),
-            ...outfitDetails.map((outfit) => Padding(
-              padding: const EdgeInsets.symmetric(vertical: 4),
-              child: Text(
-                '• ${outfit['display']}',
-                style: const TextStyle(
-                  fontFamily: 'Inter',
-                  fontSize: 13,
-                  color: Color(0xFF795548),
+            ...outfitDetails.map(
+              (outfit) => Padding(
+                padding: const EdgeInsets.symmetric(vertical: 4),
+                child: Text(
+                  '• ${outfit['display']}',
+                  style: const TextStyle(
+                    fontFamily: 'Inter',
+                    fontSize: 13,
+                    color: Color(0xFF795548),
+                  ),
                 ),
               ),
-            )),
+            ),
             const SizedBox(height: 12),
             const Text(
               'Remove the item from these outfits first.',
@@ -271,10 +271,7 @@ class EditItemActionButtons extends StatelessWidget {
             onPressed: () => Navigator.pop(context),
             child: const Text(
               'OK',
-              style: TextStyle(
-                fontFamily: 'Inter',
-                color: Color(0xFF795548),
-              ),
+              style: TextStyle(fontFamily: 'Inter', color: Color(0xFF795548)),
             ),
           ),
         ],
