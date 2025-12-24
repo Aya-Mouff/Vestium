@@ -5,7 +5,7 @@ import '../../repo/follow_repo.dart';
 import '../../repo/like_repo.dart';
 import '../../repo/comment_repo.dart';
 import 'post_image_service.dart';
-import 'dart:io';
+//import 'dart:io';
 
 class FeedService {
   final PostRepo _postRepo = PostRepo();
@@ -14,36 +14,36 @@ class FeedService {
   final CommentRepo _commentRepo = CommentRepo();
 
 
-  static Future<String?> _getPostImageUrl(PostModel post) async {
-    try {
-      // First, try to get from PostImageService by postId
-      if (post.postId != null) {
-        final imagePath = await PostImageService.getPostImagePath(post.postId!);
-        if (imagePath != null && await File(imagePath).exists()) {
-          return imagePath;
-        }
-      }
+  // static Future<String?> _getPostImageUrl(PostModel post) async {
+  //   try {
+  //     // First, try to get from PostImageService by postId
+  //     if (post.postId != null) {
+  //       final imagePath = await PostImageService.getPostImagePath(post.postId!);
+  //       if (imagePath != null && await File(imagePath).exists()) {
+  //         return imagePath;
+  //       }
+  //     }
       
-      // Fallback to the imagePath in the post (for backward compatibility)
-      if (post.imagePath != null && post.imagePath!.isNotEmpty) {
-        // Check if it's a file path or asset path
-        if (post.imagePath!.startsWith('assets/')) {
-          return post.imagePath;
-        } else {
-          // It might be a file path
-          final file = File(post.imagePath!);
-          if (await file.exists()) {
-            return post.imagePath;
-          }
-        }
-      }
+  //     // Fallback to the imagePath in the post (for backward compatibility)
+  //     if (post.imagePath != null && post.imagePath!.isNotEmpty) {
+  //       // Check if it's a file path or asset path
+  //       if (post.imagePath!.startsWith('assets/')) {
+  //         return post.imagePath;
+  //       } else {
+  //         // It might be a file path
+  //         final file = File(post.imagePath!);
+  //         if (await file.exists()) {
+  //           return post.imagePath;
+  //         }
+  //       }
+  //     }
       
-      return 'assets/images/default_post.png';
-    } catch (e) {
-      print('Error getting post image URL: $e');
-      return 'assets/images/default_post.png';
-    }
-  }
+  //     return 'assets/images/default_post.png';
+  //   } catch (e) {
+  //     print('Error getting post image URL: $e');
+  //     return 'assets/images/default_post.png';
+  //   }
+  // }
   /// Get feed posts with priority logic
   // Future<List<PostWithCounts>> getFeedPosts({
   //   required int currentUserId,
