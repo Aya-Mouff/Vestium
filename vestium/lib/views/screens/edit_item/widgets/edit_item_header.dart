@@ -8,17 +8,13 @@ class EditItemHeader extends StatelessWidget {
   final String imagePath;
   final Future<void> Function()? onSave;
 
-  const EditItemHeader({
-    super.key,
-    required this.imagePath,
-    this.onSave,
-  });
+  const EditItemHeader({super.key, required this.imagePath, this.onSave});
 
   @override
   Widget build(BuildContext context) {
     // Get the cubit here at the top level
     final cubit = context.read<EditItemCubit>();
-    
+
     return Container(
       margin: const EdgeInsets.all(16),
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
@@ -57,10 +53,7 @@ class _BackButton extends StatelessWidget {
   final String imagePath;
   final EditItemCubit cubit;
 
-  const _BackButton({
-    required this.imagePath,
-    required this.cubit,
-  });
+  const _BackButton({required this.imagePath, required this.cubit});
 
   @override
   Widget build(BuildContext context) {
@@ -82,11 +75,7 @@ class _BackButton extends StatelessWidget {
               color: const Color(0xFFF5ECE7),
               borderRadius: BorderRadius.circular(8),
             ),
-            child: const Icon(
-              Icons.close,
-              color: Color(0xFF3E2723),
-              size: 24,
-            ),
+            child: const Icon(Icons.close, color: Color(0xFF3E2723), size: 24),
           ),
         );
       },
@@ -101,9 +90,16 @@ class _Title extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<EditItemCubit, EditItemState>(
       builder: (context, state) {
+        String title = 'Edit Item';
+        if (state.isCropping) {
+          title = 'Crop Image';
+        } else if (state.isRemovingBg) {
+          title = 'Remove Background';
+        }
+
         return Expanded(
           child: Text(
-            state.isRemovingBg ? 'Remove Background' : 'Edit Item',
+            title,
             textAlign: TextAlign.center,
             style: const TextStyle(
               fontFamily: 'CormorantGaramond',
@@ -142,33 +138,83 @@ class _SaveButton extends StatelessWidget {
           color: const Color(0xFF795548),
           borderRadius: BorderRadius.circular(8),
         ),
-        child: const Icon(
-          Icons.check,
-          color: Colors.white,
-          size: 24,
-        ),
+        child: const Icon(Icons.check, color: Colors.white, size: 24),
       ),
     );
   }
 
   void _saveAndContinue(BuildContext context) async {
-    print('🎯 _saveAndContinue called, isRemovingBg: ${state.isRemovingBg}');
-    
-    if (state.isRemovingBg) {
+    print(
+      '🎯 _saveAndContinue called, isCropping: ${state.isCropping}, isRemovingBg: ${state.isRemovingBg}',
+    );
+
+    if (state.isCropping) {
+      // Handle crop mode - save the crop
       try {
-        print('💾 About to call onSave');
-        // Save the edited image first
+        print('💾 Crop mode: calling onSave to save cropped image');
         if (onSave != null) {
           await onSave!();
-          print('✅ onSave completed');
+          print('✅ Crop saved');
         } else {
           print('⚠️ onSave is null');
         }
-        
+
+        print('🔄 Exiting crop mode');
+        cubit.stopCropping();
+
+        // Show confirmation
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: const Row(
+              children: [
+                Icon(Icons.check_circle, color: Colors.white),
+                SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    'Crop applied successfully',
+                    style: TextStyle(
+                      fontFamily: 'Inter',
+                      fontSize: 14,
+                      fontWeight: FontWeight.w200,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            backgroundColor: const Color(0xFF795548),
+            duration: const Duration(seconds: 2),
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+          ),
+        );
+        print('✅ Snackbar shown');
+      } catch (e, stackTrace) {
+        print('❌ Error saving crop: $e');
+        print('Stack trace: $stackTrace');
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error saving crop: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } else if (state.isRemovingBg) {
+      // Handle remove BG mode - save the removal
+      try {
+        print('💾 Remove BG mode: calling onSave');
+        if (onSave != null) {
+          await onSave!();
+          print('✅ Background removed');
+        } else {
+          print('⚠️ onSave is null');
+        }
+
         print('🔄 Canceling remove BG mode');
-        // Exit eraser mode and go back to edit buttons
         cubit.cancelRemoveBg();
-        
+
         // Show confirmation
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -200,7 +246,7 @@ class _SaveButton extends StatelessWidget {
       } catch (e, stackTrace) {
         print('❌ Error in _saveAndContinue: $e');
         print('Stack trace: $stackTrace');
-        
+
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Error saving image: $e'),
@@ -209,7 +255,7 @@ class _SaveButton extends StatelessWidget {
         );
       }
     } else {
-      // Proceed to next screen with the current image
+      // Normal mode - proceed to next screen with the current image
       final finalImagePath = state.editedImagePath ?? imagePath;
       print('📤 Proceeding to ItemDetails with path: $finalImagePath');
       context.router.push(ItemDetailsRoute(imagePath: finalImagePath));

@@ -30,6 +30,7 @@ class SaveOutfitDataLoaded extends SaveOutfitState {
   final String? selectedSeason;
   final int itemsCount;
   final bool isSaving;
+  final String? preCapturedImagePath;
 
   const SaveOutfitDataLoaded({
     required this.allCategories,
@@ -39,6 +40,7 @@ class SaveOutfitDataLoaded extends SaveOutfitState {
     this.selectedSeason,
     required this.itemsCount,
     this.isSaving = false,
+    this.preCapturedImagePath,
   });
 
   SaveOutfitDataLoaded copyWith({
@@ -49,6 +51,7 @@ class SaveOutfitDataLoaded extends SaveOutfitState {
     String? selectedSeason,
     int? itemsCount,
     bool? isSaving,
+    String? preCapturedImagePath,
   }) {
     return SaveOutfitDataLoaded(
       allCategories: allCategories ?? this.allCategories,
@@ -58,6 +61,7 @@ class SaveOutfitDataLoaded extends SaveOutfitState {
       selectedSeason: selectedSeason ?? this.selectedSeason,
       itemsCount: itemsCount ?? this.itemsCount,
       isSaving: isSaving ?? this.isSaving,
+       preCapturedImagePath: preCapturedImagePath ?? this.preCapturedImagePath,
     );
   }
 
@@ -97,3 +101,4 @@ class SaveOutfitError extends SaveOutfitState {
   @override
   List<Object?> get props => [message];
 }
+

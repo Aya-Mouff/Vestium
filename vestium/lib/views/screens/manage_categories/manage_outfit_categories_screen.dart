@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'cubit/manage_outfit_categories_cubit.dart';
-import 'cubit/manage_outfit_categories_state.dart';
 import 'widgets/add_outfit_category_row.dart';
 import 'widgets/outfit_categories_list.dart';
 import 'widgets/bottom_info_text.dart';

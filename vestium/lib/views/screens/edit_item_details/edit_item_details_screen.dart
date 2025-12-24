@@ -17,10 +17,11 @@ import './widgets/edit_item_action_buttons.dart';
 @RoutePage()
 class EditItemDetailsScreen extends StatefulWidget {
   final int itemId;
-
+  final String? editedImagePath;
   const EditItemDetailsScreen({
     super.key,
     required this.itemId,
+    this.editedImagePath,
   });
 
   @override
@@ -33,7 +34,7 @@ class _EditItemDetailsScreenState extends State<EditItemDetailsScreen> {
   @override
   void initState() {
     super.initState();
-    _cubit = EditItemDetailsCubit(itemId: widget.itemId);
+    _cubit = EditItemDetailsCubit(itemId: widget.itemId , editedImagePath: widget.editedImagePath,);
   }
 
   @override
@@ -106,7 +107,7 @@ class _EditItemDetailsContent extends StatelessWidget {
                   const EditItemHeader(),
                   
                   // Image Preview
-                  EditItemImagePreview(imagePath: state.item!.imagePath),
+                  EditItemImagePreview(imagePath: state.editedImagePath ?? state.item!.imagePath,),
                   
                   // Form Container
                   Container(

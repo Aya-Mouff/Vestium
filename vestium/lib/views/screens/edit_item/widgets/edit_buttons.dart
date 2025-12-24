@@ -29,12 +29,13 @@ class _CropButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<EditItemCubit, EditItemState>(
       builder: (context, state) {
+        final isCropping = state.isCropping;
         return ElevatedButton.icon(
-          onPressed: state.isCropping ? null : () => _cropImage(context), // FIXED: Pass context
-          icon: const Icon(Icons.crop_rotate, size: 20),
-          label: const Text(
-            'Crop',
-            style: TextStyle(
+          onPressed: () => _handleCropPressed(context, isCropping),
+          icon: Icon(isCropping ? Icons.check : Icons.crop_rotate, size: 20),
+          label: Text(
+            isCropping ? 'Done' : 'Crop',
+            style: const TextStyle(
               fontFamily: 'Inter',
               fontSize: 15,
               fontWeight: FontWeight.w200,
@@ -42,10 +43,12 @@ class _CropButton extends StatelessWidget {
             ),
           ),
           style: ElevatedButton.styleFrom(
-            backgroundColor: const Color(0xFFD7CCC8),
-            foregroundColor: const Color(0xFF795548),
-            disabledBackgroundColor: const Color(0xFFD7CCC8).withAlpha(128),
-            disabledForegroundColor: const Color(0xFF795548).withAlpha(128),
+            backgroundColor: isCropping
+                ? const Color(0xFF795548)
+                : const Color(0xFFD7CCC8),
+            foregroundColor: isCropping
+                ? const Color(0xFFFFFFFF)
+                : const Color(0xFF795548),
             padding: const EdgeInsets.symmetric(vertical: 16),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(16),
@@ -57,13 +60,20 @@ class _CropButton extends StatelessWidget {
     );
   }
 
-  void _cropImage(BuildContext context) { // FIXED: Added context parameter
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Crop functionality - Coming soon'),
-        backgroundColor: Color(0xFF795548),
-      ),
-    );
+  void _handleCropPressed(BuildContext context, bool isCropping) {
+    final cubit = context.read<EditItemCubit>();
+    if (isCropping) {
+      // Exit crop mode - save the crop first
+      print('🔍 Crop Done button pressed - saving crop');
+      // The parent widget (EditItemScreen) will handle the save
+      // Just stop cropping mode, the save button will handle confirmEdits()
+      cubit.stopCropping();
+    } else {
+      // Enter crop mode - cancel remove BG first
+      print('🔍 Crop button pressed - entering crop mode');
+      cubit.cancelRemoveBg();
+      cubit.startCropping();
+    }
   }
 }
 
@@ -75,7 +85,9 @@ class _RemoveBgButton extends StatelessWidget {
     return BlocBuilder<EditItemCubit, EditItemState>(
       builder: (context, state) {
         return ElevatedButton.icon(
-          onPressed: state.isCropping ? null : () => _removeBackground(context), // FIXED: Pass context
+          onPressed: state.isCropping
+              ? null
+              : () => _removeBackground(context), // FIXED: Pass context
           icon: const Icon(Icons.auto_fix_high, size: 20),
           label: const Text(
             'Remove BG',
@@ -89,8 +101,12 @@ class _RemoveBgButton extends StatelessWidget {
           style: ElevatedButton.styleFrom(
             backgroundColor: const Color(0xFF795548),
             foregroundColor: const Color(0xFFFFFFFF),
-            disabledBackgroundColor: const Color(0xFF795548).withAlpha(128),   // 0.5 * 255
-            disabledForegroundColor: const Color(0xFFFFFFFF).withAlpha(179),  // 0.7 * 255
+            disabledBackgroundColor: const Color(
+              0xFF795548,
+            ).withAlpha(128), // 0.5 * 255
+            disabledForegroundColor: const Color(
+              0xFFFFFFFF,
+            ).withAlpha(179), // 0.7 * 255
             padding: const EdgeInsets.symmetric(vertical: 16),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(16),
@@ -102,7 +118,12 @@ class _RemoveBgButton extends StatelessWidget {
     );
   }
 
-  void _removeBackground(BuildContext context) { // FIXED: Added context parameter
-    context.read<EditItemCubit>().startRemovingBg();
+  void _removeBackground(BuildContext context) {
+    final cubit = context.read<EditItemCubit>();
+    // Ensure crop mode is stopped first
+    if (cubit.state.isCropping) {
+      cubit.stopCropping();
+    }
+    cubit.startRemovingBg();
   }
 }

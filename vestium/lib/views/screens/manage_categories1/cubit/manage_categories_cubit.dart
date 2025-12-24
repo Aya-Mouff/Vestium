@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'manage_categories_state.dart';
 import 'package:vestium/repo/item_category_repo.dart';
 import 'package:vestium/databases/db_models.dart';
-import '../../../../databases/services/outfit_category_service.dart';
 import '../../../../repo/item_category_join_repo.dart';
 
 

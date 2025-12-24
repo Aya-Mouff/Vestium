@@ -2,28 +2,49 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:vestium/databases/db_models.dart';
 
-/// Model for an item placed in the outfit
+/// Model for an item placed in the outfit with z-index for layering
+@immutable
 class PlacedItemModel extends Equatable {
   final int itemId;
   final ItemModel item;
   final Offset position;
+  final int zIndex; // For layering control
+  final double scale; // For individual item scaling/zooming
+  final double width; 
+  final double height;
 
   const PlacedItemModel({
     required this.itemId,
     required this.item,
     this.position = const Offset(0, 0),
+    this.zIndex = 0,
+    this.scale = 1.0,
+    this.width = 100.0,  
+    this.height = 150.0, 
   });
 
-  PlacedItemModel copyWith({int? itemId, ItemModel? item, Offset? position}) {
+  PlacedItemModel copyWith({
+    int? itemId,
+    ItemModel? item,
+    Offset? position,
+    int? zIndex,
+    double? scale,
+    double? width,
+    double? height,
+  }) {
     return PlacedItemModel(
       itemId: itemId ?? this.itemId,
       item: item ?? this.item,
       position: position ?? this.position,
+      zIndex: zIndex ?? this.zIndex,
+      scale: scale ?? this.scale,
+      width: width ?? this.width,
+      height: height ?? this.height,
     );
   }
 
   @override
-  List<Object?> get props => [itemId, item.itemId, position];
+  List<Object?> get props => [itemId, item.itemId, position, zIndex, scale, width, height];
 }
 
 /// Base state for CreateOutfitCubit
@@ -55,6 +76,13 @@ class CreateOutfitItemsLoaded extends CreateOutfitState {
     required this.placedItems,
     this.showAvailableItems = false,
   });
+
+  /// Get placed items sorted by z-index for proper rendering
+  List<PlacedItemModel> get sortedPlacedItems {
+    final items = List<PlacedItemModel>.from(placedItems);
+    items.sort((a, b) => a.zIndex.compareTo(b.zIndex));
+    return items;
+  }
 
   CreateOutfitItemsLoaded copyWith({
     List<ItemModel>? availableItems,
