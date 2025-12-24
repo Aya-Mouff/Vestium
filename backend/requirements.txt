@@ -1,0 +1,43 @@
+# Flask Core
+Flask==2.3.3
+Flask-CORS==4.0.0
+Flask-Uploads==0.2.1
+
+# Database
+Flask-SQLAlchemy==3.1.1
+Flask-Migrate==4.0.5
+psycopg2-binary==2.9.9
+alembic==1.12.1
+
+# Authentication
+Flask-JWT-Extended==4.5.3
+python-jose[cryptography]==3.3.0
+bcrypt==4.1.2
+PyJWT==2.8.0
+
+# Supabase
+supabase==1.1.1
+python-dotenv==1.0.0
+
+# Firebase
+firebase-admin==6.2.0
+pyfcm==1.5.4
+
+# Image Processing
+Pillow==10.1.0
+
+# Utilities
+requests==2.31.0
+Werkzeug==2.3.7
+
+# Production
+gunicorn==21.2.0
+
+aiohttp==3.9.1  # For async HTTP requests in sync service
+redis==5.0.1     # For queue management (optional)
+celery==5.3.4    # For background sync tasks (optional)
+
+# Add these to your requirements.txt:
+flask-caching==2.0.2  # For caching sync data
+redis==5.0.1  # For distributed sync (optional)
+celery==5.3.4  # For background sync tasks (optional)

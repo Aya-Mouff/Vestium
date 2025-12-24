@@ -1,0 +1,37 @@
+# ========================================
+# VESTIUM - ESSENTIAL FILES TO IGNORE
+# ========================================
+
+# 1. SECRETS (CRITICAL - NEVER COMMIT!)
+.env
+.env.local
+.firebase-credentials.json
+firebase-service-account.json
+firebase-credentials.json
+
+# 2. DATABASE (if you use SQLite locally)
+*.db
+*.sqlite
+*.sqlite3
+
+# 3. UPLOADED FILES
+uploads/
+temp_uploads/
+user_images/
+
+# 4. PYTHON TEMP FILES
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# 5. VIRTUAL ENVIRONMENT (if you use one)
+venv/
+env/
+.venv/
+
+# 6. IDE FILES (optional)
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

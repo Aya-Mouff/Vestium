@@ -3,7 +3,7 @@ import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
 class DBHelper {
-  static const _databaseName = "vestiumDB.db";
+  static const _databaseName = "vestium_DATABASE.db";
   static const _databaseVersion = 1; // Keep as 1
   static Database? _database;
 
@@ -179,6 +179,25 @@ class DBHelper {
             FOREIGN KEY (user_id) REFERENCES user(user_id) ON DELETE CASCADE ON UPDATE CASCADE
           );
         ''');
+
+        // Sync Queue Table
+        await db.execute('''
+          CREATE TABLE IF NOT EXISTS sync_queue (
+            queue_id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id INTEGER,
+            action TEXT,
+            entity_type TEXT,
+            entity_id INTEGER,
+            entity_data TEXT,
+            created_at TEXT,
+            processed INTEGER DEFAULT 0,
+            processed_at TEXT,
+            retry_count INTEGER DEFAULT 0,
+            FOREIGN KEY (user_id) REFERENCES user(user_id) ON DELETE CASCADE
+          );
+        ''');
+
+        print('✅ Created sync_queue table');
       },
     );
 

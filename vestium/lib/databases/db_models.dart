@@ -557,6 +557,7 @@ class ItemCategoryJoin {
   };
 }
 
+
 // lib/models/sync_queue_model.dart
 class SyncQueueModel {
   int? queueId;
