@@ -36,7 +36,7 @@
 //       itemBuilder: (context, index) {
 //         final outfit = outfits[index];
 //         final imagePath = outfit['imageUrl'];
-        
+
 //         return GestureDetector(
 //           onTap: () => context.pushRoute(EditOutfitRoute(outfitId: outfit['id'])),
 //           child: ClipRRect(
@@ -86,6 +86,7 @@
 import 'package:flutter/material.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:vestium/app_router.dart';
+import 'package:vestium/l10n/app_localizations.dart';
 import 'dart:io';
 
 class OutfitsGrid extends StatelessWidget {
@@ -93,23 +94,16 @@ class OutfitsGrid extends StatelessWidget {
   final int userId;
   final Function(int)? onOutfitTap;
 
-  const OutfitsGrid({
-    super.key,
-    required this.outfits,
-    required this.userId,
-    this.onOutfitTap,
-  });
+  const OutfitsGrid({super.key, required this.outfits, required this.userId, this.onOutfitTap});
 
   @override
   Widget build(BuildContext context) {
     if (outfits.isEmpty) {
+      final loc = AppLocalizations.of(context)!;
       return SizedBox(
         height: 200,
         child: Center(
-          child: Text(
-            'No outfits yet',
-            style: TextStyle(color: Colors.grey.shade600),
-          ),
+          child: Text(loc.myProfileNoOutfitsYet, style: TextStyle(color: Colors.grey.shade600)),
         ),
       );
     }
@@ -127,17 +121,17 @@ class OutfitsGrid extends StatelessWidget {
       itemBuilder: (context, index) {
         final outfit = outfits[index];
         final imagePath = outfit['imageUrl'] ?? '';
-        
+
         // Try to get outfit ID from different possible keys
         final outfitId = outfit['outfit_id'] ?? outfit['id'];
-        
+
         return GestureDetector(
           onTap: () {
             if (outfitId == null) {
               print('⚠️ Warning: Outfit ID is null for outfit at index $index');
               return;
             }
-            
+
             if (onOutfitTap != null) {
               // Use callback if provided (preferred for auto-refresh)
               onOutfitTap!(outfitId);
@@ -146,10 +140,7 @@ class OutfitsGrid extends StatelessWidget {
               context.pushRoute(EditOutfitRoute(outfitId: outfitId));
             }
           },
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(12),
-            child: _buildOutfitImage(imagePath),
-          ),
+          child: ClipRRect(borderRadius: BorderRadius.circular(12), child: _buildOutfitImage(imagePath)),
         );
       },
     );
@@ -160,9 +151,7 @@ class OutfitsGrid extends StatelessWidget {
     if (imagePath.isEmpty) {
       return Container(
         color: const Color(0xFFE9D9CF),
-        child: const Center(
-          child: Icon(Icons.photo, color: Color(0xFF7B5247), size: 40),
-        ),
+        child: const Center(child: Icon(Icons.photo, color: Color(0xFF7B5247), size: 40)),
       );
     }
 
@@ -174,9 +163,7 @@ class OutfitsGrid extends StatelessWidget {
         errorBuilder: (context, error, stackTrace) {
           return Container(
             color: const Color(0xFFE9D9CF),
-            child: const Center(
-              child: Icon(Icons.photo, color: Color(0xFF7B5247), size: 40),
-            ),
+            child: const Center(child: Icon(Icons.photo, color: Color(0xFF7B5247), size: 40)),
           );
         },
       );
@@ -193,10 +180,7 @@ class OutfitsGrid extends StatelessWidget {
               child: SizedBox(
                 width: 20,
                 height: 20,
-                child: CircularProgressIndicator(
-                  strokeWidth: 2,
-                  color: Color(0xFF7B5247),
-                ),
+                child: CircularProgressIndicator(strokeWidth: 2, color: Color(0xFF7B5247)),
               ),
             ),
           );
@@ -209,9 +193,7 @@ class OutfitsGrid extends StatelessWidget {
             errorBuilder: (context, error, stackTrace) {
               return Container(
                 color: const Color(0xFFE9D9CF),
-                child: const Center(
-                  child: Icon(Icons.photo, color: Color(0xFF7B5247), size: 40),
-                ),
+                child: const Center(child: Icon(Icons.photo, color: Color(0xFF7B5247), size: 40)),
               );
             },
           );
@@ -220,9 +202,7 @@ class OutfitsGrid extends StatelessWidget {
         // File doesn't exist
         return Container(
           color: const Color(0xFFE9D9CF),
-          child: const Center(
-            child: Icon(Icons.broken_image, color: Color(0xFF7B5247), size: 40),
-          ),
+          child: const Center(child: Icon(Icons.broken_image, color: Color(0xFF7B5247), size: 40)),
         );
       },
     );

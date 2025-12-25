@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vestium/l10n/app_localizations.dart';
 
 class PasswordField extends StatefulWidget {
   final TextEditingController controller;
@@ -15,12 +16,14 @@ class _PasswordFieldState extends State<PasswordField> {
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
+    
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'Password',
-          style: TextStyle(
+        Text(
+          loc.fieldPasswordLabel,
+          style: const TextStyle(
             fontFamily: 'CormorantGaramond',
             fontSize: 14,
             fontWeight: FontWeight.w600,
@@ -33,7 +36,7 @@ class _PasswordFieldState extends State<PasswordField> {
           cursorColor: const Color(0xFF6B5344),
           obscureText: _obscurePassword,
           decoration: InputDecoration(
-            hintText: '••••••••',
+            hintText: loc.fieldPasswordHint,
             hintStyle: const TextStyle(
               fontFamily: 'inter',
               color: Color(0xFFA1887F),
@@ -45,6 +48,7 @@ class _PasswordFieldState extends State<PasswordField> {
             suffixIcon: IconButton(
               icon: Icon(
                 _obscurePassword ? Icons.visibility_off : Icons.visibility,
+                color: Color(0xFFA1887F),
               ),
               onPressed: () {
                 setState(() {

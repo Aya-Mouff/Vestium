@@ -52,6 +52,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:vestium/l10n/app_localizations.dart';
 import '../cubit/save_outfit_cubit.dart';
 import '../cubit/save_outfit_state.dart';
 
@@ -60,6 +61,8 @@ class ItemsCountDisplay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
+
     return BlocBuilder<SaveOutfitCubit, SaveOutfitState>(
       builder: (context, state) {
         final itemsCount = state is SaveOutfitDataLoaded ? state.itemsCount : 0;
@@ -69,22 +72,15 @@ class ItemsCountDisplay extends StatelessWidget {
           decoration: BoxDecoration(
             color: const Color(0xFFF5ECE7),
             borderRadius: BorderRadius.circular(16),
-            border: Border.all(
-              color: const Color(0xFFD7CCC8),
-              width: 1,
-            ),
+            border: Border.all(color: const Color(0xFFD7CCC8), width: 1),
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Icon(
-                Icons.layers_outlined,
-                color: Color(0xFF795548),
-                size: 24,
-              ),
+              const Icon(Icons.layers_outlined, color: Color(0xFF795548), size: 24),
               const SizedBox(width: 12),
               Text(
-                '$itemsCount item${itemsCount != 1 ? 's' : ''} in outfit',
+                itemsCount != 1 ? loc.saveOutfitItemsCountPlural(itemsCount) : loc.saveOutfitItemsCount(itemsCount),
                 style: const TextStyle(
                   fontFamily: 'CormorantGaramond',
                   fontSize: 16,

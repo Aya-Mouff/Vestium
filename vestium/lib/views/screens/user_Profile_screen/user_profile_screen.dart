@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:vestium/l10n/app_localizations.dart';
 import 'cubit/user_profile_screen_cubit.dart';
 import 'cubit/user_profile_screen_state.dart';
 import '../../../../repo/user_repo.dart';
@@ -16,11 +17,7 @@ class UserProfileScreen extends StatelessWidget {
   final int userId;
   final int currentUserId;
 
-  const UserProfileScreen({
-    super.key,
-    required this.userId,
-    required this.currentUserId,
-  });
+  const UserProfileScreen({super.key, required this.userId, required this.currentUserId});
 
   @override
   Widget build(BuildContext context) {
@@ -39,9 +36,10 @@ class UserProfileScreen extends StatelessWidget {
           elevation: 0,
           title: BlocBuilder<UserProfileCubit, UserProfileState>(
             builder: (context, state) {
+              final loc = AppLocalizations.of(context)!;
               if (state is UserProfileLoaded) {
                 return Text(
-                  state.user.username ?? 'User',
+                  state.user.username ?? loc.userProfileDefaultUser,
                   style: const TextStyle(fontSize: 18, color: Colors.black),
                 );
               }
@@ -62,9 +60,14 @@ class UserProfileScreen extends StatelessWidget {
                   children: [
                     Text(state.message),
                     const SizedBox(height: 16),
-                    ElevatedButton(
-                      onPressed: () => context.read<UserProfileCubit>().loadProfile(userId),
-                      child: const Text('Retry'),
+                    Builder(
+                      builder: (context) {
+                        final loc = AppLocalizations.of(context)!;
+                        return ElevatedButton(
+                          onPressed: () => context.read<UserProfileCubit>().loadProfile(userId),
+                          child: Text(loc.userProfileRetry),
+                        );
+                      },
                     ),
                   ],
                 ),
@@ -87,7 +90,7 @@ class UserProfileScreen extends StatelessWidget {
                       const SizedBox(height: 16),
                       UserStats(
                         posts: state.posts.length,
-                        followers: state.followersCount, 
+                        followers: state.followersCount,
                         following: state.followingCount,
                         userId: userId,
                         currentUserId: currentUserId,
@@ -96,31 +99,28 @@ class UserProfileScreen extends StatelessWidget {
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 24),
                         child: SizedBox(
-                          width: double.infinity, 
+                          width: double.infinity,
                           child: ElevatedButton(
-                            onPressed: () => context
-                                .read<UserProfileCubit>()
-                                .toggleFollow(context),
+                            onPressed: () => context.read<UserProfileCubit>().toggleFollow(context),
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: state.isFollowing
-                                  ? Colors.white
-                                  : const Color(0xFF795548),
-                              side: state.isFollowing
-                                  ? const BorderSide(color: Colors.grey)
-                                  : BorderSide.none,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
+                              backgroundColor: state.isFollowing ? Colors.white : const Color(0xFF795548),
+                              side: state.isFollowing ? const BorderSide(color: Colors.grey) : BorderSide.none,
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                               elevation: 0,
                               minimumSize: const Size(double.infinity, 40),
                             ),
-                            child: Text(
-                              state.isFollowing ? "Following" : "Follow",
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w600,
-                                color: state.isFollowing ? Colors.black87 : Colors.white,
-                              ),
+                            child: Builder(
+                              builder: (context) {
+                                final loc = AppLocalizations.of(context)!;
+                                return Text(
+                                  state.isFollowing ? loc.userProfileFollowing : loc.userProfileFollow,
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w600,
+                                    color: state.isFollowing ? Colors.black87 : Colors.white,
+                                  ),
+                                );
+                              },
                             ),
                           ),
                         ),
@@ -128,11 +128,7 @@ class UserProfileScreen extends StatelessWidget {
                       const SizedBox(height: 16),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 16),
-                        child: PostsGrid(
-                          posts: state.posts,
-                          profileUserId: userId,
-                          currentUserId: currentUserId,
-                        ),
+                        child: PostsGrid(posts: state.posts, profileUserId: userId, currentUserId: currentUserId),
                       ),
                       const SizedBox(height: 80),
                     ],
@@ -144,10 +140,7 @@ class UserProfileScreen extends StatelessWidget {
             return const SizedBox();
           },
         ),
-        bottomNavigationBar: CustomNavBar(
-          currentPage: 'home',
-          userId: currentUserId,
-        ),
+        bottomNavigationBar: CustomNavBar(currentPage: 'home', userId: currentUserId),
       ),
     );
   }

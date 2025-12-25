@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vestium/l10n/app_localizations.dart';
 
 class DeleteOutfitDialog extends StatelessWidget {
   final VoidCallback onDelete;
@@ -7,17 +8,16 @@ class DeleteOutfitDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
     return Dialog(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: Container(
         padding: const EdgeInsets.all(24),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text(
-              'Delete Outfit?',
+            Text(
+              loc.outfitDetailsDeleteDialog,
               style: TextStyle(
                 fontFamily: 'CormorantGaramond',
                 fontSize: 20,
@@ -27,7 +27,7 @@ class DeleteOutfitDialog extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             Text(
-              'Are you sure you want to delete this outfit?\nThis action cannot be undone.',
+              loc.outfitDetailsDeleteMessage,
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontFamily: 'Inter',
@@ -47,18 +47,12 @@ class DeleteOutfitDialog extends StatelessWidget {
                   backgroundColor: const Color(0xFFE7000B),
                   foregroundColor: Colors.white,
                   padding: const EdgeInsets.symmetric(vertical: 14),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                   elevation: 0,
                 ),
-                child: const Text(
-                  'Delete',
-                  style: TextStyle(
-                    fontFamily: 'Inter',
-                    fontSize: 16,
-                    fontWeight: FontWeight.w200,
-                  ),
+                child: Text(
+                  loc.outfitDetailsDeleteButton,
+                  style: const TextStyle(fontFamily: 'Inter', fontSize: 16, fontWeight: FontWeight.w200),
                 ),
               ),
             ),
@@ -70,12 +64,10 @@ class DeleteOutfitDialog extends StatelessWidget {
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
-                style: TextButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: 14),
-                ),
-                child: const Text(
-                  'Cancel',
-                  style: TextStyle(
+                style: TextButton.styleFrom(padding: const EdgeInsets.symmetric(vertical: 14)),
+                child: Text(
+                  loc.outfitDetailsCancelButton,
+                  style: const TextStyle(
                     fontFamily: 'Inter',
                     fontSize: 16,
                     fontWeight: FontWeight.w200,

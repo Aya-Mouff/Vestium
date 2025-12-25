@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:auto_route/auto_route.dart';
+import 'package:vestium/l10n/app_localizations.dart';
 import './cubit/outfit_details_cubit.dart';
 import './cubit/outfit_details_state.dart';
 import './widgets/outfit_details_appbar.dart';
@@ -13,10 +14,7 @@ import './widgets/outfit_action_buttons.dart';
 class OutfitDetailsScreen extends StatelessWidget {
   final String outfitId;
 
-  const OutfitDetailsScreen({
-    super.key,
-    @PathParam('outfitId') required this.outfitId,
-  });
+  const OutfitDetailsScreen({super.key, @PathParam('outfitId') required this.outfitId});
 
   @override
   Widget build(BuildContext context) {
@@ -32,10 +30,11 @@ class OutfitDetailsScreen extends StatelessWidget {
             }
 
             if (state.outfit == null || state.hasError) {
-              return const Center(
+              final loc = AppLocalizations.of(context)!;
+              return Center(
                 child: Text(
-                  'Error loading outfit details',
-                  style: TextStyle(
+                  loc.outfitDetailsError,
+                  style: const TextStyle(
                     fontFamily: 'Inter',
                     fontSize: 16,
                     fontWeight: FontWeight.w200,

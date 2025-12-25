@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:vestium/l10n/app_localizations.dart';
 import '../cubit/account_manager_cubit.dart';
 import '../cubit/account_manager_state.dart';
 
@@ -28,6 +29,7 @@ class _ChangeFullNameDialogState extends State<ChangeFullNameDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
     final cubit = context.read<AccountManagerCubit>();
 
     return Dialog(
@@ -39,9 +41,9 @@ class _ChangeFullNameDialogState extends State<ChangeFullNameDialog> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Text(
-                'Change Full Name',
-                style: TextStyle(
+              Text(
+                loc.accountManagerChangeFullNameDialogTitle,
+                style: const TextStyle(
                   fontFamily: 'CormorantGaramond',
                   fontSize: 18,
                   fontWeight: FontWeight.w600,
@@ -49,22 +51,18 @@ class _ChangeFullNameDialogState extends State<ChangeFullNameDialog> {
                 ),
               ),
               const SizedBox(height: 8),
-              const Text(
-                'Enter your new display name',
-                style: TextStyle(
-                  fontFamily: 'inter',
-                  fontSize: 14,
-                  color: Color(0xFF666666),
-                ),
+              Text(
+                loc.accountManagerChangeFullNameDialogDescription,
+                style: const TextStyle(fontFamily: 'inter', fontSize: 14, color: Color(0xFF666666)),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 24),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    'Full Name',
-                    style: TextStyle(
+                  Text(
+                    loc.accountManagerFullName,
+                    style: const TextStyle(
                       fontFamily: 'CormorantGaramond',
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
@@ -75,27 +73,18 @@ class _ChangeFullNameDialogState extends State<ChangeFullNameDialog> {
                   TextField(
                     controller: _fullNameController,
                     decoration: InputDecoration(
-                      hintText: 'Your name',
+                      hintText: loc.accountManagerFullNameHint,
                       filled: true,
                       fillColor: const Color(0xFFF0EBE6),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
-                        borderSide: const BorderSide(
-                          color: Color(0xFFA1887F),
-                          width: 1.5,
-                        ),
+                        borderSide: const BorderSide(color: Color(0xFFA1887F), width: 1.5),
                       ),
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
-                        borderSide: const BorderSide(
-                          color: Color(0xFFA1887F),
-                          width: 1.5,
-                        ),
+                        borderSide: const BorderSide(color: Color(0xFFA1887F), width: 1.5),
                       ),
-                      contentPadding: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 14,
-                      ),
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
                     ),
                   ),
                 ],
@@ -105,24 +94,19 @@ class _ChangeFullNameDialogState extends State<ChangeFullNameDialog> {
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () async {
-                    await cubit.changeFullName(
-                      newFullName: _fullNameController.text.trim(),
-                    );
-                    if (context.mounted &&
-                        cubit.state.status != AccountManagerStatus.error) {
+                    await cubit.changeFullName(newFullName: _fullNameController.text.trim());
+                    if (context.mounted && cubit.state.status != AccountManagerStatus.error) {
                       Navigator.pop(context);
                     }
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF6B5344),
                     padding: const EdgeInsets.symmetric(vertical: 14),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                   ),
-                  child: const Text(
-                    'Save',
-                    style: TextStyle(
+                  child: Text(
+                    loc.accountManagerSave,
+                    style: const TextStyle(
                       fontFamily: 'CormorantGaramond',
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
@@ -136,8 +120,8 @@ class _ChangeFullNameDialogState extends State<ChangeFullNameDialog> {
                 width: double.infinity,
                 child: TextButton(
                   onPressed: () => Navigator.pop(context),
-                  child: const Text(
-                    'Cancel',
+                  child: Text(
+                    loc.accountManagerCancel,
                     style: TextStyle(
                       fontFamily: 'CormorantGaramond',
                       fontSize: 16,

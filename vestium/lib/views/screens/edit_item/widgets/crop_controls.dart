@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:vestium/l10n/app_localizations.dart';
 import '../cubit/edit_item_cubit.dart';
 
 class CropControls extends StatelessWidget {
@@ -10,13 +11,14 @@ class CropControls extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
     return Column(
       children: [
-        const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 12.0),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 12.0),
           child: Text(
-            'Drag to adjust crop area',
-            style: TextStyle(
+            loc.editItemDragText,
+            style: const TextStyle(
               fontFamily: 'Inter',
               fontSize: 13,
               fontWeight: FontWeight.w200,
@@ -33,9 +35,9 @@ class CropControls extends StatelessWidget {
               child: OutlinedButton.icon(
                 onPressed: onReset,
                 icon: const Icon(Icons.refresh, size: 18),
-                label: const Text(
-                  'Reset',
-                  style: TextStyle(
+                label: Text(
+                  loc.editItemResetButton,
+                  style: const TextStyle(
                     fontFamily: 'Inter',
                     fontSize: 14,
                     fontWeight: FontWeight.w200,
@@ -46,22 +48,18 @@ class CropControls extends StatelessWidget {
                   foregroundColor: const Color(0xFF795548),
                   side: const BorderSide(color: Color(0xFF795548), width: 1.5),
                   padding: const EdgeInsets.symmetric(vertical: 12),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                 ),
               ),
             ),
             const SizedBox(width: 12),
             Expanded(
               child: ElevatedButton.icon(
-                onPressed: onCropDone != null
-                    ? () => _handleDoneCrop(context)
-                    : null,
+                onPressed: onCropDone != null ? () => _handleDoneCrop(context) : null,
                 icon: const Icon(Icons.check, size: 18),
-                label: const Text(
-                  'Done',
-                  style: TextStyle(
+                label: Text(
+                  loc.editItemDoneButton,
+                  style: const TextStyle(
                     fontFamily: 'Inter',
                     fontSize: 14,
                     fontWeight: FontWeight.w200,
@@ -72,9 +70,7 @@ class CropControls extends StatelessWidget {
                   backgroundColor: const Color(0xFF795548),
                   foregroundColor: const Color(0xFFFFFFFF),
                   padding: const EdgeInsets.symmetric(vertical: 12),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                   elevation: 0,
                 ),
               ),

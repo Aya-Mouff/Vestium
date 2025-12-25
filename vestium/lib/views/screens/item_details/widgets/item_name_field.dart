@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:vestium/l10n/app_localizations.dart';
 import '../cubit/item_details_cubit.dart';
 import '../cubit/item_details_state.dart';
 
@@ -27,12 +28,14 @@ class _ItemNameFieldState extends State<ItemNameField> {
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'Item Name',
-          style: TextStyle(
+        Text(
+          loc.itemDetailsItemName,
+          style: const TextStyle(
             fontFamily: 'CormorantGaramond',
             fontSize: 16,
             fontWeight: FontWeight.w400,
@@ -54,8 +57,7 @@ class _ItemNameFieldState extends State<ItemNameField> {
             }
             return TextField(
               controller: _controller,
-              onChanged: (value) =>
-                  context.read<ItemDetailsCubit>().updateName(value),
+              onChanged: (value) => context.read<ItemDetailsCubit>().updateName(value),
               style: const TextStyle(
                 fontFamily: 'Inter',
                 fontSize: 15,
@@ -63,7 +65,7 @@ class _ItemNameFieldState extends State<ItemNameField> {
                 color: Color(0xFF3E2723),
               ),
               decoration: InputDecoration(
-                hintText: 'e.g., Blue Denim Jacket',
+                hintText: loc.itemDetailsItemNameHint,
                 hintStyle: TextStyle(
                   fontFamily: 'Inter',
                   fontSize: 15,
@@ -72,25 +74,13 @@ class _ItemNameFieldState extends State<ItemNameField> {
                 ),
                 filled: true,
                 fillColor: const Color(0xFFFFFFFF),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(16),
-                  borderSide: BorderSide.none,
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(16),
-                  borderSide: BorderSide.none,
-                ),
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(16), borderSide: BorderSide.none),
+                enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(16), borderSide: BorderSide.none),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(16),
-                  borderSide: const BorderSide(
-                    color: Color(0xFF795548),
-                    width: 1.5,
-                  ),
+                  borderSide: const BorderSide(color: Color(0xFF795548), width: 1.5),
                 ),
-                contentPadding: const EdgeInsets.symmetric(
-                  horizontal: 20,
-                  vertical: 16,
-                ),
+                contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
               ),
             );
           },

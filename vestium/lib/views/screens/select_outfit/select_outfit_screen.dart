@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:vestium/l10n/app_localizations.dart';
 
 import 'cubit/select_outfit_cubit.dart';
 import 'cubit/select_outfit_state.dart';
@@ -56,10 +57,7 @@ class SelectOutfitScreen extends StatelessWidget {
                         onRetry: cubit.loadSavedOutfits,
                         onSelect: cubit.selectOutfit,
                       ),
-                      BlocProvider(
-                        create: (_) => OutfitGalleryAccessCubit(),
-                        child: const OutfitGalleryAccessBody(),
-                      ),
+                      BlocProvider(create: (_) => OutfitGalleryAccessCubit(), child: const OutfitGalleryAccessBody()),
                     ],
                   ),
                 ),
@@ -68,25 +66,30 @@ class SelectOutfitScreen extends StatelessWidget {
                   child: SizedBox(
                     width: double.infinity,
                     height: 48,
-                    child: ElevatedButton(
-                      onPressed: state.selectedOutfit != null 
-                          ? () => _onContinue(context, state.selectedOutfit!)
-                          : null,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: state.selectedOutfit != null
-                            ? const Color(0xFF8B6B5C)
-                            : const Color(0xFFC4B7AB),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                      ),
-                      child: const Text(
-                        'Continue',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
-                          fontFamily: 'Inter',
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
+                    child: Builder(
+                      builder: (context) {
+                        final loc = AppLocalizations.of(context)!;
+                        return ElevatedButton(
+                          onPressed: state.selectedOutfit != null
+                              ? () => _onContinue(context, state.selectedOutfit!)
+                              : null,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: state.selectedOutfit != null
+                                ? const Color(0xFF8B6B5C)
+                                : const Color(0xFFC4B7AB),
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                          ),
+                          child: Text(
+                            loc.selectOutfitContinue,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontFamily: 'Inter',
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        );
+                      },
                     ),
                   ),
                 ),
@@ -102,9 +105,9 @@ class SelectOutfitScreen extends StatelessWidget {
     try {
       // Get the outfit's image path
       String? imagePath = await OutfitImageService.getOutfitImagePath(outfit.outfitId!);
-      
+
       print('📦 Returning outfit data: id=${outfit.outfitId}, name=${outfit.outfitName}, imagePath=$imagePath');
-      
+
       // Return as Map with all necessary data
       final result = {
         'id': outfit.outfitId,
@@ -119,13 +122,11 @@ class SelectOutfitScreen extends StatelessWidget {
         'season': outfit.season,
         'date': outfit.date,
       };
-      
+
       context.router.pop(result);
     } catch (e) {
       print('❌ Error preparing outfit data: $e');
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error selecting outfit: $e')),
-      );
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error selecting outfit: $e')));
     }
   }
 }

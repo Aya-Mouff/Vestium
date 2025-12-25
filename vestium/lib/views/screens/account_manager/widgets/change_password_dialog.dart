@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:vestium/l10n/app_localizations.dart';
 import '../cubit/account_manager_cubit.dart';
 import '../cubit/account_manager_state.dart';
 
@@ -29,6 +30,7 @@ class _ChangePasswordDialogState extends State<ChangePasswordDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
     final cubit = context.read<AccountManagerCubit>();
 
     return Dialog(
@@ -39,9 +41,9 @@ class _ChangePasswordDialogState extends State<ChangePasswordDialog> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Text(
-                'Change Password',
-                style: TextStyle(
+              Text(
+                loc.accountManagerChangePasswordDialogTitle,
+                style: const TextStyle(
                   fontFamily: 'CormorantGaramond',
                   fontSize: 18,
                   fontWeight: FontWeight.w600,
@@ -49,37 +51,34 @@ class _ChangePasswordDialogState extends State<ChangePasswordDialog> {
                 ),
               ),
               const SizedBox(height: 8),
-              const Text(
-                'Enter your current password and new password',
-                style: TextStyle(
-                  fontFamily: 'inter',
-                  fontSize: 14,
-                  color: Color(0xFF666666),
-                ),
+              Text(
+                loc.accountManagerChangePasswordDialogDescription,
+                style: TextStyle(fontFamily: 'inter', fontSize: 14, color: Color(0xFF666666)),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 24),
               _buildPasswordField(
-                label: 'Current Password',
+                loc: loc,
+                label: loc.accountManagerCurrentPassword,
                 controller: _currentPassword,
                 obscure: _obscureCurrent,
-                onToggle: () =>
-                    setState(() => _obscureCurrent = !_obscureCurrent),
+                onToggle: () => setState(() => _obscureCurrent = !_obscureCurrent),
               ),
               const SizedBox(height: 16),
               _buildPasswordField(
-                label: 'New Password',
+                loc: loc,
+                label: loc.accountManagerNewPassword,
                 controller: _newPassword,
                 obscure: _obscureNew,
                 onToggle: () => setState(() => _obscureNew = !_obscureNew),
               ),
               const SizedBox(height: 16),
               _buildPasswordField(
-                label: 'Confirm Password',
+                loc: loc,
+                label: loc.accountManagerConfirmPassword,
                 controller: _confirmPassword,
                 obscure: _obscureConfirm,
-                onToggle: () =>
-                    setState(() => _obscureConfirm = !_obscureConfirm),
+                onToggle: () => setState(() => _obscureConfirm = !_obscureConfirm),
               ),
               const SizedBox(height: 24),
               SizedBox(
@@ -91,21 +90,18 @@ class _ChangePasswordDialogState extends State<ChangePasswordDialog> {
                       newPassword: _newPassword.text,
                       confirmPassword: _confirmPassword.text,
                     );
-                    if (context.mounted &&
-                        cubit.state.status != AccountManagerStatus.error) {
+                    if (context.mounted && cubit.state.status != AccountManagerStatus.error) {
                       Navigator.pop(context);
                     }
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF6B5344),
                     padding: const EdgeInsets.symmetric(vertical: 14),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                   ),
-                  child: const Text(
-                    'Change Password',
-                    style: TextStyle(
+                  child: Text(
+                    loc.accountManagerChangePasswordButton,
+                    style: const TextStyle(
                       fontFamily: 'CormorantGaramond',
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
@@ -119,8 +115,8 @@ class _ChangePasswordDialogState extends State<ChangePasswordDialog> {
                 width: double.infinity,
                 child: TextButton(
                   onPressed: () => Navigator.pop(context),
-                  child: const Text(
-                    'Cancel',
+                  child: Text(
+                    loc.accountManagerCancel,
                     style: TextStyle(
                       fontFamily: 'CormorantGaramond',
                       fontSize: 16,
@@ -138,6 +134,7 @@ class _ChangePasswordDialogState extends State<ChangePasswordDialog> {
   }
 
   Widget _buildPasswordField({
+    required AppLocalizations loc,
     required String label,
     required TextEditingController controller,
     required bool obscure,
@@ -163,30 +160,18 @@ class _ChangePasswordDialogState extends State<ChangePasswordDialog> {
             filled: true,
             fillColor: const Color(0xFFF0EBE6),
             suffixIcon: IconButton(
-              icon: Icon(
-                obscure ? Icons.visibility_off : Icons.visibility,
-                color: const Color(0xFFA1887F),
-              ),
+              icon: Icon(obscure ? Icons.visibility_off : Icons.visibility, color: const Color(0xFFA1887F)),
               onPressed: onToggle,
             ),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(
-                color: Color(0xFFA1887F),
-                width: 1.5,
-              ),
+              borderSide: const BorderSide(color: Color(0xFFA1887F), width: 1.5),
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(
-                color: Color(0xFFA1887F),
-                width: 1.5,
-              ),
+              borderSide: const BorderSide(color: Color(0xFFA1887F), width: 1.5),
             ),
-            contentPadding: const EdgeInsets.symmetric(
-              horizontal: 16,
-              vertical: 14,
-            ),
+            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
           ),
         ),
       ],

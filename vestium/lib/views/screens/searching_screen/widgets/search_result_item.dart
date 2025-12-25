@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vestium/l10n/app_localizations.dart';
 
 class SearchResultItem extends StatelessWidget {
   final Map<String, dynamic> user;
@@ -29,28 +30,21 @@ class SearchResultItem extends StatelessWidget {
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(12),
-            border: Border.all(
-              color: const Color(0xFFD7CCC8),
-              width: 1,
-            ),
+            border: Border.all(color: const Color(0xFFD7CCC8), width: 1),
           ),
           child: Padding(
-            padding:
-                const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             child: Row(
               children: [
                 CircleAvatar(
                   radius: 25,
                   backgroundColor: const Color(0xFF795548),
-                  backgroundImage:
-                      (user['profileImage'] as String).isNotEmpty
-                          ? AssetImage(user['profileImage'] as String)
-                          : null,
+                  backgroundImage: (user['profileImage'] as String).isNotEmpty
+                      ? AssetImage(user['profileImage'] as String)
+                      : null,
                   child: (user['profileImage'] as String).isEmpty
                       ? Text(
-                          (user['username'] as String)
-                              .substring(0, 1)
-                              .toUpperCase(),
+                          (user['username'] as String).substring(0, 1).toUpperCase(),
                           style: const TextStyle(
                             color: Colors.white,
                             fontSize: 20,
@@ -78,48 +72,40 @@ class SearchResultItem extends StatelessWidget {
                       const SizedBox(height: 2),
                       Text(
                         user['fullName'] as String,
-                        style: const TextStyle(
-                          fontSize: 13,
-                          color: Color(0xFF795548),
-                          fontFamily: 'Inter',
-                        ),
+                        style: const TextStyle(fontSize: 13, color: Color(0xFF795548), fontFamily: 'Inter'),
                       ),
                     ],
                   ),
                 ),
-                
+
                 // Only show follow button if it's not the current user
                 if (!isCurrentUser)
                   GestureDetector(
                     onTap: onToggleFollow,
-                    child: Container(
-                      width: 72.39,
-                      height: 27.97,
-                      decoration: BoxDecoration(
-                        color: isFollowing
-                            ? Colors.transparent
-                            : const Color(0xFF795548),
-                        borderRadius: BorderRadius.circular(20),
-                        border: isFollowing
-                            ? Border.all(
-                                color: const Color(0xFF795548),
-                                width: 1.5,
-                              )
-                            : null,
-                      ),
-                      child: Center(
-                        child: Text(
-                          isFollowing ? 'Following' : 'Follow',
-                          style: TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w600,
-                            color: isFollowing
-                                ? const Color(0xFF795548)
-                                : Colors.white,
-                            fontFamily: 'Inter',
+                    child: Builder(
+                      builder: (context) {
+                        final loc = AppLocalizations.of(context)!;
+                        return Container(
+                          width: 72.39,
+                          height: 27.97,
+                          decoration: BoxDecoration(
+                            color: isFollowing ? Colors.transparent : const Color(0xFF795548),
+                            borderRadius: BorderRadius.circular(20),
+                            border: isFollowing ? Border.all(color: const Color(0xFF795548), width: 1.5) : null,
                           ),
-                        ),
-                      ),
+                          child: Center(
+                            child: Text(
+                              isFollowing ? loc.searchFollowing : loc.searchFollow,
+                              style: TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w600,
+                                color: isFollowing ? const Color(0xFF795548) : Colors.white,
+                                fontFamily: 'Inter',
+                              ),
+                            ),
+                          ),
+                        );
+                      },
                     ),
                   ),
               ],

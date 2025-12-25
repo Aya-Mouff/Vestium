@@ -1,6 +1,7 @@
 // lib/wardrobe_screen/widgets/wardrobe_error_state.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:vestium/l10n/app_localizations.dart';
 import '../cubit/wardrobe_cubit.dart';
 
 class WardrobeErrorState extends StatelessWidget {
@@ -14,11 +15,7 @@ class WardrobeErrorState extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Icon(
-            Icons.error_outline,
-            size: 64,
-            color: Colors.red,
-          ),
+          const Icon(Icons.error_outline, size: 64, color: Colors.red),
           const SizedBox(height: 16),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 32),
@@ -31,10 +28,13 @@ class WardrobeErrorState extends StatelessWidget {
           const SizedBox(height: 16),
           ElevatedButton(
             onPressed: () => context.read<WardrobeCubit>().refresh(),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF8B6B61),
+            style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF8B6B61)),
+            child: Builder(
+              builder: (context) {
+                final loc = AppLocalizations.of(context)!;
+                return Text(loc.wardrobeErrorRetry, style: const TextStyle(color: Colors.white));
+              },
             ),
-            child: const Text('Retry', style: TextStyle(color: Colors.white)),
           ),
         ],
       ),

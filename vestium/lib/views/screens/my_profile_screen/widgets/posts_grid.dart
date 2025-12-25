@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:auto_route/auto_route.dart';
+import 'package:vestium/l10n/app_localizations.dart';
 import 'package:vestium/app_router.dart';
 import 'dart:io';
-
 
 class PostsGrid extends StatelessWidget {
   final List<dynamic> posts;
@@ -11,13 +11,11 @@ class PostsGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (posts.isEmpty) {
+      final loc = AppLocalizations.of(context)!;
       return SizedBox(
         height: 200,
         child: Center(
-          child: Text(
-            'No posts yet',
-            style: TextStyle(color: Colors.grey.shade600),
-          ),
+          child: Text(loc.myProfileNoPostsYet, style: TextStyle(color: Colors.grey.shade600)),
         ),
       );
     }
@@ -35,13 +33,10 @@ class PostsGrid extends StatelessWidget {
       itemBuilder: (context, index) {
         final post = posts[index];
         final imagePath = post['imageUrl'];
-         
+
         return GestureDetector(
           onTap: () => context.router.push(MyPostsRoute(postId: post['id'].toString())),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(16),
-            child: _buildPostImage(imagePath),
-          ),
+          child: ClipRRect(borderRadius: BorderRadius.circular(16), child: _buildPostImage(imagePath)),
         );
       },
     );
@@ -55,9 +50,7 @@ class PostsGrid extends StatelessWidget {
         errorBuilder: (context, error, stackTrace) {
           return Container(
             color: const Color(0xFFE9D9CF),
-            child: const Center(
-              child: Icon(Icons.photo, color: Color(0xFF7B5247), size: 40),
-            ),
+            child: const Center(child: Icon(Icons.photo, color: Color(0xFF7B5247), size: 40)),
           );
         },
       );
@@ -68,9 +61,7 @@ class PostsGrid extends StatelessWidget {
         errorBuilder: (context, error, stackTrace) {
           return Container(
             color: const Color(0xFFE9D9CF),
-            child: const Center(
-              child: Icon(Icons.photo, color: Color(0xFF7B5247), size: 40),
-            ),
+            child: const Center(child: Icon(Icons.photo, color: Color(0xFF7B5247), size: 40)),
           );
         },
       );

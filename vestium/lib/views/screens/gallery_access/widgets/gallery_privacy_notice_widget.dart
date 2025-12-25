@@ -1,39 +1,33 @@
 import 'package:flutter/material.dart';
+import 'package:vestium/l10n/app_localizations.dart';
 
 class GalleryPrivacyNoticeWidget extends StatelessWidget {
   const GalleryPrivacyNoticeWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         color: const Color(0xFFFFFFFF),
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
-          BoxShadow(
-            color: const Color(0xFF795548).withValues(alpha: 0.08),
-            blurRadius: 12,
-            offset: const Offset(0, 2),
-          ),
+          BoxShadow(color: const Color(0xFF795548).withValues(alpha: 0.08), blurRadius: 12, offset: const Offset(0, 2)),
         ],
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(
-            Icons.lock_outline,
-            size: 20,
-            color: const Color(0xFF795548).withValues(alpha: 0.6),
-          ),
+          Icon(Icons.lock_outline, size: 20, color: const Color(0xFF795548).withValues(alpha: 0.6)),
           const SizedBox(width: 12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
-                  'Your pictures are private',
-                  style: TextStyle(
+                Text(
+                  loc.galleryAccessPrivacyTitle,
+                  style: const TextStyle(
                     fontFamily: 'Inter',
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
@@ -43,7 +37,7 @@ class GalleryPrivacyNoticeWidget extends StatelessWidget {
                 ),
                 const SizedBox(height: 6),
                 Text(
-                  'We only use your camera to capture clothing items. Your photos stay on your device.',
+                  loc.galleryAccessPrivacyDescription,
                   style: TextStyle(
                     fontFamily: 'Inter',
                     fontSize: 13,

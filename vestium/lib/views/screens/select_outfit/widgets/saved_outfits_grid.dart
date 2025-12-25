@@ -1,5 +1,6 @@
 // widgets/saved_outfits_grid.dart
 import 'package:flutter/material.dart';
+import 'package:vestium/l10n/app_localizations.dart';
 import '../../../../databases/db_models.dart';
 import '../../../../databases/services/outfit_image_service.dart';
 import 'saved_outfit_card.dart';
@@ -23,15 +24,14 @@ class SavedOutfitsGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
+
     if (isLoading) {
       return const Center(child: CircularProgressIndicator());
     }
 
     if (outfits.isEmpty) {
-      return const EmptyState(
-        title: 'No outfits yet',
-        message: 'Create your first outfit to see it here.',
-      );
+      return EmptyState(title: loc.selectOutfitNoOutfits, message: loc.selectOutfitCreateFirst);
     }
 
     return Padding(
@@ -46,8 +46,7 @@ class SavedOutfitsGrid extends StatelessWidget {
         itemCount: outfits.length,
         itemBuilder: (context, index) {
           final outfit = outfits[index];
-          final isSelected =
-              selectedOutfit != null && selectedOutfit!.outfitId == outfit.outfitId;
+          final isSelected = selectedOutfit != null && selectedOutfit!.outfitId == outfit.outfitId;
 
           return FutureBuilder<String?>(
             future: OutfitImageService.getOutfitImagePath(outfit.outfitId!),

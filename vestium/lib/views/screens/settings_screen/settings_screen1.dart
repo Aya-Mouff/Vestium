@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:vestium/l10n/app_localizations.dart';
 
 import '../../../../app_router.dart';
 import '../../../../repo/user_repo.dart';
@@ -66,31 +67,26 @@ class _SettingsScreen1State extends State<SettingsScreen1> {
             });
           }
 
+          final loc = AppLocalizations.of(context)!;
+
           if (state.errorMessage != null && state.errorMessage!.isNotEmpty) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(state.errorMessage!)),
-            );
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.errorMessage!)));
           }
 
           if (state.saveSuccess) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Profile updated')),
-            );
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(loc.settingsProfileUpdated)));
           }
         },
         builder: (context, state) {
           final cubit = context.read<SettingsCubit>();
+          final loc = AppLocalizations.of(context)!;
 
           return Scaffold(
             backgroundColor: const Color(0xFFF2E7E0),
             appBar: AppBar(
-              title: const Text(
-                'Settings',
-                style: TextStyle(
-                  color: Color(0xFF3E2723),
-                  fontFamily: 'Inter',
-                  fontWeight: FontWeight.w600,
-                ),
+              title: Text(
+                loc.settingsTitle,
+                style: const TextStyle(color: Color(0xFF3E2723), fontFamily: 'Inter', fontWeight: FontWeight.w600),
               ),
               backgroundColor: const Color(0xFFF2E7E0),
               elevation: 0,
@@ -105,9 +101,7 @@ class _SettingsScreen1State extends State<SettingsScreen1> {
                       children: [
                         // Profile card (view/edit)
                         Card(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(16),
-                          ),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                           color: Colors.white,
                           child: state.isEditing
                               ? ProfileEditMode(
@@ -135,69 +129,61 @@ class _SettingsScreen1State extends State<SettingsScreen1> {
                         const SizedBox(height: 24),
 
                         // ACCOUNT
-                        const SettingsSectionHeader(title: 'ACCOUNT'),
+                        SettingsSectionHeader(title: loc.settingsAccountSection),
                         SettingsMenuItem(
                           icon: Icons.person_outline,
-                          title: 'Account Management',
+                          title: loc.settingsAccountManagement,
                           onTap: () {
-                            context.router.push(
-                              AccountManagerRoute(userId: widget.userId),
-                            );
+                            context.router.push(AccountManagerRoute(userId: widget.userId));
                           },
                         ),
                         const SizedBox(height: 24),
 
                         // CATEGORIES
-                        const SettingsSectionHeader(title: 'CATEGORIES'),
+                        SettingsSectionHeader(title: loc.settingsCategoriesSection),
                         SettingsMenuItem(
                           icon: Icons.category_outlined,
-                          title: 'Manage Categories For Items',
+                          title: loc.settingsManageCategoriesItems,
                           onTap: () {
-                            context.router.push(
-                              ManageCategoriesRoute(),
-                            );
-                           // TODO: Navigate to items categories screen
+                            context.router.push(ManageCategoriesRoute());
+                            // TODO: Navigate to items categories screen
                           },
                         ),
                         const SizedBox(height: 12),
                         SettingsMenuItem(
                           icon: Icons.checkroom_outlined,
-                          title: 'Manage Categories For Outfits',
+                          title: loc.settingsManageCategoriesOutfits,
                           onTap: () {
-                            context.router.push(
-                              ManageOutfitCategoriesRoute(userId: widget.userId),
-                            );
-                           // TODO: Navigate to outfits categories screen
+                            context.router.push(ManageOutfitCategoriesRoute(userId: widget.userId));
+                            // TODO: Navigate to outfits categories screen
                           },
                         ),
                         const SizedBox(height: 24),
 
                         // NOTIFICATIONS
-                        const SettingsSectionHeader(title: 'NOTIFICATIONS'),
+                        SettingsSectionHeader(title: loc.settingsNotificationsSection),
                         SettingsToggleItem(
                           icon: Icons.notifications_active_outlined,
-                          title: 'Push Notifications',
+                          title: loc.settingsPushNotifications,
                           value: state.pushNotifications,
                           onChanged: cubit.togglePushNotifications,
                         ),
                         const SizedBox(height: 12),
                         SettingsToggleItem(
                           icon: Icons.email_outlined,
-                          title: 'Email Notifications',
+                          title: loc.settingsEmailNotifications,
                           value: state.emailNotifications,
                           onChanged: cubit.toggleEmailNotifications,
                         ),
                         const SizedBox(height: 24),
 
                         // SUPPORT
-                        const SettingsSectionHeader(title: 'SUPPORT'),
+                        SettingsSectionHeader(title: loc.settingsSupportSection),
                         SettingsMenuItem(
                           icon: Icons.help_outline,
-                          title: 'Help Center',
+                          title: loc.settingsHelpCenter,
                           onTap: () {
-                           context.router.push(
-                              HelpCenterRoute(),
-                            );
+                            context.router.push(HelpCenterRoute());
                           },
                         ),
                         const SizedBox(height: 24),
@@ -209,25 +195,20 @@ class _SettingsScreen1State extends State<SettingsScreen1> {
                               final confirmed = await showDialog<bool>(
                                 context: context,
                                 builder: (ctx) {
+                                  final dialogLoc = AppLocalizations.of(ctx)!;
                                   return AlertDialog(
-                                    title: const Text('Log out'),
-                                    content: const Text(
-                                      'Are you sure you want to log out?',
-                                    ),
+                                    title: Text(dialogLoc.settingsLogoutDialogTitle),
+                                    content: Text(dialogLoc.settingsLogoutDialogMessage),
                                     actions: [
                                       TextButton(
-                                        onPressed: () =>
-                                            Navigator.of(ctx).pop(false),
-                                        child: const Text('Cancel'),
+                                        onPressed: () => Navigator.of(ctx).pop(false),
+                                        child: Text(dialogLoc.settingsLogoutCancel),
                                       ),
                                       TextButton(
-                                        onPressed: () =>
-                                            Navigator.of(ctx).pop(true),
-                                        child: const Text(
-                                          'Log out',
-                                          style: TextStyle(
-                                            color: Color(0xFFD32F2F),
-                                          ),
+                                        onPressed: () => Navigator.of(ctx).pop(true),
+                                        child: Text(
+                                          dialogLoc.settingsLogoutButton,
+                                          style: const TextStyle(color: Color(0xFFD32F2F)),
                                         ),
                                       ),
                                     ],
@@ -239,9 +220,9 @@ class _SettingsScreen1State extends State<SettingsScreen1> {
                                 await cubit.logout(context);
                               }
                             },
-                            child: const Text(
-                              'Log Out',
-                              style: TextStyle(
+                            child: Text(
+                              loc.settingsLogoutButton,
+                              style: const TextStyle(
                                 color: Color(0xFFD32F2F),
                                 fontSize: 16,
                                 fontWeight: FontWeight.w500,

@@ -2,13 +2,14 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:auto_route/auto_route.dart';
+import 'package:vestium/l10n/app_localizations.dart';
 import './cubit/edit_outfit_cubit.dart';
 import './cubit/edit_outfit_state.dart';
 import './widgets/edit_outfit_appbar.dart';
 import './widgets/outfit_image_preview.dart';
 import './widgets/outfit_name_field.dart';
 import './widgets/outfit_description_field.dart';
-import './widgets/category_selector.dart'; 
+import './widgets/category_selector.dart';
 import './widgets/season_dropdown.dart';
 import './widgets/action_buttons_row.dart';
 
@@ -16,10 +17,7 @@ import './widgets/action_buttons_row.dart';
 class EditOutfitScreen extends StatelessWidget {
   final int outfitId;
 
-  const EditOutfitScreen({
-    super.key,
-    @PathParam('outfitId') required this.outfitId,
-  });
+  const EditOutfitScreen({super.key, @PathParam('outfitId') required this.outfitId});
 
   @override
   Widget build(BuildContext context) {
@@ -34,13 +32,14 @@ class _EditOutfitScreenContent extends StatefulWidget {
   const _EditOutfitScreenContent();
 
   @override
-  State<_EditOutfitScreenContent> createState() =>
-      _EditOutfitScreenContentState();
+  State<_EditOutfitScreenContent> createState() => _EditOutfitScreenContentState();
 }
 
 class _EditOutfitScreenContentState extends State<_EditOutfitScreenContent> {
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
+
     return BlocListener<EditOutfitCubit, EditOutfitState>(
       listener: (context, state) {
         // Handle deletion - navigate back when deleted
@@ -57,11 +56,7 @@ class _EditOutfitScreenContentState extends State<_EditOutfitScreenContent> {
 
         // Handle success messages
         if (state.successMessage != null && state.successMessage!.isNotEmpty) {
-          _showCustomSnackBar(
-            context,
-            state.successMessage!,
-            const Color(0xFF795548),
-          );
+          _showCustomSnackBar(context, state.successMessage!, const Color(0xFF795548));
         }
       },
       child: Scaffold(
@@ -77,14 +72,11 @@ class _EditOutfitScreenContentState extends State<_EditOutfitScreenContent> {
                     SizedBox(
                       width: 40,
                       height: 40,
-                      child: CircularProgressIndicator(
-                        color: const Color(0xFF795548),
-                        strokeWidth: 2.5,
-                      ),
+                      child: CircularProgressIndicator(color: const Color(0xFF795548), strokeWidth: 2.5),
                     ),
                     const SizedBox(height: 20),
                     Text(
-                      'Loading outfit...',
+                      loc.editOutfitLoading,
                       style: TextStyle(
                         fontFamily: 'Inter',
                         fontSize: 14,
@@ -107,19 +99,12 @@ class _EditOutfitScreenContentState extends State<_EditOutfitScreenContent> {
                       Container(
                         width: 80,
                         height: 80,
-                        decoration: BoxDecoration(
-                          color: Colors.red.withValues(alpha: .1),
-                          shape: BoxShape.circle,
-                        ),
-                        child: Icon(
-                          Icons.error_outline_rounded,
-                          size: 40,
-                          color: Colors.red.withValues(alpha: .7),
-                        ),
+                        decoration: BoxDecoration(color: Colors.red.withValues(alpha: .1), shape: BoxShape.circle),
+                        child: Icon(Icons.error_outline_rounded, size: 40, color: Colors.red.withValues(alpha: .7)),
                       ),
                       const SizedBox(height: 24),
                       Text(
-                        'Oops! Something went wrong',
+                        loc.editOutfitError,
                         style: TextStyle(
                           fontFamily: 'CormorantGaramond',
                           fontSize: 22,
@@ -148,22 +133,16 @@ class _EditOutfitScreenContentState extends State<_EditOutfitScreenContent> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           ElevatedButton(
-                            onPressed: () =>
-                                context.read<EditOutfitCubit>().refresh(),
+                            onPressed: () => context.read<EditOutfitCubit>().refresh(),
                             style: ElevatedButton.styleFrom(
                               backgroundColor: const Color(0xFF795548),
                               foregroundColor: Colors.white,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 28,
-                                vertical: 12,
-                              ),
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                              padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 12),
                               elevation: 0,
                             ),
                             child: Text(
-                              'Try Again',
+                              loc.editOutfitTryAgain,
                               style: TextStyle(
                                 fontFamily: 'Inter',
                                 fontSize: 14,
@@ -176,28 +155,17 @@ class _EditOutfitScreenContentState extends State<_EditOutfitScreenContent> {
                           OutlinedButton(
                             onPressed: () => context.router.maybePop(),
                             style: OutlinedButton.styleFrom(
-                              side: BorderSide(
-                                color: const Color(
-                                  0xFF795548,
-                                ).withValues(alpha: .3),
-                              ),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 28,
-                                vertical: 12,
-                              ),
+                              side: BorderSide(color: const Color(0xFF795548).withValues(alpha: .3)),
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                              padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 12),
                             ),
                             child: Text(
-                              'Go Back',
+                              loc.editOutfitGoBack,
                               style: TextStyle(
                                 fontFamily: 'Inter',
                                 fontSize: 14,
                                 fontWeight: FontWeight.w300,
-                                color: const Color(
-                                  0xFF795548,
-                                ).withValues(alpha: .8),
+                                color: const Color(0xFF795548).withValues(alpha: .8),
                               ),
                             ),
                           ),
@@ -219,10 +187,7 @@ class _EditOutfitScreenContentState extends State<_EditOutfitScreenContent> {
                       Container(
                         width: 80,
                         height: 80,
-                        decoration: BoxDecoration(
-                          color: const Color(0xFFE9D9CF),
-                          shape: BoxShape.circle,
-                        ),
+                        decoration: BoxDecoration(color: const Color(0xFFE9D9CF), shape: BoxShape.circle),
                         child: Icon(
                           Icons.search_off_rounded,
                           size: 40,
@@ -231,7 +196,7 @@ class _EditOutfitScreenContentState extends State<_EditOutfitScreenContent> {
                       ),
                       const SizedBox(height: 24),
                       Text(
-                        'Outfit not found',
+                        loc.editOutfitNotFound,
                         style: TextStyle(
                           fontFamily: 'CormorantGaramond',
                           fontSize: 22,
@@ -241,7 +206,7 @@ class _EditOutfitScreenContentState extends State<_EditOutfitScreenContent> {
                       ),
                       const SizedBox(height: 12),
                       Text(
-                        'The outfit may have been deleted or doesn\'t exist',
+                        loc.editOutfitNotFoundMessage,
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontFamily: 'Inter',
@@ -256,17 +221,12 @@ class _EditOutfitScreenContentState extends State<_EditOutfitScreenContent> {
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFF795548),
                           foregroundColor: Colors.white,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 32,
-                            vertical: 12,
-                          ),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                          padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
                           elevation: 0,
                         ),
                         child: Text(
-                          'Go Back',
+                          loc.editOutfitGoBack,
                           style: TextStyle(
                             fontFamily: 'Inter',
                             fontSize: 14,
@@ -291,10 +251,7 @@ class _EditOutfitScreenContentState extends State<_EditOutfitScreenContent> {
                       _buildOutfitImageSection(context, state),
 
                       // Items in outfit
-                      if (state.itemCount > 0) ...[
-                        _buildItemsSection(state),
-                        const SizedBox(height: 8),
-                      ],
+                      if (state.itemCount > 0) ...[_buildItemsSection(state), const SizedBox(height: 8)],
 
                       // Edit Form Section
                       _buildEditFormSection(context, state),
@@ -310,8 +267,9 @@ class _EditOutfitScreenContentState extends State<_EditOutfitScreenContent> {
   }
 
   Widget _buildOutfitImageSection(BuildContext context, EditOutfitState state) {
+    final loc = AppLocalizations.of(context)!;
     print('🖼️ Building image section - hasImage: ${state.hasImage}, imageUrl: "${state.outfitImageUrl}"');
-    
+
     if (state.hasImage) {
       return OutfitImagePreview(imageUrl: state.outfitImageUrl!);
     }
@@ -327,14 +285,10 @@ class _EditOutfitScreenContentState extends State<_EditOutfitScreenContent> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
-            Icons.photo_library_rounded,
-            size: 64,
-            color: const Color(0xFF7B5247).withValues(alpha: .6),
-          ),
+          Icon(Icons.photo_library_rounded, size: 64, color: const Color(0xFF7B5247).withValues(alpha: .6)),
           const SizedBox(height: 12),
           Text(
-            'No outfit image',
+            loc.editOutfitNoImage,
             style: TextStyle(
               fontFamily: 'Inter',
               fontSize: 14,
@@ -348,6 +302,7 @@ class _EditOutfitScreenContentState extends State<_EditOutfitScreenContent> {
   }
 
   Widget _buildItemsSection(EditOutfitState state) {
+    final loc = AppLocalizations.of(context)!;
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 20),
       padding: const EdgeInsets.all(16),
@@ -362,7 +317,7 @@ class _EditOutfitScreenContentState extends State<_EditOutfitScreenContent> {
           Row(
             children: [
               Text(
-                'Items in this outfit',
+                loc.editOutfitItemsTitle,
                 style: TextStyle(
                   fontFamily: 'CormorantGaramond',
                   fontSize: 18,
@@ -373,10 +328,7 @@ class _EditOutfitScreenContentState extends State<_EditOutfitScreenContent> {
               const SizedBox(width: 8),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                decoration: BoxDecoration(
-                  color: const Color(0xFFF5ECE7),
-                  borderRadius: BorderRadius.circular(12),
-                ),
+                decoration: BoxDecoration(color: const Color(0xFFF5ECE7), borderRadius: BorderRadius.circular(12)),
                 child: Text(
                   state.itemCount.toString(),
                   style: TextStyle(
@@ -399,9 +351,7 @@ class _EditOutfitScreenContentState extends State<_EditOutfitScreenContent> {
                 final item = state.outfitItems[index];
                 return Container(
                   width: 70,
-                  margin: EdgeInsets.only(
-                    right: index == state.itemCount - 1 ? 0 : 10,
-                  ),
+                  margin: EdgeInsets.only(right: index == state.itemCount - 1 ? 0 : 10),
                   child: Column(
                     children: [
                       Container(
@@ -417,10 +367,7 @@ class _EditOutfitScreenContentState extends State<_EditOutfitScreenContent> {
                               offset: const Offset(0, 2),
                             ),
                           ],
-                          border: Border.all(
-                            color: const Color(0xFFE9D9CF),
-                            width: 1,
-                          ),
+                          border: Border.all(color: const Color(0xFFE9D9CF), width: 1),
                         ),
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(12),
@@ -451,6 +398,7 @@ class _EditOutfitScreenContentState extends State<_EditOutfitScreenContent> {
   }
 
   Widget _buildEditFormSection(BuildContext context, EditOutfitState state) {
+    final loc = AppLocalizations.of(context)!;
     return Container(
       margin: const EdgeInsets.all(20),
       padding: const EdgeInsets.all(24),
@@ -458,19 +406,13 @@ class _EditOutfitScreenContentState extends State<_EditOutfitScreenContent> {
         color: Colors.white,
         borderRadius: BorderRadius.circular(20),
         border: Border.all(color: const Color(0xFFE9D9CF), width: 1),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: .03),
-            blurRadius: 12,
-            offset: const Offset(0, 4),
-          ),
-        ],
+        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: .03), blurRadius: 12, offset: const Offset(0, 4))],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Edit Outfit Details',
+            loc.editOutfitDetailsTitle,
             style: TextStyle(
               fontFamily: 'CormorantGaramond',
               fontSize: 22,
@@ -480,7 +422,7 @@ class _EditOutfitScreenContentState extends State<_EditOutfitScreenContent> {
           ),
           const SizedBox(height: 4),
           Text(
-            'Update your outfit information',
+            loc.editOutfitDetailsSubtitle,
             style: TextStyle(
               fontFamily: 'Inter',
               fontSize: 13,
@@ -508,11 +450,7 @@ class _EditOutfitScreenContentState extends State<_EditOutfitScreenContent> {
       return Container(
         color: const Color(0xFFF5ECE7),
         child: Center(
-          child: Icon(
-            Icons.photo_outlined,
-            color: const Color(0xFF795548).withValues(alpha: .4),
-            size: 24,
-          ),
+          child: Icon(Icons.photo_outlined, color: const Color(0xFF795548).withValues(alpha: .4), size: 24),
         ),
       );
     }
@@ -544,11 +482,7 @@ class _EditOutfitScreenContentState extends State<_EditOutfitScreenContent> {
     return Container(
       color: const Color(0xFFF5ECE7),
       child: Center(
-        child: Icon(
-          Icons.broken_image_outlined,
-          color: const Color(0xFF795548).withValues(alpha: .4),
-          size: 24,
-        ),
+        child: Icon(Icons.broken_image_outlined, color: const Color(0xFF795548).withValues(alpha: .4), size: 24),
       ),
     );
   }
@@ -560,12 +494,7 @@ class _EditOutfitScreenContentState extends State<_EditOutfitScreenContent> {
       SnackBar(
         content: Text(
           message,
-          style: TextStyle(
-            fontFamily: 'Inter',
-            fontSize: 14,
-            fontWeight: FontWeight.w300,
-            color: Colors.white,
-          ),
+          style: TextStyle(fontFamily: 'Inter', fontSize: 14, fontWeight: FontWeight.w300, color: Colors.white),
         ),
         backgroundColor: color,
         behavior: SnackBarBehavior.floating,

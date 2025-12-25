@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:vestium/l10n/app_localizations.dart';
 import 'cubit/manage_outfit_categories_cubit.dart';
 import 'widgets/add_outfit_category_row.dart';
 import 'widgets/outfit_categories_list.dart';
@@ -15,8 +16,7 @@ class ManageOutfitCategoriesScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => ManageOutfitCategoriesCubit(OutfitCategoryService())
-        ..loadCategories(),
+      create: (_) => ManageOutfitCategoriesCubit(OutfitCategoryService())..loadCategories(),
       child: const _ManageOutfitCategoriesView(),
     );
   }
@@ -27,6 +27,8 @@ class _ManageOutfitCategoriesView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
+
     return Scaffold(
       backgroundColor: const Color(0xFFF5EDE8),
       appBar: AppBar(
@@ -38,8 +40,8 @@ class _ManageOutfitCategoriesView extends StatelessWidget {
             Navigator.pop(context);
           },
         ),
-        title: const Text(
-          'Manage Categories For Outfits',
+        title: Text(
+          loc.manageOutfitCategoriesTitle,
           style: TextStyle(
             color: Colors.black,
             fontSize: 16,
@@ -48,13 +50,7 @@ class _ManageOutfitCategoriesView extends StatelessWidget {
           ),
         ),
       ),
-      body: const Column(
-        children: [
-          AddOutfitCategoryRow(),
-          OutfitCategoriesList(),
-          BottomInfoText(),
-        ],
-      ),
+      body: const Column(children: [AddOutfitCategoryRow(), OutfitCategoriesList(), BottomInfoText()]),
     );
   }
 }

@@ -1,6 +1,7 @@
 // lib/edit_item_details_screen/widgets/edit_item_name_field.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:vestium/l10n/app_localizations.dart';
 import '../cubit/edit_item_details_cubit.dart';
 import '../cubit/edit_item_details_state.dart';
 
@@ -31,19 +32,20 @@ class _EditItemNameFieldState extends State<EditItemNameField> {
     return BlocBuilder<EditItemDetailsCubit, EditItemDetailsState>(
       buildWhen: (previous, current) => previous.name != current.name,
       builder: (context, state) {
+        final loc = AppLocalizations.of(context)!;
         if (_controller.text != state.name) {
           _controller.value = TextEditingValue(
             text: state.name,
             selection: TextSelection.collapsed(offset: state.name.length),
           );
         }
-        
+
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              'Item Name',
-              style: TextStyle(
+            Text(
+              loc.editItemDetailsItemName,
+              style: const TextStyle(
                 fontFamily: 'CormorantGaramond',
                 fontSize: 16,
                 fontWeight: FontWeight.w400,
@@ -63,8 +65,7 @@ class _EditItemNameFieldState extends State<EditItemNameField> {
               ),
               child: TextField(
                 controller: _controller,
-                onChanged: (value) =>
-                    context.read<EditItemDetailsCubit>().updateName(value),
+                onChanged: (value) => context.read<EditItemDetailsCubit>().updateName(value),
                 style: const TextStyle(
                   fontFamily: 'Inter',
                   fontSize: 15,
@@ -72,7 +73,7 @@ class _EditItemNameFieldState extends State<EditItemNameField> {
                   color: Color(0xFF3E2723),
                 ),
                 decoration: InputDecoration(
-                  hintText: 'Enter item name',
+                  hintText: loc.editItemDetailsItemNameHint,
                   hintStyle: TextStyle(
                     fontFamily: 'Inter',
                     fontSize: 15,
@@ -80,10 +81,7 @@ class _EditItemNameFieldState extends State<EditItemNameField> {
                     color: const Color(0xFF795548).withValues(alpha: .5),
                   ),
                   border: InputBorder.none,
-                  contentPadding: const EdgeInsets.symmetric(
-                    horizontal: 20,
-                    vertical: 16,
-                  ),
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
                 ),
               ),
             ),

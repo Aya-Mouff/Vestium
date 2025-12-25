@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:vestium/l10n/app_localizations.dart';
 import '../cubit/edit_item_cubit.dart';
 
 class EditButtons extends StatelessWidget {
@@ -29,30 +30,20 @@ class _CropButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<EditItemCubit, EditItemState>(
       builder: (context, state) {
+        final loc = AppLocalizations.of(context)!;
         final isCropping = state.isCropping;
         return ElevatedButton.icon(
           onPressed: () => _handleCropPressed(context, isCropping),
           icon: Icon(isCropping ? Icons.check : Icons.crop_rotate, size: 20),
           label: Text(
-            isCropping ? 'Done' : 'Crop',
-            style: const TextStyle(
-              fontFamily: 'Inter',
-              fontSize: 15,
-              fontWeight: FontWeight.w200,
-              letterSpacing: 0.2,
-            ),
+            isCropping ? loc.editItemDoneButton : loc.editItemCropButton,
+            style: const TextStyle(fontFamily: 'Inter', fontSize: 15, fontWeight: FontWeight.w200, letterSpacing: 0.2),
           ),
           style: ElevatedButton.styleFrom(
-            backgroundColor: isCropping
-                ? const Color(0xFF795548)
-                : const Color(0xFFD7CCC8),
-            foregroundColor: isCropping
-                ? const Color(0xFFFFFFFF)
-                : const Color(0xFF795548),
+            backgroundColor: isCropping ? const Color(0xFF795548) : const Color(0xFFD7CCC8),
+            foregroundColor: isCropping ? const Color(0xFFFFFFFF) : const Color(0xFF795548),
             padding: const EdgeInsets.symmetric(vertical: 16),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(16),
-            ),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
             elevation: 0,
           ),
         );
@@ -85,32 +76,29 @@ class _RemoveBgButton extends StatelessWidget {
     return BlocBuilder<EditItemCubit, EditItemState>(
       builder: (context, state) {
         return ElevatedButton.icon(
-          onPressed: state.isCropping
-              ? null
-              : () => _removeBackground(context), // FIXED: Pass context
+          onPressed: state.isCropping ? null : () => _removeBackground(context), // FIXED: Pass context
           icon: const Icon(Icons.auto_fix_high, size: 20),
-          label: const Text(
-            'Remove BG',
-            style: TextStyle(
-              fontFamily: 'Inter',
-              fontSize: 15,
-              fontWeight: FontWeight.w200,
-              letterSpacing: 0.2,
-            ),
+          label: Builder(
+            builder: (context) {
+              final loc = AppLocalizations.of(context)!;
+              return Text(
+                loc.editItemRemoveBgButton,
+                style: const TextStyle(
+                  fontFamily: 'Inter',
+                  fontSize: 15,
+                  fontWeight: FontWeight.w200,
+                  letterSpacing: 0.2,
+                ),
+              );
+            },
           ),
           style: ElevatedButton.styleFrom(
             backgroundColor: const Color(0xFF795548),
             foregroundColor: const Color(0xFFFFFFFF),
-            disabledBackgroundColor: const Color(
-              0xFF795548,
-            ).withAlpha(128), // 0.5 * 255
-            disabledForegroundColor: const Color(
-              0xFFFFFFFF,
-            ).withAlpha(179), // 0.7 * 255
+            disabledBackgroundColor: const Color(0xFF795548).withAlpha(128), // 0.5 * 255
+            disabledForegroundColor: const Color(0xFFFFFFFF).withAlpha(179), // 0.7 * 255
             padding: const EdgeInsets.symmetric(vertical: 16),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(16),
-            ),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
             elevation: 0,
           ),
         );

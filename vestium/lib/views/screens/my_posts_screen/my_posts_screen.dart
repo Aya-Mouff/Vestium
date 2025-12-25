@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:vestium/l10n/app_localizations.dart';
 import 'cubit/my_posts_screen_cubit.dart';
 import 'cubit/my_posts_screen_state.dart';
 import 'widgets/post_card.dart';
@@ -11,10 +12,7 @@ import '../../widgets/nav_bar.dart';
 class MyPostsScreen extends StatelessWidget {
   final String postId;
 
-  const MyPostsScreen({
-    super.key,
-    @PathParam('postId') required this.postId,
-  });
+  const MyPostsScreen({super.key, @PathParam('postId') required this.postId});
 
   @override
   Widget build(BuildContext context) {
@@ -47,18 +45,14 @@ class _MyPostsScreenContentState extends State<_MyPostsScreenContent> {
       backgroundColor: const Color(0xFFF5ECE7),
       extendBody: true,
       appBar: _buildAppBar(),
-      body: BlocConsumer<MyPostsScreenCubit, MyPostsScreenState>(
-        listener: _stateListener,
-        builder: _stateBuilder,
-      ),
-      bottomNavigationBar: const CustomNavBar(
-        currentPage: 'profile',
-        userId: 1,
-      ),
+      body: BlocConsumer<MyPostsScreenCubit, MyPostsScreenState>(listener: _stateListener, builder: _stateBuilder),
+      bottomNavigationBar: const CustomNavBar(currentPage: 'profile', userId: 1),
     );
   }
 
   PreferredSizeWidget _buildAppBar() {
+    final loc = AppLocalizations.of(context)!;
+
     return AppBar(
       backgroundColor: Colors.white,
       elevation: 0,
@@ -66,9 +60,9 @@ class _MyPostsScreenContentState extends State<_MyPostsScreenContent> {
         icon: const Icon(Icons.arrow_back, color: Colors.black87),
         onPressed: () => context.router.pop(),
       ),
-      title: const Text(
-        'Posts',
-        style: TextStyle(
+      title: Text(
+        loc.myPostsTitle,
+        style: const TextStyle(
           fontFamily: 'CormorantGaramond',
           fontSize: 20,
           fontWeight: FontWeight.w600,
@@ -81,7 +75,7 @@ class _MyPostsScreenContentState extends State<_MyPostsScreenContent> {
 
   void _stateListener(BuildContext context, MyPostsScreenState state) {
     final cubit = context.read<MyPostsScreenCubit>();
-    
+
     if (state is MyPostsLoaded) {
       if (cubit.shouldScrollToFocusedPost()) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -94,21 +88,14 @@ class _MyPostsScreenContentState extends State<_MyPostsScreenContent> {
 
     if (state is MyPostsError) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(state.message),
-          backgroundColor: Colors.red,
-          duration: const Duration(seconds: 2),
-        ),
+        SnackBar(content: Text(state.message), backgroundColor: Colors.red, duration: const Duration(seconds: 2)),
       );
     }
 
     if (state is MyPostsDeleted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(state.message),
-          duration: const Duration(seconds: 2),
-        ),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(state.message), duration: const Duration(seconds: 2)));
       // Navigate back after all posts deleted
       Future.delayed(const Duration(seconds: 2), () {
         if (context.mounted) {
@@ -139,9 +126,7 @@ class _MyPostsScreenContentState extends State<_MyPostsScreenContent> {
   }
 
   Widget _buildLoadingState() {
-    return const Center(
-      child: CircularProgressIndicator(),
-    );
+    return const Center(child: CircularProgressIndicator());
   }
 
   Widget _buildErrorState(String message) {
@@ -154,11 +139,7 @@ class _MyPostsScreenContentState extends State<_MyPostsScreenContent> {
           Text(
             message,
             textAlign: TextAlign.center,
-            style: TextStyle(
-              fontFamily: 'Inter',
-              fontSize: 16,
-              color: Colors.grey.shade600,
-            ),
+            style: TextStyle(fontFamily: 'Inter', fontSize: 16, color: Colors.grey.shade600),
           ),
         ],
       ),
@@ -166,6 +147,8 @@ class _MyPostsScreenContentState extends State<_MyPostsScreenContent> {
   }
 
   Widget _buildDeletedState() {
+    final loc = AppLocalizations.of(context)!;
+
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -173,13 +156,9 @@ class _MyPostsScreenContentState extends State<_MyPostsScreenContent> {
           Icon(Icons.check_circle_outline, size: 64, color: Colors.grey.shade400),
           const SizedBox(height: 16),
           Text(
-            'All posts have been deleted',
+            loc.myPostsAllDeleted,
             textAlign: TextAlign.center,
-            style: TextStyle(
-              fontFamily: 'Inter',
-              fontSize: 16,
-              color: Colors.grey.shade600,
-            ),
+            style: TextStyle(fontFamily: 'Inter', fontSize: 16, color: Colors.grey.shade600),
           ),
         ],
       ),
@@ -206,11 +185,7 @@ class _MyPostsScreenContentState extends State<_MyPostsScreenContent> {
     );
   }
 
-  void _showDeleteDialog(
-    BuildContext context,
-    String postId,
-    MyPostsScreenCubit cubit,
-  ) {
+  void _showDeleteDialog(BuildContext context, String postId, MyPostsScreenCubit cubit) {
     DeletePostDialog.show(
       context,
       onDeletePressed: () {

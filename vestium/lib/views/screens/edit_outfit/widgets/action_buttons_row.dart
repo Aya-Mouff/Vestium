@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:auto_route/auto_route.dart';
+import 'package:vestium/l10n/app_localizations.dart';
 import '../cubit/edit_outfit_cubit.dart';
 import '../cubit/edit_outfit_state.dart';
 import 'package:vestium/app_router.dart';
@@ -12,15 +13,12 @@ class ActionButtonsRow extends StatelessWidget {
   Future<void> _saveChanges(BuildContext context) async {
     final cubit = context.read<EditOutfitCubit>();
     final state = cubit.state;
+    final loc = AppLocalizations.of(context)!;
 
     // Validate name
     if (state.name.trim().isEmpty) {
       if (context.mounted) {
-        _showCustomSnackBar(
-          context,
-          'Please enter an outfit name',
-          const Color(0xFF795548),
-        );
+        _showCustomSnackBar(context, loc.editOutfitErrorName, const Color(0xFF795548));
       }
       return;
     }
@@ -28,11 +26,7 @@ class ActionButtonsRow extends StatelessWidget {
     // Validate categories
     if (state.selectedCategories.isEmpty) {
       if (context.mounted) {
-        _showCustomSnackBar(
-          context,
-          'Please select at least one category',
-          const Color(0xFF795548),
-        );
+        _showCustomSnackBar(context, loc.editOutfitErrorCategory, const Color(0xFF795548));
       }
       return;
     }
@@ -43,11 +37,7 @@ class ActionButtonsRow extends StatelessWidget {
 
       // Show success message
       if (context.mounted) {
-        _showCustomSnackBar(
-          context,
-          'Outfit updated successfully!',
-          const Color(0xFF795548),
-        );
+        _showCustomSnackBar(context, loc.editOutfitSuccessSave, const Color(0xFF795548));
       }
 
       // Navigate back after a short delay
@@ -57,11 +47,7 @@ class ActionButtonsRow extends StatelessWidget {
       }
     } catch (e) {
       if (context.mounted) {
-        _showCustomSnackBar(
-          context,
-          'Error saving outfit: ${e.toString()}',
-          Colors.red,
-        );
+        _showCustomSnackBar(context, loc.editOutfitErrorSave(e.toString()), Colors.red);
       }
     }
   }
@@ -74,12 +60,7 @@ class ActionButtonsRow extends StatelessWidget {
       SnackBar(
         content: Text(
           message,
-          style: const TextStyle(
-            fontFamily: 'Inter',
-            fontSize: 14,
-            fontWeight: FontWeight.w300,
-            color: Colors.white,
-          ),
+          style: const TextStyle(fontFamily: 'Inter', fontSize: 14, fontWeight: FontWeight.w300, color: Colors.white),
         ),
         backgroundColor: color,
         behavior: SnackBarBehavior.floating,
@@ -107,22 +88,19 @@ class ActionButtonsRow extends StatelessWidget {
     }
   }
 
-  Future<void> _showCannotDeleteDialog(
-    BuildContext context,
-    int postCount,
-  ) async {
+  Future<void> _showCannotDeleteDialog(BuildContext context, int postCount) async {
+    final loc = AppLocalizations.of(context)!;
+
     return showDialog(
       context: context,
       barrierDismissible: true,
       builder: (BuildContext dialogContext) {
-        final postText = postCount == 1 ? 'post' : 'posts';
-        final oneText = postCount == 1 ? 'one' : 'ones';
+        final postText = postCount == 1 ? loc.editOutfitPost : loc.editOutfitPosts;
+        final oneText = postCount == 1 ? loc.editOutfitOne : loc.editOutfitOnes;
 
         return Dialog(
           backgroundColor: Colors.white,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(24),
-          ),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
           child: Container(
             padding: const EdgeInsets.all(24),
             decoration: BoxDecoration(
@@ -135,9 +113,9 @@ class ActionButtonsRow extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // Title
-                const Text(
-                  'Cannot Delete Outfit',
-                  style: TextStyle(
+                Text(
+                  loc.editOutfitCannotDeleteTitle,
+                  style: const TextStyle(
                     fontFamily: 'CormorantGaramond',
                     fontSize: 24,
                     fontWeight: FontWeight.w500,
@@ -148,7 +126,7 @@ class ActionButtonsRow extends StatelessWidget {
 
                 // Content
                 Text(
-                  'This outfit is used in $postCount $postText.',
+                  loc.editOutfitCannotDeleteMessage(postCount, postText),
                   style: const TextStyle(
                     fontFamily: 'Inter',
                     fontSize: 15,
@@ -160,7 +138,7 @@ class ActionButtonsRow extends StatelessWidget {
                 const SizedBox(height: 12),
 
                 Text(
-                  'To delete this outfit, you must first delete the $postText that use it.',
+                  loc.editOutfitCannotDeleteInstruction(postText),
                   style: const TextStyle(
                     fontFamily: 'Inter',
                     fontSize: 15,
@@ -177,29 +155,20 @@ class ActionButtonsRow extends StatelessWidget {
                   decoration: BoxDecoration(
                     color: const Color(0xFFFFF3E0),
                     borderRadius: BorderRadius.circular(12),
-                    border: Border.all(
-                      color: const Color(0xFFFFB74D),
-                      width: 1,
-                    ),
+                    border: Border.all(color: const Color(0xFFFFB74D), width: 1),
                   ),
                   child: Row(
                     children: [
-                      Icon(
-                        Icons.info_outline_rounded,
-                        color: const Color(0xFFF57C00).withValues(alpha: .8),
-                        size: 20,
-                      ),
+                      Icon(Icons.info_outline_rounded, color: const Color(0xFFF57C00).withValues(alpha: .8), size: 20),
                       const SizedBox(width: 12),
                       Expanded(
                         child: Text(
-                          'Go to your posts and delete the $oneText using this outfit first.',
+                          loc.editOutfitCannotDeleteInfo(oneText),
                           style: TextStyle(
                             fontFamily: 'Inter',
                             fontSize: 13,
                             fontWeight: FontWeight.w300,
-                            color: const Color(
-                              0xFFF57C00,
-                            ).withValues(alpha: .9),
+                            color: const Color(0xFFF57C00).withValues(alpha: .9),
                             height: 1.4,
                           ),
                         ),
@@ -271,13 +240,8 @@ class ActionButtonsRow extends StatelessWidget {
                       child: TextButton(
                         onPressed: () => Navigator.of(dialogContext).pop(),
                         style: TextButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 16,
-                            vertical: 10,
-                          ), // Reduced padding
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
+                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10), // Reduced padding
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                         ),
                         child: const Text(
                           'Cancel',
@@ -303,17 +267,12 @@ class ActionButtonsRow extends StatelessWidget {
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFF795548),
                           foregroundColor: Colors.white,
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 12,
-                            vertical: 10,
-                          ), // Reduced padding
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
+                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10), // Reduced padding
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                           elevation: 0,
                         ),
-                        child: const Text(
-                          'Go to Posts',
+                        child: Text(
+                          loc.editOutfitGoToPostsButton,
                           style: TextStyle(
                             fontFamily: 'Inter',
                             fontSize: 14,
@@ -351,14 +310,11 @@ class ActionButtonsRow extends StatelessWidget {
 
     // Get current user ID directly from CurrentUserService
     final userId = CurrentUserService.currentUserId;
+    final loc = AppLocalizations.of(context)!;
 
     if (userId == null) {
       // User is not logged in
-      _showCustomSnackBar(
-        context,
-        'Please log in to view your profile',
-        const Color(0xFF795548),
-      );
+      _showCustomSnackBar(context, loc.editOutfitLoginRequired, const Color(0xFF795548));
       return;
     }
 
@@ -369,6 +325,7 @@ class ActionButtonsRow extends StatelessWidget {
   Future<void> _showDeleteConfirmation(BuildContext context) async {
     final cubit = context.read<EditOutfitCubit>();
     final outfitName = cubit.state.name;
+    final loc = AppLocalizations.of(context)!;
 
     return showDialog(
       context: context,
@@ -376,9 +333,7 @@ class ActionButtonsRow extends StatelessWidget {
       builder: (BuildContext dialogContext) {
         return Dialog(
           backgroundColor: Colors.white,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(24),
-          ),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
           child: Container(
             padding: const EdgeInsets.all(24),
             decoration: BoxDecoration(
@@ -391,9 +346,9 @@ class ActionButtonsRow extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // Title
-                const Text(
-                  'Delete Outfit',
-                  style: TextStyle(
+                Text(
+                  loc.editOutfitDeleteDialog,
+                  style: const TextStyle(
                     fontFamily: 'CormorantGaramond',
                     fontSize: 24,
                     fontWeight: FontWeight.w500,
@@ -404,7 +359,7 @@ class ActionButtonsRow extends StatelessWidget {
 
                 // Content
                 Text(
-                  'Are you sure you want to delete "$outfitName"?',
+                  loc.editOutfitDeleteMessage(outfitName),
                   style: const TextStyle(
                     fontFamily: 'Inter',
                     fontSize: 15,
@@ -415,14 +370,9 @@ class ActionButtonsRow extends StatelessWidget {
                 ),
                 const SizedBox(height: 8),
 
-                const Text(
-                  'This action cannot be undone.',
-                  style: TextStyle(
-                    fontFamily: 'Inter',
-                    fontSize: 14,
-                    fontWeight: FontWeight.w300,
-                    color: Colors.red,
-                  ),
+                Text(
+                  loc.editOutfitDeleteWarning,
+                  style: TextStyle(fontFamily: 'Inter', fontSize: 14, fontWeight: FontWeight.w300, color: Colors.red),
                 ),
                 const SizedBox(height: 24),
 
@@ -434,13 +384,8 @@ class ActionButtonsRow extends StatelessWidget {
                     TextButton(
                       onPressed: () => Navigator.of(dialogContext).pop(),
                       style: TextButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 20,
-                          vertical: 10,
-                        ),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
+                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                       ),
                       child: const Text(
                         'Cancel',
@@ -465,17 +410,12 @@ class ActionButtonsRow extends StatelessWidget {
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.red,
                         foregroundColor: Colors.white,
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 24,
-                          vertical: 10,
-                        ),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
+                        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 10),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                         elevation: 0,
                       ),
-                      child: const Text(
-                        'Delete',
+                      child: Text(
+                        loc.editOutfitCancelButton,
                         style: TextStyle(
                           fontFamily: 'Inter',
                           fontSize: 14,
@@ -494,10 +434,7 @@ class ActionButtonsRow extends StatelessWidget {
     );
   }
 
-  Future<void> _deleteOutfit(
-    BuildContext context,
-    EditOutfitCubit cubit,
-  ) async {
+  Future<void> _deleteOutfit(BuildContext context, EditOutfitCubit cubit) async {
     try {
       print('🗑️ Starting outfit deletion from UI...');
 
@@ -508,31 +445,17 @@ class ActionButtonsRow extends StatelessWidget {
         SnackBar(
           content: Row(
             children: const [
-              SizedBox(
-                width: 20,
-                height: 20,
-                child: CircularProgressIndicator(
-                  color: Colors.white,
-                  strokeWidth: 2,
-                ),
-              ),
+              SizedBox(width: 20, height: 20, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2)),
               SizedBox(width: 16),
               Text(
                 'Deleting outfit...',
-                style: TextStyle(
-                  fontFamily: 'Inter',
-                  fontSize: 14,
-                  fontWeight: FontWeight.w300,
-                  color: Colors.white,
-                ),
+                style: TextStyle(fontFamily: 'Inter', fontSize: 14, fontWeight: FontWeight.w300, color: Colors.white),
               ),
             ],
           ),
           backgroundColor: Colors.red,
           behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           duration: const Duration(seconds: 5),
         ),
       );
@@ -544,12 +467,9 @@ class ActionButtonsRow extends StatelessWidget {
 
       // Show success message
       if (context.mounted) {
+        final loc = AppLocalizations.of(context)!;
         ScaffoldMessenger.of(context).clearSnackBars();
-        _showCustomSnackBar(
-          context,
-          'Outfit deleted successfully!',
-          Colors.green,
-        );
+        _showCustomSnackBar(context, loc.editOutfitDeleteSuccess, Colors.green);
       }
 
       // Navigate back after deletion
@@ -563,18 +483,17 @@ class ActionButtonsRow extends StatelessWidget {
       print('Stack trace: $stackTrace');
 
       if (context.mounted) {
+        final loc = AppLocalizations.of(context)!;
         ScaffoldMessenger.of(context).clearSnackBars();
-        _showCustomSnackBar(
-          context,
-          'Error deleting outfit: ${e.toString()}',
-          Colors.red,
-        );
+        _showCustomSnackBar(context, loc.editOutfitDeleteError(e.toString()), Colors.red);
       }
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
+
     return Column(
       children: [
         // Warning message if outfit has posts
@@ -584,7 +503,7 @@ class ActionButtonsRow extends StatelessWidget {
             final hasPosts = state.outfit?['hasPosts'] ?? false;
 
             if (hasPosts) {
-              final postText = postCount == 1 ? 'post' : 'posts';
+              final postText = postCount == 1 ? loc.editOutfitPost : loc.editOutfitPosts;
 
               return Container(
                 margin: const EdgeInsets.only(bottom: 16),
@@ -597,37 +516,29 @@ class ActionButtonsRow extends StatelessWidget {
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Icon(
-                      Icons.warning_amber_rounded,
-                      color: const Color(0xFFF57C00).withValues(alpha: .8),
-                      size: 20,
-                    ),
+                    Icon(Icons.warning_amber_rounded, color: const Color(0xFFF57C00).withValues(alpha: .8), size: 20),
                     const SizedBox(width: 12),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'This outfit is used in $postCount $postText',
+                            loc.editOutfitWarningUsed(postCount, postText),
                             style: TextStyle(
                               fontFamily: 'Inter',
                               fontSize: 14,
                               fontWeight: FontWeight.w400,
-                              color: const Color(
-                                0xFFF57C00,
-                              ).withValues(alpha: .9),
+                              color: const Color(0xFFF57C00).withValues(alpha: .9),
                             ),
                           ),
                           const SizedBox(height: 4),
                           Text(
-                            'Delete the $postText first to delete this outfit',
+                            loc.editOutfitWarningDeleteFirst(postText),
                             style: TextStyle(
                               fontFamily: 'Inter',
                               fontSize: 13,
                               fontWeight: FontWeight.w300,
-                              color: const Color(
-                                0xFFF57C00,
-                              ).withValues(alpha: .8),
+                              color: const Color(0xFFF57C00).withValues(alpha: .8),
                               height: 1.3,
                             ),
                           ),
@@ -646,10 +557,7 @@ class ActionButtonsRow extends StatelessWidget {
         Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(16),
-            border: Border.all(
-              color: Colors.red.withValues(alpha: .3),
-              width: 1,
-            ),
+            border: Border.all(color: Colors.red.withValues(alpha: .3), width: 1),
             color: Colors.red.withValues(alpha: .05),
           ),
           child: Material(
@@ -659,21 +567,14 @@ class ActionButtonsRow extends StatelessWidget {
               borderRadius: BorderRadius.circular(16),
               child: Container(
                 width: double.infinity,
-                padding: const EdgeInsets.symmetric(
-                  vertical: 14,
-                  horizontal: 16,
-                ),
+                padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(
-                      Icons.delete_outline,
-                      color: Colors.red.withValues(alpha: .9),
-                      size: 20,
-                    ),
+                    Icon(Icons.delete_outline, color: Colors.red.withValues(alpha: .9), size: 20),
                     const SizedBox(width: 8),
-                    const Text(
-                      'Delete Outfit',
+                    Text(
+                      loc.editOutfitDeleteButton,
                       style: TextStyle(
                         fontFamily: 'Inter',
                         fontSize: 15,
@@ -742,14 +643,10 @@ class ActionButtonsRow extends StatelessWidget {
                       ],
                     ),
                     child: Material(
-                      color: state.isLoading
-                          ? const Color(0xFF795548).withValues(alpha: .5)
-                          : const Color(0xFF795548),
+                      color: state.isLoading ? const Color(0xFF795548).withValues(alpha: .5) : const Color(0xFF795548),
                       borderRadius: BorderRadius.circular(16),
                       child: InkWell(
-                        onTap: state.isLoading
-                            ? null
-                            : () => _saveChanges(context),
+                        onTap: state.isLoading ? null : () => _saveChanges(context),
                         borderRadius: BorderRadius.circular(16),
                         child: Container(
                           padding: const EdgeInsets.symmetric(vertical: 16),
@@ -758,13 +655,10 @@ class ActionButtonsRow extends StatelessWidget {
                                 ? const SizedBox(
                                     height: 20,
                                     width: 20,
-                                    child: CircularProgressIndicator(
-                                      color: Colors.white,
-                                      strokeWidth: 2,
-                                    ),
+                                    child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
                                   )
-                                : const Text(
-                                    'Save Changes',
+                                : Text(
+                                    loc.editOutfitSaveButton,
                                     style: TextStyle(
                                       fontFamily: 'Inter',
                                       fontSize: 15,

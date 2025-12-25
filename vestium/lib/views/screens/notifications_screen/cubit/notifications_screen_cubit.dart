@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:vestium/l10n/app_localizations.dart';
 import 'notifications_screen_state.dart';
 import '../../../../repo/like_repo.dart';
 import '../../../../repo/comment_repo.dart';
@@ -21,7 +22,7 @@ class NotificationsCubit extends Cubit<NotificationsState> {
 
   Future<void> loadNotifications(int userId) async {
     if (userId == -1) return;
-    
+
     try {
       emit(NotificationsLoading());
 
@@ -36,7 +37,8 @@ class NotificationsCubit extends Cubit<NotificationsState> {
         if (post.postId != null) {
           final likes = await _likeRepo.getByPostId(post.postId!);
           for (final like in likes) {
-            if (like.userId != userId) { // Don't show self-likes
+            if (like.userId != userId) {
+              // Don't show self-likes
               final notification = await _createLikeNotification(like, post);
               if (notification != null) {
                 allNotifications.add(notification);
@@ -51,7 +53,8 @@ class NotificationsCubit extends Cubit<NotificationsState> {
         if (post.postId != null) {
           final comments = await _commentRepo.getByPostId(post.postId!);
           for (final comment in comments) {
-            if (comment.userId != userId) { // Don't show self-comments
+            if (comment.userId != userId) {
+              // Don't show self-comments
               final notification = await _createCommentNotification(comment, post);
               if (notification != null) {
                 allNotifications.add(notification);
@@ -64,9 +67,10 @@ class NotificationsCubit extends Cubit<NotificationsState> {
       // 4. Fetch follows (people who followed the user)
       final allFollows = await _followRepo.getAll();
       final userFollowers = allFollows.where((f) => f.followingId == userId).toList();
-      
+
       for (final follow in userFollowers) {
-        if (follow.followerId != userId) { // Don't show self-follows
+        if (follow.followerId != userId) {
+          // Don't show self-follows
           final notification = await _createFollowNotification(follow);
           if (notification != null) {
             allNotifications.add(notification);
@@ -85,7 +89,7 @@ class NotificationsCubit extends Cubit<NotificationsState> {
       emit(NotificationsLoaded(allNotifications));
     } catch (e) {
       print('Error loading notifications: $e');
-      emit(NotificationsError('Failed to load notifications'));
+      emit(NotificationsError('Failed to load notifications')); // Error message will be localized in UI
     }
   }
 
@@ -158,34 +162,34 @@ class NotificationsCubit extends Cubit<NotificationsState> {
       if (pfpPath.startsWith('assets/')) {
         return pfpPath;
       }
-      
+
       final file = File(pfpPath);
       final fileExists = await file.exists();
       if (fileExists) {
         return pfpPath;
       }
     }
-    
+
     final userProfilePath = await UserProfileService.getUserProfileImagePath(userId);
     if (userProfilePath != null) {
       return userProfilePath;
     }
-    
+
     return 'assets/images/icons/person.jpg';
   }
 
-  String getTimeAgo(String createdAt) {
+  String getTimeAgo(String createdAt, AppLocalizations loc) {
     try {
       final dateTime = DateTime.parse(createdAt);
       final now = DateTime.now();
       final difference = now.difference(dateTime);
 
-      if (difference.inDays > 0) return '${difference.inDays}d ago';
-      if (difference.inHours > 0) return '${difference.inHours}h ago';
-      if (difference.inMinutes > 0) return '${difference.inMinutes}m ago';
-      return 'Just now';
+      if (difference.inDays > 0) return loc.notificationsDaysAgo(difference.inDays);
+      if (difference.inHours > 0) return loc.notificationsHoursAgo(difference.inHours);
+      if (difference.inMinutes > 0) return loc.notificationsMinutesAgo(difference.inMinutes);
+      return loc.notificationsJustNow;
     } catch (e) {
-      return 'Recently';
+      return loc.notificationsRecently;
     }
   }
 
@@ -217,7 +221,7 @@ class NotificationsCubit extends Cubit<NotificationsState> {
 
   Future<String> getPostImage(String? postId) async {
     if (postId == null) return 'assets/images/placeholder_post.png';
-    
+
     try {
       final postIdInt = int.tryParse(postId);
       if (postIdInt != null) {
@@ -230,23 +234,23 @@ class NotificationsCubit extends Cubit<NotificationsState> {
     } catch (e) {
       print('Error getting post image: $e');
     }
-    
+
     return 'assets/images/placeholder_post.png';
   }
 
-  String getNotificationText(String type, {String? commentText}) {
+  String getNotificationText(String type, AppLocalizations loc, {String? commentText}) {
     switch (type) {
       case 'like':
-        return ' liked your outfit';
+        return loc.notificationsLiked;
       case 'comment':
-        final trimmedText = commentText != null && commentText.length > 30 
-            ? '${commentText.substring(0, 30)}...' 
+        final trimmedText = commentText != null && commentText.length > 30
+            ? '${commentText.substring(0, 30)}...'
             : commentText ?? '';
-        return ' commented: "$trimmedText"';
+        return loc.notificationsCommented(trimmedText);
       case 'follow':
-        return ' started following you';
+        return loc.notificationsFollowed;
       default:
-        return ' interacted with your content';
+        return loc.notificationsInteracted;
     }
   }
 

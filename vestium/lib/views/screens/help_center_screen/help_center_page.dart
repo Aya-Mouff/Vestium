@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:vestium/l10n/app_localizations.dart';
 import 'cubit/help_center_cubit.dart';
 import 'widgets/faq_item_widget.dart';
 
@@ -10,10 +11,7 @@ class HelpCenterScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => HelpCenterCubit()..loadFAQs(),
-      child: const _HelpCenterPage(),
-    );
+    return BlocProvider(create: (_) => HelpCenterCubit()..loadFAQs(), child: const _HelpCenterPage());
   }
 }
 
@@ -22,6 +20,8 @@ class _HelpCenterPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
+
     return Scaffold(
       backgroundColor: const Color(0xFFF5ECE7),
       appBar: AppBar(
@@ -31,9 +31,9 @@ class _HelpCenterPage extends StatelessWidget {
           icon: const Icon(Icons.arrow_back, color: Color(0xFF2C2C2C)),
           onPressed: () => Navigator.pop(context),
         ),
-        title: const Text(
-          'Help Center',
-          style: TextStyle(
+        title: Text(
+          loc.helpCenterTitle,
+          style: const TextStyle(
             fontFamily: 'CormorantGaramond',
             fontSize: 18,
             fontWeight: FontWeight.w600,
@@ -56,11 +56,7 @@ class _HelpCenterPage extends StatelessWidget {
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(12),
                   boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.05),
-                      blurRadius: 8,
-                      offset: const Offset(0, 2),
-                    ),
+                    BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 8, offset: const Offset(0, 2)),
                   ],
                 ),
                 child: Column(
@@ -68,20 +64,13 @@ class _HelpCenterPage extends StatelessWidget {
                     Container(
                       width: 60,
                       height: 60,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: const Color(0xFFF0EBE6),
-                      ),
-                      child: const Icon(
-                        Icons.mail_outline,
-                        color: Color(0xFFA1887F),
-                        size: 28,
-                      ),
+                      decoration: BoxDecoration(shape: BoxShape.circle, color: const Color(0xFFF0EBE6)),
+                      child: const Icon(Icons.mail_outline, color: Color(0xFFA1887F), size: 28),
                     ),
                     const SizedBox(height: 12),
-                    const Text(
-                      'Email Us',
-                      style: TextStyle(
+                    Text(
+                      loc.helpCenterEmailUs,
+                      style: const TextStyle(
                         fontFamily: 'CormorantGaramond',
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
@@ -95,9 +84,9 @@ class _HelpCenterPage extends StatelessWidget {
               // FAQ Section Title
               Align(
                 alignment: Alignment.centerLeft,
-                child: const Text(
-                  'Frequently Asked Questions',
-                  style: TextStyle(
+                child: Text(
+                  loc.helpCenterFAQTitle,
+                  style: const TextStyle(
                     fontFamily: 'CormorantGaramond',
                     fontSize: 16,
                     fontWeight: FontWeight.w600,

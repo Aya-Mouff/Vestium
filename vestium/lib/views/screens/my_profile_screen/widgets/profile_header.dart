@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vestium/l10n/app_localizations.dart';
 import 'dart:io';
 
 class ProfileHeader extends StatelessWidget {
@@ -7,8 +8,9 @@ class ProfileHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final fullName = currentUser['fullName'] as String? ?? 'Unknown User';
-    final bio = currentUser['bio'] as String? ?? 'No bio';
+    final loc = AppLocalizations.of(context)!;
+    final fullName = currentUser['fullName'] as String? ?? loc.myProfileUnknownUser;
+    final bio = currentUser['bio'] as String? ?? loc.myProfileNoBio;
     final profileImage = currentUser['pfp'] as String? ?? 'assets/images/icons/person.jpg';
 
     return Column(
@@ -17,10 +19,8 @@ class ProfileHeader extends StatelessWidget {
         const SizedBox(height: 12),
         Text(
           fullName,
-          style: const TextStyle(fontFamily: 'CormorantGaramond',
-            fontSize: 18,
-            fontWeight: FontWeight.w600,),
-          ),
+          style: const TextStyle(fontFamily: 'CormorantGaramond', fontSize: 18, fontWeight: FontWeight.w600),
+        ),
         const SizedBox(height: 4),
         Text(
           bio,

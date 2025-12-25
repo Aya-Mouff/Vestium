@@ -1,6 +1,7 @@
 // lib/edit_item_details_screen/widgets/edit_item_description_field.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:vestium/l10n/app_localizations.dart';
 import '../cubit/edit_item_details_cubit.dart';
 import '../cubit/edit_item_details_state.dart';
 
@@ -31,19 +32,20 @@ class _EditItemDescriptionFieldState extends State<EditItemDescriptionField> {
     return BlocBuilder<EditItemDetailsCubit, EditItemDetailsState>(
       buildWhen: (previous, current) => previous.description != current.description,
       builder: (context, state) {
+        final loc = AppLocalizations.of(context)!;
         if (_controller.text != state.description) {
           _controller.value = TextEditingValue(
             text: state.description,
             selection: TextSelection.collapsed(offset: state.description.length),
           );
         }
-        
+
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              'Description (optional)',
-              style: TextStyle(
+            Text(
+              loc.editItemDetailsDescription,
+              style: const TextStyle(
                 fontFamily: 'CormorantGaramond',
                 fontSize: 16,
                 fontWeight: FontWeight.w400,
@@ -63,8 +65,7 @@ class _EditItemDescriptionFieldState extends State<EditItemDescriptionField> {
               ),
               child: TextField(
                 controller: _controller,
-                onChanged: (value) =>
-                    context.read<EditItemDetailsCubit>().updateDescription(value),
+                onChanged: (value) => context.read<EditItemDetailsCubit>().updateDescription(value),
                 maxLines: 3,
                 style: const TextStyle(
                   fontFamily: 'Inter',
@@ -73,7 +74,7 @@ class _EditItemDescriptionFieldState extends State<EditItemDescriptionField> {
                   color: Color(0xFF3E2723),
                 ),
                 decoration: InputDecoration(
-                  hintText: 'Add description...',
+                  hintText: loc.editItemDetailsDescriptionHint,
                   hintStyle: TextStyle(
                     fontFamily: 'Inter',
                     fontSize: 15,
@@ -81,10 +82,7 @@ class _EditItemDescriptionFieldState extends State<EditItemDescriptionField> {
                     color: const Color(0xFF795548).withValues(alpha: .5),
                   ),
                   border: InputBorder.none,
-                  contentPadding: const EdgeInsets.symmetric(
-                    horizontal: 20,
-                    vertical: 16,
-                  ),
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
                 ),
               ),
             ),

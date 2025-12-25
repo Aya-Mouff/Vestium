@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:vestium/l10n/app_localizations.dart';
 import 'dart:io';
 import '../../../../app_router.dart';
 import '../cubit/posts_details_screen_cubit.dart';
@@ -28,12 +29,7 @@ class PostCard extends StatelessWidget {
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.5),
-            spreadRadius: 2,
-            blurRadius: 5,
-            offset: const Offset(3, 3),
-          ),
+          BoxShadow(color: Colors.grey.withOpacity(0.5), spreadRadius: 2, blurRadius: 5, offset: const Offset(3, 3)),
         ],
       ),
       child: Column(
@@ -46,31 +42,22 @@ class PostCard extends StatelessWidget {
               children: [
                 GestureDetector(
                   onTap: () {
-                    context.router.push(UserProfileRoute(
-                      userId: int.parse(post['userId'].toString()),
-                      currentUserId: currentUserId,
-                    ));
+                    context.router.push(
+                      UserProfileRoute(userId: int.parse(post['userId'].toString()), currentUserId: currentUserId),
+                    );
                   },
-                  child: CircleAvatar(
-                    radius: 18,
-                    backgroundImage: _getProfileImage(post['profileImage']),
-                  ),
+                  child: CircleAvatar(radius: 18, backgroundImage: _getProfileImage(post['profileImage'])),
                 ),
                 const SizedBox(width: 12),
                 GestureDetector(
                   onTap: () {
-                    context.router.push(UserProfileRoute(
-                      userId: int.parse(post['userId'].toString()),
-                      currentUserId: currentUserId,
-                    ));
+                    context.router.push(
+                      UserProfileRoute(userId: int.parse(post['userId'].toString()), currentUserId: currentUserId),
+                    );
                   },
                   child: Text(
                     post['username'],
-                    style: const TextStyle(
-                      fontFamily: 'CormorantGaramond',
-                      fontWeight: FontWeight.bold,
-                      fontSize: 14,
-                    ),
+                    style: const TextStyle(fontFamily: 'CormorantGaramond', fontWeight: FontWeight.bold, fontSize: 14),
                   ),
                 ),
               ],
@@ -79,10 +66,7 @@ class PostCard extends StatelessWidget {
 
           // Post image
           ClipRRect(
-            borderRadius: const BorderRadius.only(
-              topLeft: Radius.circular(0),
-              topRight: Radius.circular(0),
-            ),
+            borderRadius: const BorderRadius.only(topLeft: Radius.circular(0), topRight: Radius.circular(0)),
             child: _buildPostImage(post['imageUrl']),
           ),
 
@@ -106,6 +90,7 @@ class PostCard extends StatelessWidget {
                         return false;
                       },
                       builder: (context, isLiked) {
+                        final loc = AppLocalizations.of(context)!;
                         return IconButton(
                           icon: isLiked
                               ? const Icon(Icons.favorite, size: 24, color: Colors.red)
@@ -113,8 +98,8 @@ class PostCard extends StatelessWidget {
                           onPressed: () {
                             if (currentUserId == -1) {
                               ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text('You must be logged in to like posts!'),
+                                SnackBar(
+                                  content: Text(loc.postsDetailsMustLoginToLike),
                                   duration: Duration(seconds: 2),
                                 ),
                               );
@@ -132,10 +117,9 @@ class PostCard extends StatelessWidget {
                     IconButton(
                       icon: const Icon(Icons.mode_comment_outlined, size: 24),
                       onPressed: () {
-                        context.router.push(CommentsRoute(
-                          postId: int.parse(post['id'].toString()),
-                          userId: currentUserId,
-                        ));
+                        context.router.push(
+                          CommentsRoute(postId: int.parse(post['id'].toString()), userId: currentUserId),
+                        );
                       },
                       padding: EdgeInsets.zero,
                       constraints: const BoxConstraints(),
@@ -154,46 +138,46 @@ class PostCard extends StatelessWidget {
                     return post['likesCount'] as int;
                   },
                   builder: (context, likesCount) {
-                    return Text('$likesCount likes',
-                        style: const TextStyle(
-                            fontFamily: 'Inter',
-                            fontWeight: FontWeight.w600,
-                            fontSize: 13));
+                    final loc = AppLocalizations.of(context)!;
+                    return Text(
+                      loc.postsDetailsLikesCount(likesCount),
+                      style: const TextStyle(fontFamily: 'Inter', fontWeight: FontWeight.w600, fontSize: 13),
+                    );
                   },
                 ),
 
                 const SizedBox(height: 4),
                 post['caption'] != ''
-                ? RichText(
-                  text: TextSpan(
-                    children: [
-                      TextSpan(
-                          text: post['caption'],
-                          style: const TextStyle(
-                              fontFamily: 'Inter',
-                              fontWeight: FontWeight.w400,
-                              fontSize: 13,
-                              color: Colors.black)),
-                    ],
-                  ),
-                )
-                : const SizedBox.shrink(),
+                    ? RichText(
+                        text: TextSpan(
+                          children: [
+                            TextSpan(
+                              text: post['caption'],
+                              style: const TextStyle(
+                                fontFamily: 'Inter',
+                                fontWeight: FontWeight.w400,
+                                fontSize: 13,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
+                    : const SizedBox.shrink(),
 
                 const SizedBox(height: 8),
                 GestureDetector(
                   onTap: () {
-                    context.router.push(CommentsRoute(
-                      postId: int.parse(post['id'].toString()),
-                      userId: currentUserId,
-                    ));
+                    context.router.push(CommentsRoute(postId: int.parse(post['id'].toString()), userId: currentUserId));
                   },
-                  child: Text(
-                    'View all ${post['commentsCount']} comments',
-                    style: TextStyle(
-                      fontFamily: 'Inter',
-                      fontSize: 13,
-                      color: Colors.grey.shade600,
-                    ),
+                  child: Builder(
+                    builder: (context) {
+                      final loc = AppLocalizations.of(context)!;
+                      return Text(
+                        loc.postsDetailsViewAllComments(post['commentsCount']),
+                        style: TextStyle(fontFamily: 'Inter', fontSize: 13, color: Colors.grey.shade600),
+                      );
+                    },
                   ),
                 ),
               ],
@@ -252,7 +236,7 @@ class PostCard extends StatelessWidget {
               child: const Center(child: CircularProgressIndicator()),
             );
           }
-          
+
           if (snapshot.data == true) {
             return Image.file(
               File(imageUrl),
@@ -270,6 +254,7 @@ class PostCard extends StatelessWidget {
             );
           } else {
             // File doesn't exist, show default
+            final loc = AppLocalizations.of(context)!;
             return Container(
               width: double.infinity,
               height: 400,
@@ -279,10 +264,7 @@ class PostCard extends StatelessWidget {
                 children: [
                   const Icon(Icons.image_not_supported, size: 50, color: Colors.grey),
                   const SizedBox(height: 8),
-                  Text(
-                    'Image not found',
-                    style: TextStyle(color: Colors.grey[600]),
-                  ),
+                  Text(loc.postsDetailsImageNotFound, style: TextStyle(color: Colors.grey[600])),
                 ],
               ),
             );

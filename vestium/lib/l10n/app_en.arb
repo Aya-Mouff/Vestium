@@ -1,0 +1,584 @@
+{
+  "@@locale": "en",
+  "appTitle": "Vestium",
+  "splashSubtitle": "Your personal virtual wardrobe.",
+  "splashDescription": "Organize your style, create outfits, and\nshare your fashion journey.",
+  "splashCheckingAuth": "Checking authentication...",
+  "splashSignUp": "Sign Up",
+  "splashContinueAsGuest": "Continue as Guest",
+  "splashAlreadyHaveAccount": "Already have an account?",
+
+  "loginTitle": "Welcome Back",
+  "loginSubtitle": "Log in to continue your style journey",
+  "loginEmailRequired": "Please enter your email",
+  "loginEmailInvalid": "Please enter a valid email",
+  "loginPasswordRequired": "Please enter your password",
+  "loginForgotPassword": "Forgot Password?",
+  "loginButton": "Sign In",
+  "loginNoAccount": "Don't have an account? ",
+  "loginCreateAccount": "Create Account",
+  "loginWelcomeBackUser": "Welcome back, {userName}!",
+  
+  "loginEmailLabel": "Email",
+  "loginEmailHint": "you@example.com",
+  "loginPasswordLabel": "Password",
+  "loginPasswordHint": "••••••••",
+
+  "signupTitle": "Create Account",
+  "signupSubtitle": "Join Vestium and start your style journey",
+  "signupFullNameRequired": "Please enter your full name",
+  "signupFullNameTooShort": "Name must be at least 2 characters",
+  "signupEmailRequired": "Please enter your email",
+  "signupEmailInvalid": "Please enter a valid email",
+  "signupPasswordRequired": "Please enter a password",
+  "signupPasswordTooShort": "Password must be at least 6 characters",
+  "signupButton": "Create Account",
+  "signupHaveAccount": "Already have an account? ",
+  "signupSignIn": "Sign In",
+  "signupWelcomeUser": "Welcome {userName}!",
+  
+  "fieldEmailLabel": "Email",
+  "fieldEmailHint": "you@example.com",
+  "fieldFullNameLabel": "Full Name",
+  "fieldFullNameHint": "Your name",
+  "fieldPasswordLabel": "Password",
+  "fieldPasswordHint": "••••••••",
+
+  "homeAppTitle": "Vestium",
+  "homeRefreshFailed": "Refresh failed: {error}",
+  "homeLikeRequiresLogin": "You must be logged in to like posts!",
+  "homeLikesCount": "{count} likes",
+  "homeViewAllComments": "View all {count} comments",
+  "homeReachedEndOfFeed": "You've reached the end of your feed",
+  "homeRetryButton": "Retry",
+  "homeNoPostsYet": "No posts yet. Follow some users to see their posts!",
+  "homeFindUsersButton": "Find Users",
+  "homeSearchTabHint": "Go to the search tab to find users to follow!",
+  "homeNewPosts": "New posts",
+
+  "searchRecentHeader": "Recent",
+  "searchDeleteAll": "Delete all",
+  "searchDiscoverTitle": "Discover",
+  "searchPlaceholder": "Search users, outfits, tags...",
+  "searchFollowing": "Following",
+  "searchFollow": "Follow",
+  "searchNoResults": "No results found",
+  "searchTrySomethingElse": "Try searching for something else",
+
+  "newPostTitle": "New Post",
+  "newPostButton": "Post",
+  "captionPlaceholder": "Write a caption for your outfit...",
+  "outfitPickerEmpty": "Choose an Outfit",
+  "publicPostLabel": "Public Post",
+  "publicPostDescription": "Your post will be visible to all Vestium users",
+  
+  "selectOutfitTitle": "Select Outfit",
+  "selectOutfitContinue": "Continue",
+  "selectOutfitSavedOutfits": "Saved Outfits",
+  "selectOutfitGallery": "Gallery",
+  "selectOutfitNoOutfits": "No outfits yet",
+  "selectOutfitCreateFirst": "Create your first outfit to see it here.",
+  "galleryEmptyMessage": "Gallery will appear here once access is managed.",
+
+  "wardrobeMyWardrobe": "My Wardrobe",
+  "wardrobeAll": "All",
+  "wardrobeEmptyFull": "Your wardrobe is empty",
+  "wardrobeEmptyCategory": "No items in \"{category}\" category",
+  "wardrobeAddItem": "Tap the + button to add your first item",
+  "wardrobeErrorRetry": "Retry",
+  "wardrobeNoCategory": "No category",
+  "wardrobeUnnamedItem": "Unnamed Item",
+
+  "userProfileDefaultUser": "User",
+  "userProfileRetry": "Retry",
+  "userProfileFollowing": "Following",
+  "userProfileFollow": "Follow",
+  "userProfilePostsLabel": "Posts",
+  "userProfileFollowersLabel": "Followers",
+  "userProfileFollowingLabel": "Following",
+  "userProfileNoPostsYet": "No posts yet",
+
+  "myProfileUnknownUser": "Unknown User",
+  "myProfileNoBio": "No bio",
+  "myProfilePostsLabel": "Posts",
+  "myProfileOutfitsLabel": "Outfits",
+  "myProfileFollowersLabel": "Followers",
+  "myProfileFollowingLabel": "Following",
+  "myProfileNoPostsYet": "No posts yet",
+  "myProfileNoOutfitsYet": "No outfits yet",
+  "myProfileEditProfile": "Edit Profile",
+  "myProfileSettingsButton": "Settings",
+
+  "galleryAccessTitle": "Gallery Access",
+  "galleryAccessDescription": "Vestium needs access to your gallery to pick pictures of your clothing items and add them to your virtual wardrobe.",
+  "galleryAccessAllowButton": "Allow Gallery Access",
+  "galleryAccessMaybeLater": "Maybe Later",
+  "galleryAccessPrivacyTitle": "Your pictures are private",
+  "galleryAccessPrivacyDescription": "We only use your camera to capture clothing items. Your photos stay on your device.",
+  "galleryAccessPermissionRequired": "Permission Required",
+  "galleryAccessPermissionDenied": "Gallery access has been permanently denied. Please enable it in app settings.",
+  "galleryAccessCancel": "Cancel",
+  "galleryAccessSettings": "Settings",
+
+  "cameraAccessTitle": "Camera Access",
+  "cameraAccessDescription": "Vestium needs access to your camera to capture photos of your clothing items and add them to your virtual wardrobe.",
+  "cameraAccessAllowButton": "Allow Camera Access",
+  "cameraAccessMaybeLater": "Maybe Later",
+  "cameraAccessPrivacyTitle": "Your photos are private",
+  "cameraAccessPrivacyDescription": "We only use your camera to capture clothing items. Your photos stay on your device.",
+
+  "selectItemTitle": "Select Item",
+  "selectItemContinueButton": "Continue",
+  "selectItemEmptyTitle": "No Photos Yet",
+  "selectItemEmptyDescription": "Visit your gallery or take a photo to get started.",
+
+  "editItemTitle": "Edit Item",
+  "editItemCropTitle": "Crop Image",
+  "editItemRemoveBgTitle": "Remove Background",
+  "editItemDragText": "Drag to adjust crop area",
+  "editItemResetButton": "Reset",
+  "editItemDoneButton": "Done",
+  "editItemCropButton": "Crop",
+  "editItemRemoveBgButton": "Remove BG",
+  "editItemInstructionText": "Draw on the image to remove background",
+  "editItemEraserSizeLabel": "Eraser Size",
+  "editItemSaveButtonLabel": "Save",
+  "editItemSaveErrorMessage": "Failed to save edited image: {error}",
+  "editItemCropSaveError": "Error saving crop: {error}",
+
+  "editItemDetailsTitle": "Edit Item",
+  "editItemDetailsItemName": "Item Name",
+  "editItemDetailsItemNameHint": "Enter item name",
+  "editItemDetailsDescription": "Description (optional)",
+  "editItemDetailsDescriptionHint": "Add description...",
+  "editItemDetailsCategories": "Categories",
+  "editItemDetailsSeason": "Season",
+  "editItemDetailsSeasonHint": "Select season",
+  "editItemDetailsSpring": "Spring",
+  "editItemDetailsSummer": "Summer",
+  "editItemDetailsFall": "Fall",
+  "editItemDetailsWinter": "Winter",
+  "editItemDetailsAllSeason": "All Season",
+  "editItemDetailsSaveChanges": "Save Changes",
+  "editItemDetailsDeleteItem": "Delete Item",
+  "editItemDetailsDeleteConfirmTitle": "Delete Item",
+  "editItemDetailsDeleteConfirmMessage": "Are you sure you want to delete this item?",
+  "editItemDetailsDeleteConfirmCancel": "Cancel",
+  "editItemDetailsDeleteConfirmDelete": "Delete",
+  "editItemDetailsSuccessMessage": "Item updated successfully!",
+  "editItemDetailsDeleteSuccessMessage": "Item deleted successfully!",
+  "editItemDetailsValidationError": "Please enter item name and select at least one category",
+  "editItemDetailsBlockedTitle": "Cannot Delete Item",
+  "editItemDetailsBlockedMessage": "This item is used in the following outfits:",
+  "editItemDetailsBlockedOK": "OK",
+  "editItemDetailsItemNotFound": "Item not found",
+
+  "itemDetailsTitle": "Item Details",
+  "itemDetailsItemName": "Item Name",
+  "itemDetailsItemNameHint": "e.g., Blue Denim Jacket",
+  "itemDetailsDescription": "Description (optional)",
+  "itemDetailsDescriptionHint": "Add notes about this item...",
+  "itemDetailsSeason": "Season",
+  "itemDetailsSeasonHint": "Select season",
+  "itemDetailsSeasonSpring": "Spring",
+  "itemDetailsSeasonSummer": "Summer",
+  "itemDetailsSeasonFall": "Fall",
+  "itemDetailsSeasonWinter": "Winter",
+  "itemDetailsSeasonAllSeason": "All Season",
+  "itemDetailsCategories": "Categories",
+  "itemDetailsCategoriesLoading": "Loading categories...",
+  "itemDetailsCategoriesError": "Failed to load categories",
+  "itemDetailsCategoriesRetry": "Tap to retry",
+  "itemDetailsCategoriesEmpty": "No categories available",
+  "itemDetailsAddToWardrobe": "Add to Wardrobe",
+  "itemDetailsAddedSuccess": "Item added to wardrobe!",
+  "itemDetailsNameRequired": "Please enter an item name",
+  "itemDetailsCategoryRequired": "Please select at least one category",
+
+  "takePicTitle": "Add Item",
+  "takePicPosition": "Position your clothing item",
+  "takePicTapToStart": "Tap here to start taking picture",
+
+  "myProfileEditProfile": "Edit Profile",
+  "myProfilePosts": "Posts",
+  "myProfileOutfits": "Outfits",
+
+  "settingsTitle": "Settings",
+  "settingsProfileUpdated": "Profile updated",
+  "settingsAccountSection": "ACCOUNT",
+  "settingsAccountManagement": "Account Management",
+  "settingsCategoriesSection": "CATEGORIES",
+  "settingsManageCategoriesItems": "Manage Categories For Items",
+  "settingsManageCategoriesOutfits": "Manage Categories For Outfits",
+  "settingsNotificationsSection": "NOTIFICATIONS",
+  "settingsPushNotifications": "Push Notifications",
+  "settingsEmailNotifications": "Email Notifications",
+  "settingsSupportSection": "SUPPORT",
+  "settingsHelpCenter": "Help Center",
+  "settingsLogoutDialogTitle": "Log out",
+  "settingsLogoutDialogMessage": "Are you sure you want to log out?",
+  "settingsLogoutCancel": "Cancel",
+  "settingsLogoutButton": "Log Out",
+  "settingsEditName": "Name",
+  "settingsEditNameHint": "My Name",
+  "settingsEditUsername": "Username",
+  "settingsEditUsernameHint": "my_username",
+  "settingsEditBio": "Bio",
+  "settingsEditBioHint": "Fashion enthusiast ✨ | Style inspiration",
+  "settingsEditCancel": "Cancel",
+  "settingsEditSave": "Save",
+  "settingsEdit": "Edit",
+
+  "photoPreviewTitle": "Add Item",
+  "photoPreviewRetake": "Retake",
+  "photoPreviewUsePhoto": "Use Photo",
+  "photoPreviewLoadError": "Failed to load image",
+
+  "myPostsTitle": "Posts",
+  "myPostsAllDeleted": "All posts have been deleted",
+  "myPostsDefaultUser": "User",
+  "myPostsLikesCount": "{count} likes",
+  "myPostsViewComments": "View all {count} comments",
+  "myPostsDeleteDialogTitle": "Delete Post?",
+  "myPostsDeleteDialogMessage": "Are you sure you want to delete this post?\nThis action cannot be undone and the post\nwill be removed from your profile.",
+  "myPostsDeleteButton": "Delete",
+  "myPostsDeleteCancel": "Cancel",
+
+  "commentsTitle": "Comments",
+  "commentsNoComments": "No comments",
+  "commentsLoginRequired": "You must be logged in to comment",
+  "commentsAddComment": "Add a comment...",
+  "commentsDaysAgo": "{count}d ago",
+  "commentsHoursAgo": "{count}h ago",
+  "commentsMinutesAgo": "{count}m ago",
+  "commentsJustNow": "Just now",
+  "commentsRecently": "Recently",
+  "commentsUnknownUser": "unknown",
+
+  "accountManagerTitle": "Account Manager",
+  "accountManagerChangeEmail": "Change Email",
+  "accountManagerChangeEmailSubtitle": "Update your email address",
+  "accountManagerChangePassword": "Change Password",
+  "accountManagerChangePasswordSubtitle": "Update your password",
+  "accountManagerChangeFullName": "Change Full Name",
+  "accountManagerChangeFullNameSubtitle": "Update your display name",
+  "accountManagerDangerZone": "DANGER ZONE",
+  "accountManagerDeleteAccount": "Delete Account",
+  "accountManagerDeleteAccountSubtitle": "Permanently delete your account",
+  "accountManagerChangeEmailDialogTitle": "Change Email",
+  "accountManagerChangeEmailDialogDescription": "Enter your new email and confirm with your password",
+  "accountManagerNewEmail": "New Email",
+  "accountManagerNewEmailHint": "newemail@example.com",
+  "accountManagerCurrentPassword": "Current Password",
+  "accountManagerChangeEmailButton": "Change Email",
+  "accountManagerCancel": "Cancel",
+  "accountManagerChangeFullNameDialogTitle": "Change Full Name",
+  "accountManagerChangeFullNameDialogDescription": "Enter your new display name",
+  "accountManagerFullName": "Full Name",
+  "accountManagerFullNameHint": "Your name",
+  "accountManagerSave": "Save",
+  "accountManagerChangePasswordDialogTitle": "Change Password",
+  "accountManagerChangePasswordDialogDescription": "Enter your current password and new password",
+  "accountManagerNewPassword": "New Password",
+  "accountManagerConfirmPassword": "Confirm Password",
+  "accountManagerChangePasswordButton": "Change Password",
+  "accountManagerDeleteAccountDialogTitle": "Delete Account",
+  "accountManagerDeleteAccountDialogDescription": "Are you sure you want to permanently delete your account? This action cannot be undone.",
+  "accountManagerDeleteAccountButton": "Delete Account",
+  "accountManagerFinalConfirmation": "Final Confirmation",
+  "accountManagerFinalConfirmationDescription": "Type DELETE and enter your password to confirm account deletion",
+  "accountManagerTypeDelete": "Type DELETE to confirm",
+  "accountManagerTypeDeleteHint": "Type DELETE",
+  "accountManagerPassword": "Password",
+
+  "followersTitle": "Followers",
+  "followersSearchHint": "Search followers...",
+  "followersNotFound": "No followers found",
+  "followersFollow": "Follow",
+  "followersFollowing": "Following",
+  "followingTitle": "Following",
+  "followingSearchHint": "Search following...",
+  "followingNotFound": "No results found",
+
+  "manageCategoriesTitle": "Manage Categories For Items",
+  "manageCategoriesNewHint": "New category name...",
+  "manageCategoriesItemCount": "{count} items",
+  "manageCategoriesEditTitle": "Edit Category",
+  "manageCategoriesEditHint": "Category name",
+  "manageCategoriesDeleteTitle": "Delete Category",
+  "manageCategoriesDeleteMessage": "Are you sure you want to delete \"{name}\"?",
+  "manageCategoriesCancel": "Cancel",
+  "manageCategoriesSave": "Save",
+  "manageCategoriesDelete": "Delete",
+  "manageCategoriesInfo": "Categories help you organize your wardrobe items. Items can belong to multiple categories.",
+  "manageOutfitCategoriesTitle": "Manage Categories For Outfits",
+
+  "helpCenterTitle": "Help Center",
+  "helpCenterEmailUs": "Email Us",
+  "helpCenterFAQTitle": "Frequently Asked Questions",
+
+  "notificationsTitle": "Notifications",
+  "notificationsRetry": "Retry",
+  "notificationsLiked": " liked your outfit",
+  "notificationsCommented": " commented: \"{comment}\"",
+  "@notificationsCommented": {
+    "placeholders": {
+      "comment": {
+        "type": "String"
+      }
+    }
+  },
+  "notificationsFollowed": " started following you",
+  "notificationsInteracted": " interacted with your content",
+  "notificationsDaysAgo": "{count}d ago",
+  "@notificationsDaysAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "notificationsHoursAgo": "{count}h ago",
+  "@notificationsHoursAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "notificationsMinutesAgo": "{count}m ago",
+  "@notificationsMinutesAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "notificationsJustNow": "Just now",
+  "notificationsRecently": "Recently",
+  "notificationsErrorMessage": "Failed to load notifications",
+
+  "saveOutfitTitle": "Save Outfit",
+  "saveOutfitNoDataError": "No outfit data found. Please create an outfit first.",
+  "saveOutfitNoDataFound": "No outfit data found",
+  "saveOutfitName": "Outfit Name",
+  "saveOutfitNameHint": "e.g., Casual Friday Look",
+  "saveOutfitDescription": "Description (optional)",
+  "saveOutfitDescriptionHint": "Add notes about this outfit...",
+  "saveOutfitSeason": "Season",
+  "saveOutfitSeasonHint": "Select season",
+  "saveOutfitCategories": "Categories",
+  "saveOutfitItemsCount": "{count} item in outfit",
+  "@saveOutfitItemsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "saveOutfitItemsCountPlural": "{count} items in outfit",
+  "@saveOutfitItemsCountPlural": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "saveOutfitSaveButton": "Save to Wardrobe",
+
+  "editOutfitTitle": "Outfit Details",
+  "editOutfitLoading": "Loading outfit...",
+  "editOutfitError": "Oops! Something went wrong",
+  "editOutfitTryAgain": "Try Again",
+  "editOutfitGoBack": "Go Back",
+  "editOutfitNotFound": "Outfit not found",
+  "editOutfitNotFoundMessage": "The outfit may have been deleted or doesn't exist",
+  "editOutfitNoImage": "No outfit image",
+  "editOutfitItemsTitle": "Items in this outfit",
+  "editOutfitDetailsTitle": "Edit Outfit Details",
+  "editOutfitDetailsSubtitle": "Update your outfit information",
+  "editOutfitNameLabel": "Outfit Name",
+  "editOutfitNameHint": "e.g., Summer Casual",
+  "editOutfitDescriptionLabel": "Description",
+  "editOutfitDescriptionHint": "Perfect outfit for a casual summer day",
+  "editOutfitSeasonLabel": "Season",
+  "editOutfitSeasonHint": "Select season",
+  "editOutfitErrorName": "Please enter an outfit name",
+  "editOutfitErrorCategory": "Please select at least one category",
+  "editOutfitSuccessSave": "Outfit updated successfully!",
+  "editOutfitErrorSave": "Error saving outfit: {error}",
+  "@editOutfitErrorSave": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "editOutfitDeleteDialog": "Delete Outfit",
+  "editOutfitDeleteMessage": "Are you sure you want to delete \"{name}\"?",
+  "@editOutfitDeleteMessage": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "editOutfitDeleteWarning": "This action cannot be undone.",
+  "editOutfitDeleting": "Deleting outfit...",
+  "editOutfitDeleteSuccess": "Outfit deleted successfully!",
+  "editOutfitDeleteError": "Error deleting outfit: {error}",
+  "@editOutfitDeleteError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "editOutfitCannotDeleteTitle": "Cannot Delete Outfit",
+  "editOutfitCannotDeleteMessage": "This outfit is used in {count} {posts}.",
+  "@editOutfitCannotDeleteMessage": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "posts": {
+        "type": "String"
+      }
+    }
+  },
+  "editOutfitCannotDeleteInstruction": "To delete this outfit, you must first delete the {posts} that use it.",
+  "@editOutfitCannotDeleteInstruction": {
+    "placeholders": {
+      "posts": {
+        "type": "String"
+      }
+    }
+  },
+  "editOutfitCannotDeleteInfo": "Go to your posts and delete the {ones} using this outfit first.",
+  "@editOutfitCannotDeleteInfo": {
+    "placeholders": {
+      "ones": {
+        "type": "String"
+      }
+    }
+  },
+  "editOutfitPost": "post",
+  "editOutfitPosts": "posts",
+  "editOutfitOne": "one",
+  "editOutfitOnes": "ones",
+  "editOutfitWarningUsed": "This outfit is used in {count} {posts}",
+  "@editOutfitWarningUsed": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "posts": {
+        "type": "String"
+      }
+    }
+  },
+  "editOutfitWarningDeleteFirst": "Delete the {posts} first to delete this outfit",
+  "@editOutfitWarningDeleteFirst": {
+    "placeholders": {
+      "posts": {
+        "type": "String"
+      }
+    }
+  },
+  "editOutfitDeleteButton": "Delete Outfit",
+  "editOutfitCancelButton": "Cancel",
+  "editOutfitSaveButton": "Save Changes",
+  "editOutfitGoToPostsButton": "Go to Posts",
+  "editOutfitLoginRequired": "Please log in to view your profile",
+  "editOutfitImageLoading": "Loading image...",
+  "editOutfitImageNotAvailable": "Image not available",
+  "seasonSpring": "Spring",
+  "seasonSummer": "Summer",
+  "seasonFall": "Fall",
+  "seasonWinter": "Winter",
+  "seasonAllSeason": "All Season",
+  "outfitDetailsTitle": "Outfit Details",
+  "outfitDetailsError": "Error loading outfit details",
+  "outfitDetailsDeleteDialog": "Delete Outfit?",
+  "outfitDetailsDeleteMessage": "Are you sure you want to delete this outfit?\nThis action cannot be undone.",
+  "outfitDetailsDeleteButton": "Delete",
+  "outfitDetailsCancelButton": "Cancel",
+  "outfitDetailsShareComingSoon": "Share functionality - Coming soon",
+  "outfitDetailsOutfitDeleted": "Outfit deleted",
+  "outfitDetailsShareButton": "Share Outfit",
+  "outfitDetailsDeleteButtonAction": "Delete Outfit",
+  "outfitDetailsUnnamedOutfit": "Unnamed Outfit",
+  "outfitDetailsCreatedDefault": "Created on October 20, 2025",
+  "outfitDetailsItemsCount": "Items ({count})",
+  "@outfitDetailsItemsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "outfitDetailsNoItems": "No items in this outfit",
+  "outfitDetailsUnnamedItem": "Unnamed Item",
+  "outfitDetailsUncategorized": "Uncategorized",
+  "createOutfitCapturing": "Capturing outfit...",
+  "createOutfitAddAtLeastOne": "Please add at least one item to the outfit",
+  "createOutfitSaveSuccess": "Outfit saved successfully!",
+  "createOutfitErrorLoading": "Error loading items",
+  "createOutfitTryAgain": "Try Again",
+  "createOutfitZoomIn": "Zoom In",
+  "createOutfitZoomOut": "Zoom Out",
+  "createOutfitResetSize": "Reset Size",
+  "createOutfitBringToFront": "Bring to Front",
+  "createOutfitSendToBack": "Send to Back",
+  "createOutfitRemoveFromOutfit": "Remove from Outfit",
+  "createOutfitAddItems": "Add Items",
+  "createOutfitItemsCount": "{count} items",
+  "@createOutfitItemsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "createOutfitAddedToOutfit": "Added {itemName} to outfit",
+  "@createOutfitAddedToOutfit": {
+    "placeholders": {
+      "itemName": {
+        "type": "String"
+      }
+    }
+  },
+  "createOutfitRemoveItemTitle": "Remove Item",
+  "createOutfitRemoveItemMessage": "Remove this item from the outfit?",
+  "createOutfitCancel": "Cancel",
+  "createOutfitRemove": "Remove",
+  "createOutfitYourItems": "Your Items",
+  "createOutfitTotalCount": "{count} total",
+  "@createOutfitTotalCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "createOutfitNoItems": "No items in your wardrobe",
+  "postsDetailsTitle": "Posts",
+  "postsDetailsMustLoginToLike": "You must be logged in to like posts!",
+  "postsDetailsLikesCount": "{count} likes",
+  "@postsDetailsLikesCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "postsDetailsViewAllComments": "View all {count} comments",
+  "@postsDetailsViewAllComments": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "postsDetailsImageNotFound": "Image not found"
+}

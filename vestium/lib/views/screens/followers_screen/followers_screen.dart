@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:vestium/l10n/app_localizations.dart';
 
 import '../../../repo/follow_repo.dart';
 import '../../../repo/user_repo.dart';
@@ -14,24 +15,13 @@ class FollowersScreen extends StatelessWidget {
   final int userId;
   final int currentUserId;
 
-  const FollowersScreen({
-    super.key,
-    required this.userId,
-    required this.currentUserId,
-  });
+  const FollowersScreen({super.key, required this.userId, required this.currentUserId});
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => FollowersCubit(
-        FollowRepo(),
-        UserRepo(),
-        userId: userId,
-      )..loadFollowers(),
-      child: _FollowersView(
-        userId: userId,
-        currentUserId: currentUserId,
-      ),
+      create: (_) => FollowersCubit(FollowRepo(), UserRepo(), userId: userId)..loadFollowers(),
+      child: _FollowersView(userId: userId, currentUserId: currentUserId),
     );
   }
 }
@@ -40,18 +30,13 @@ class _FollowersView extends StatefulWidget {
   final int userId;
   final int currentUserId;
 
-  const _FollowersView({
-    required this.userId,
-    required this.currentUserId,
-  });
+  const _FollowersView({required this.userId, required this.currentUserId});
 
   @override
   State<_FollowersView> createState() => _FollowersViewState();
 }
 
 class _FollowersViewState extends State<_FollowersView> {
-
-
   final TextEditingController _searchController = TextEditingController();
 
   @override
@@ -70,6 +55,8 @@ class _FollowersViewState extends State<_FollowersView> {
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
+
     return BlocBuilder<FollowersCubit, FollowersState>(
       builder: (context, state) {
         return Scaffold(
@@ -83,8 +70,8 @@ class _FollowersViewState extends State<_FollowersView> {
                 Navigator.pop(context);
               },
             ),
-            title: const Text(
-              'Followers',
+            title: Text(
+              loc.followersTitle,
               style: TextStyle(
                 color: Colors.black,
                 fontSize: 18,
@@ -116,25 +103,17 @@ class _FollowersViewState extends State<_FollowersView> {
       return Center(
         child: Text(
           state.errorMessage!,
-          style: const TextStyle(
-            fontSize: 16,
-            color: Color(0xFF795548),
-            fontFamily: 'Inter',
-          ),
+          style: const TextStyle(fontSize: 16, color: Color(0xFF795548), fontFamily: 'Inter'),
         ),
       );
     }
 
-    if (state.filteredFollowers.isEmpty &&
-        _searchController.text.isNotEmpty) {
-      return const Center(
+    if (state.filteredFollowers.isEmpty && _searchController.text.isNotEmpty) {
+      final loc = AppLocalizations.of(context)!;
+      return Center(
         child: Text(
-          'No followers found',
-          style: TextStyle(
-            fontSize: 16,
-            color: Color(0xFF795548),
-            fontFamily: 'Inter',
-          ),
+          loc.followersNotFound,
+          style: TextStyle(fontSize: 16, color: Color(0xFF795548), fontFamily: 'Inter'),
         ),
       );
     }
@@ -146,7 +125,7 @@ class _FollowersViewState extends State<_FollowersView> {
         final follower = state.filteredFollowers[index];
         final followerId = int.tryParse(follower['id']?.toString() ?? '') ?? 0;
         final followerUserId = follower['userId'] ?? followerId;
-        
+
         return FollowerItem(
           name: follower['name'] ?? '',
           username: follower['username'] ?? '',
@@ -154,10 +133,9 @@ class _FollowersViewState extends State<_FollowersView> {
           isFollowing: follower['isFollowing'] ?? false,
           followerUserId: followerUserId, // Pass the follower's ID
           currentUserId: currentUserId, // Pass current user ID
-          onFollowTap: () =>
-              context.read<FollowersCubit>().toggleFollow(index),
+          onFollowTap: () => context.read<FollowersCubit>().toggleFollow(index),
         );
-      }
+      },
     );
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vestium/l10n/app_localizations.dart';
 
 class RecentList extends StatelessWidget {
   final List<String> recentUsers;
@@ -35,38 +36,23 @@ class RecentList extends StatelessWidget {
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(12),
-                      border: Border.all(
-                        color: const Color(0xFFD7CCC8),
-                        width: 1,
-                      ),
+                      border: Border.all(color: const Color(0xFFD7CCC8), width: 1),
                     ),
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
                       child: Row(
                         children: [
-                          const Icon(
-                            Icons.access_time,
-                            size: 18,
-                            color: Color(0xFF795548),
-                          ),
+                          const Icon(Icons.access_time, size: 18, color: Color(0xFF795548)),
                           const SizedBox(width: 12),
                           Expanded(
                             child: Text(
                               username,
-                              style: const TextStyle(
-                                fontSize: 15,
-                                color: Colors.black,
-                                fontFamily: 'Inter',
-                              ),
+                              style: const TextStyle(fontSize: 15, color: Colors.black, fontFamily: 'Inter'),
                             ),
                           ),
                           GestureDetector(
                             onTap: () => onRemoveRecent(index),
-                            child: const Icon(
-                              Icons.close,
-                              size: 20,
-                              color: Color(0xFF795548),
-                            ),
+                            child: const Icon(Icons.close, size: 20, color: Color(0xFF795548)),
                           ),
                         ],
                       ),
@@ -84,37 +70,42 @@ class RecentList extends StatelessWidget {
   Widget _buildHeader() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          const Row(
+      child: Builder(
+        builder: (context) {
+          final loc = AppLocalizations.of(context)!;
+          return Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Icon(Icons.access_time, size: 18, color: Color(0xFF795548)),
-              SizedBox(width: 8),
-              Text(
-                'Recent',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.black,
-                  fontFamily: 'Inter',
+              Row(
+                children: [
+                  const Icon(Icons.access_time, size: 18, color: Color(0xFF795548)),
+                  const SizedBox(width: 8),
+                  Text(
+                    loc.searchRecentHeader,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.black,
+                      fontFamily: 'Inter',
+                    ),
+                  ),
+                ],
+              ),
+              GestureDetector(
+                onTap: onClearAll,
+                child: Text(
+                  loc.searchDeleteAll,
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                    color: Color(0xFF795548),
+                    fontFamily: 'Inter',
+                  ),
                 ),
               ),
             ],
-          ),
-          GestureDetector(
-            onTap: onClearAll,
-            child: const Text(
-              'Delete all',
-              style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w500,
-                color: Color(0xFF795548),
-                fontFamily: 'Inter',
-              ),
-            ),
-          ),
-        ],
+          );
+        },
       ),
     );
   }

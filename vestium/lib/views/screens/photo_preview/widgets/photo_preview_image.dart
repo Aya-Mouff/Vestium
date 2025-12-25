@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:vestium/l10n/app_localizations.dart';
 
 class PhotoPreviewImage extends StatelessWidget {
   final String imagePath;
@@ -28,25 +29,18 @@ class PhotoPreviewImage extends StatelessWidget {
             fit: BoxFit.cover,
             width: double.infinity,
             errorBuilder: (context, error, stackTrace) {
+              final loc = AppLocalizations.of(context)!;
               return Container(
                 color: const Color(0xFFD7CCC8),
                 child: Center(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(
-                        Icons.error_outline,
-                        size: 64,
-                        color: const Color(0xFF795548).withValues(alpha: .6),
-                      ),
+                      Icon(Icons.error_outline, size: 64, color: const Color(0xFF795548).withValues(alpha: .6)),
                       const SizedBox(height: 16),
-                      const Text(
-                        'Failed to load image',
-                        style: TextStyle(
-                          fontFamily: 'Inter',
-                          fontSize: 15,
-                          color: Color(0xFF795548),
-                        ),
+                      Text(
+                        loc.photoPreviewLoadError,
+                        style: const TextStyle(fontFamily: 'Inter', fontSize: 15, color: Color(0xFF795548)),
                       ),
                     ],
                   ),

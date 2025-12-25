@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vestium/l10n/app_localizations.dart';
 
 class OutfitInfoCard extends StatelessWidget {
   final Map<String, dynamic> outfit;
@@ -7,19 +8,17 @@ class OutfitInfoCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16),
       padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
-      ),
+      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(20)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Outfit Name
           Text(
-            outfit['name'] ?? 'Unnamed Outfit',
+            outfit['name'] ?? loc.outfitDetailsUnnamedOutfit,
             style: const TextStyle(
               fontFamily: 'CormorantGaramond',
               fontSize: 24,
@@ -30,8 +29,7 @@ class OutfitInfoCard extends StatelessWidget {
           const SizedBox(height: 8),
 
           // Description
-          if (outfit['description'] != null &&
-              outfit['description'].toString().isNotEmpty)
+          if (outfit['description'] != null && outfit['description'].toString().isNotEmpty)
             Text(
               outfit['description'],
               style: TextStyle(
@@ -47,14 +45,10 @@ class OutfitInfoCard extends StatelessWidget {
           // Created Date
           Row(
             children: [
-              const Icon(
-                Icons.calendar_today_outlined,
-                size: 16,
-                color: Color(0xFF795548),
-              ),
+              const Icon(Icons.calendar_today_outlined, size: 16, color: Color(0xFF795548)),
               const SizedBox(width: 8),
               Text(
-                outfit['createdDate'] ?? 'Created on October 20, 2025',
+                outfit['createdDate'] ?? loc.outfitDetailsCreatedDefault,
                 style: TextStyle(
                   fontFamily: 'Inter',
                   fontSize: 13,
@@ -70,11 +64,7 @@ class OutfitInfoCard extends StatelessWidget {
           if (outfit['tags'] != null && (outfit['tags'] as List).isNotEmpty)
             Row(
               children: [
-                const Icon(
-                  Icons.label_outline,
-                  size: 16,
-                  color: Color(0xFF795548),
-                ),
+                const Icon(Icons.label_outline, size: 16, color: Color(0xFF795548)),
                 const SizedBox(width: 8),
                 Expanded(
                   child: Wrap(
@@ -82,10 +72,7 @@ class OutfitInfoCard extends StatelessWidget {
                     runSpacing: 8,
                     children: (outfit['tags'] as List).map((tag) {
                       return Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 12,
-                          vertical: 6,
-                        ),
+                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                         decoration: BoxDecoration(
                           color: const Color(0xFFF5ECE7),
                           borderRadius: BorderRadius.circular(16),

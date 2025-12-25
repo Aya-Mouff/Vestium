@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:vestium/l10n/app_localizations.dart';
 import '../cubit/manage_outfit_categories_cubit.dart';
 
 class AddOutfitCategoryRow extends StatefulWidget {
@@ -20,6 +21,8 @@ class _AddOutfitCategoryRowState extends State<AddOutfitCategoryRow> {
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
+
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
       child: Row(
@@ -27,26 +30,16 @@ class _AddOutfitCategoryRowState extends State<AddOutfitCategoryRow> {
           Expanded(
             child: Container(
               height: 40,
-              decoration: BoxDecoration(
-                color: const Color(0xFFE8DCD3),
-                borderRadius: BorderRadius.circular(25),
-              ),
+              decoration: BoxDecoration(color: const Color(0xFFE8DCD3), borderRadius: BorderRadius.circular(25)),
               child: TextField(
                 controller: _controller,
-                onChanged: (value) => context
-                    .read<ManageOutfitCategoriesCubit>()
-                    .onNewCategoryNameChanged(value),
+                onChanged: (value) => context.read<ManageOutfitCategoriesCubit>().onNewCategoryNameChanged(value),
                 style: const TextStyle(fontFamily: 'Inter', color: Colors.black),
-                decoration: const InputDecoration(
-                  hintText: 'New category name...',
-                  hintStyle: TextStyle(
-                    color: Color(0xFF795548),
-                    fontSize: 14,
-                    fontFamily: 'Inter',
-                  ),
+                decoration: InputDecoration(
+                  hintText: loc.manageCategoriesNewHint,
+                  hintStyle: TextStyle(color: Color(0xFF795548), fontSize: 14, fontFamily: 'Inter'),
                   border: InputBorder.none,
-                  contentPadding:
-                      EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                  contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
                 ),
               ),
             ),
@@ -55,17 +48,12 @@ class _AddOutfitCategoryRowState extends State<AddOutfitCategoryRow> {
           Container(
             width: 40,
             height: 40,
-            decoration: const BoxDecoration(
-              color: Color(0xFF795548),
-              shape: BoxShape.circle,
-            ),
+            decoration: const BoxDecoration(color: Color(0xFF795548), shape: BoxShape.circle),
             child: IconButton(
               padding: EdgeInsets.zero,
               icon: const Icon(Icons.add, color: Colors.white, size: 22),
               onPressed: () async {
-                await context
-                    .read<ManageOutfitCategoriesCubit>()
-                    .addCategory();
+                await context.read<ManageOutfitCategoriesCubit>().addCategory();
                 _controller.clear();
               },
             ),

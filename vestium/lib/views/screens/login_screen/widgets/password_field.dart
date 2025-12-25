@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:vestium/l10n/app_localizations.dart';
 
 class PasswordField extends StatefulWidget {
   final TextEditingController controller;
   final String? Function(String?)? validator;
 
-  const PasswordField({super.key, required this.controller, this.validator});
+  const PasswordField({
+    super.key,
+    required this.controller,
+    this.validator,
+  });
 
   @override
   State<PasswordField> createState() => _PasswordFieldState();
@@ -15,12 +20,14 @@ class _PasswordFieldState extends State<PasswordField> {
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'Password',
-          style: TextStyle(
+        Text(
+          loc.loginPasswordLabel,
+          style: const TextStyle(
             fontFamily: 'CormorantGaramond',
             fontSize: 14,
             fontWeight: FontWeight.w600,
@@ -33,7 +40,7 @@ class _PasswordFieldState extends State<PasswordField> {
           cursorColor: const Color(0xFF6B5344),
           obscureText: _obscurePassword,
           decoration: InputDecoration(
-            hintText: '••••••••',
+            hintText: loc.loginPasswordHint,
             hintStyle: const TextStyle(
               fontFamily: 'inter',
               color: Color(0xFFA1887F),
@@ -56,11 +63,13 @@ class _PasswordFieldState extends State<PasswordField> {
             fillColor: const Color(0xFFF0EBE6),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(20),
-              borderSide: const BorderSide(color: Color(0xFFD7CCC8), width: 2),
+              borderSide:
+                  const BorderSide(color: Color(0xFFD7CCC8), width: 2),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(20),
-              borderSide: const BorderSide(color: Color(0xFFD7CCC8), width: 2),
+              borderSide:
+                  const BorderSide(color: Color(0xFFD7CCC8), width: 2),
             ),
             contentPadding: const EdgeInsets.symmetric(
               horizontal: 16,

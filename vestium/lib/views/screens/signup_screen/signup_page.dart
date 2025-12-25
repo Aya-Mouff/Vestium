@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:vestium/app_router.dart';
 import 'package:vestium/repo/user_repo.dart';
+import 'package:vestium/l10n/app_localizations.dart';
 import 'cubit/signup_cubit.dart';
 import 'cubit/signup_state.dart';
 import 'widgets/email_field.dart';
@@ -51,6 +52,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
+
     return BlocProvider<SignupCubit>(
       create: (context) => _signUpCubit,
       child: Scaffold(
@@ -58,17 +61,16 @@ class _SignUpScreenState extends State<SignUpScreen> {
         body: BlocListener<SignupCubit, SignupState>(
           listener: (context, state) {
             if (state is SignupSuccess) {
+              final message = loc.signupWelcomeUser(state.user.fullName ?? '');
+              
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Text(
-                    'Welcome ${state.user.fullName}!',
-                  ),
+                  content: Text(message),
                   backgroundColor: Colors.green,
                   duration: const Duration(seconds: 2),
                 ),
               );
               
-              // Navigate to home screen with user ID
               final userId = state.user.userId ?? -1;
               context.router.pushAndPopUntil(
                 HomeRoute(userId: userId),
@@ -97,9 +99,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     fit: BoxFit.contain,
                   ),
                   const SizedBox(height: 20),
-                  const Text(
-                    'Create Account',
-                    style: TextStyle(
+                  Text(
+                    loc.signupTitle,
+                    style: const TextStyle(
                       fontFamily: 'CormorantGaramond',
                       fontSize: 24,
                       fontWeight: FontWeight.w400,
@@ -107,9 +109,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     ),
                   ),
                   const SizedBox(height: 8),
-                  const Text(
-                    'Join Vestium and start your style journey',
-                    style: TextStyle(
+                  Text(
+                    loc.signupSubtitle,
+                    style: const TextStyle(
                       fontFamily: 'inter',
                       fontSize: 14,
                       color: Color(0xFF6B5344),
@@ -126,10 +128,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           controller: _fullNameController,
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return 'Please enter your full name';
+                              return loc.signupFullNameRequired;
                             }
                             if (value.length < 2) {
-                              return 'Name must be at least 2 characters';
+                              return loc.signupFullNameTooShort;
                             }
                             return null;
                           },
@@ -139,12 +141,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           controller: _emailController,
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return 'Please enter your email';
+                              return loc.signupEmailRequired;
                             }
-                            if (!RegExp(
-                              r'^[^@]+@[^@]+\.[^@]+',
-                            ).hasMatch(value)) {
-                              return 'Please enter a valid email';
+                            if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
+                              return loc.signupEmailInvalid;
                             }
                             return null;
                           },
@@ -154,10 +154,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           controller: _passwordController,
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return 'Please enter a password';
+                              return loc.signupPasswordRequired;
                             }
                             if (value.length < 6) {
-                              return 'Password must be at least 6 characters';
+                              return loc.signupPasswordTooShort;
                             }
                             return null;
                           },
@@ -180,7 +180,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                     borderRadius: BorderRadius.circular(20),
                                   ),
                                   disabledBackgroundColor:
-                                      Colors.grey.withOpacity(0.5),
+                                      Colors.grey.withValues(alpha: .5),
                                 ),
                                 child: state is SignupLoading
                                     ? const SizedBox(
@@ -194,9 +194,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                           strokeWidth: 2,
                                         ),
                                       )
-                                    : const Text(
-                                        'Create Account',
-                                        style: TextStyle(
+                                    : Text(
+                                        loc.signupButton,
+                                        style: const TextStyle(
                                           fontFamily: 'CormorantGaramond',
                                           fontSize: 16,
                                           fontWeight: FontWeight.w600,
@@ -214,9 +214,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Text(
-                        'Already have an account? ',
-                        style: TextStyle(
+                      Text(
+                        loc.signupHaveAccount,
+                        style: const TextStyle(
                           fontFamily: 'inter',
                           fontSize: 14,
                           color: Color(0xFF666666),
@@ -226,9 +226,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         onTap: () {
                           context.router.push(const LogInRoute());
                         },
-                        child: const Text(
-                          'Sign In',
-                          style: TextStyle(
+                        child: Text(
+                          loc.signupSignIn,
+                          style: const TextStyle(
                             fontFamily: 'CormorantGaramond',
                             fontSize: 14,
                             fontWeight: FontWeight.w600,
@@ -239,7 +239,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     ],
                   ),
                   const SizedBox(height: 40),
-                  // DEBUG BUTTON REMOVED - Don't include in production!
                 ],
               ),
             ),

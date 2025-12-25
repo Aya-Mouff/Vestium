@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:vestium/l10n/app_localizations.dart';
 import '../cubit/take_pic_cubit.dart';
 
 class CameraPlaceholderWidget extends StatelessWidget {
@@ -7,6 +8,8 @@ class CameraPlaceholderWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
+
     return Center(
       // This is the small inner container with placeholder - EXACTLY like original
       child: GestureDetector(
@@ -17,10 +20,7 @@ class CameraPlaceholderWidget extends StatelessWidget {
           decoration: BoxDecoration(
             color: const Color(0xFFD7CCC8),
             borderRadius: BorderRadius.circular(20),
-            border: Border.all(
-              color: const Color(0xFF795548).withValues(alpha: 0.3),
-              width: 2,
-            ),
+            border: Border.all(color: const Color(0xFF795548).withValues(alpha: 0.3), width: 2),
           ),
           child: ClipRRect(
             borderRadius: BorderRadius.circular(18),
@@ -31,15 +31,11 @@ class CameraPlaceholderWidget extends StatelessWidget {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(
-                      Icons.camera_alt_outlined,
-                      size: 64,
-                      color: const Color(0xFF795548).withValues(alpha: 0.6),
-                    ),
+                    Icon(Icons.camera_alt_outlined, size: 64, color: const Color(0xFF795548).withValues(alpha: 0.6)),
                     const SizedBox(height: 16),
-                    const Text(
-                      'Position your clothing item',
-                      style: TextStyle(
+                    Text(
+                      loc.takePicPosition,
+                      style: const TextStyle(
                         fontFamily: 'Inter',
                         fontSize: 15,
                         fontWeight: FontWeight.w400,
@@ -49,7 +45,7 @@ class CameraPlaceholderWidget extends StatelessWidget {
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      'Tap here to start taking picture',
+                      loc.takePicTapToStart,
                       style: TextStyle(
                         fontFamily: 'Inter',
                         fontSize: 13,

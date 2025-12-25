@@ -9,6 +9,9 @@ import 'databases/db_helper.dart';
 import 'databases/services/current_user_service.dart';
 import 'repo/user_repo.dart';
 import 'repo/outfit_repo.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'l10n/app_localizations.dart';
+
 
 Future<void> initMyApp() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -82,6 +85,23 @@ class _MyAppState extends State<MyApp> {
       routerDelegate: widget.appRouter.delegate(),
       routeInformationParser: widget.appRouter.defaultRouteParser(),
       title: 'Vestium',
+       locale: const Locale('ar'),
+   // ADD THIS:
+  localizationsDelegates: const [
+    AppLocalizations.delegate,
+    GlobalMaterialLocalizations.delegate,
+    GlobalWidgetsLocalizations.delegate,
+    GlobalCupertinoLocalizations.delegate,
+  ],
+  supportedLocales: const [
+    Locale('en'),
+    Locale('fr'),
+    Locale('ar'),
+    Locale('it'),
+  ],
+  // optional: start with system language
+  // locale: const Locale('en'), // uncomment to force English
+
     );
   }
 }
