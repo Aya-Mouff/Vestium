@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:vestium/app_router.dart';
 import 'package:vestium/repo/user_repo.dart';
+import 'package:vestium/l10n/app_localizations.dart';
+
 import 'cubit/login_cubit.dart';
 import 'cubit/login_state.dart';
 import 'widgets/email_field.dart';
@@ -47,6 +49,8 @@ class _LogInScreenState extends State<LogInScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
+
     return BlocProvider<LoginCubit>(
       create: (context) => _loginCubit,
       child: Scaffold(
@@ -54,15 +58,16 @@ class _LogInScreenState extends State<LogInScreen> {
         body: BlocListener<LoginCubit, LoginState>(
           listener: (context, state) {
             if (state is LoginSuccess) {
+             final message = loc.loginWelcomeBackUser(state.user.fullName ?? '');
+
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Text('Welcome back, ${state.user.fullName}!'),
+                  content: Text(message),
                   backgroundColor: Colors.green,
                   duration: const Duration(seconds: 2),
                 ),
               );
-              
-              // Navigate to home screen with user ID
+
               final userId = state.user.userId ?? -1;
               context.router.pushAndPopUntil(
                 HomeRoute(userId: userId),
@@ -91,9 +96,9 @@ class _LogInScreenState extends State<LogInScreen> {
                     fit: BoxFit.contain,
                   ),
                   const SizedBox(height: 10),
-                  const Text(
-                    'Welcome Back',
-                    style: TextStyle(
+                  Text(
+                    loc.loginTitle,
+                    style: const TextStyle(
                       fontFamily: 'CormorantGaramond',
                       fontStyle: FontStyle.italic,
                       fontWeight: FontWeight.w400,
@@ -102,9 +107,9 @@ class _LogInScreenState extends State<LogInScreen> {
                     ),
                   ),
                   const SizedBox(height: 8),
-                  const Text(
-                    'Log in to continue your style journey ',
-                    style: TextStyle(
+                  Text(
+                    loc.loginSubtitle,
+                    style: const TextStyle(
                       fontFamily: 'inter',
                       fontSize: 14,
                       color: Color(0xFF6B5344),
@@ -121,12 +126,11 @@ class _LogInScreenState extends State<LogInScreen> {
                           controller: _emailController,
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return 'Please enter your email';
+                              return loc.loginEmailRequired;
                             }
-                            if (!RegExp(
-                              r'^[^@]+@[^@]+\.[^@]+',
-                            ).hasMatch(value)) {
-                              return 'Please enter a valid email';
+                            if (!RegExp(r'^[^@]+@[^@]+\.[^@]+')
+                                .hasMatch(value)) {
+                              return loc.loginEmailInvalid;
                             }
                             return null;
                           },
@@ -136,7 +140,7 @@ class _LogInScreenState extends State<LogInScreen> {
                           controller: _passwordController,
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return 'Please enter your password';
+                              return loc.loginPasswordRequired;
                             }
                             return null;
                           },
@@ -146,11 +150,11 @@ class _LogInScreenState extends State<LogInScreen> {
                           alignment: Alignment.centerRight,
                           child: GestureDetector(
                             onTap: () {
-                              context.router.push(ResetPasswordRoute());
+                              context.router.push(const ResetPasswordRoute());
                             },
-                            child: const Text(
-                              'Forgot Password?',
-                              style: TextStyle(
+                            child: Text(
+                              loc.loginForgotPassword,
+                              style: const TextStyle(
                                 fontFamily: 'inter',
                                 fontSize: 14,
                                 fontWeight: FontWeight.w600,
@@ -191,9 +195,9 @@ class _LogInScreenState extends State<LogInScreen> {
                                           strokeWidth: 2,
                                         ),
                                       )
-                                    : const Text(
-                                        'Sign In',
-                                        style: TextStyle(
+                                    : Text(
+                                        loc.loginButton,
+                                        style: const TextStyle(
                                           fontFamily: 'CormorantGaramond',
                                           fontSize: 16,
                                           fontWeight: FontWeight.w600,
@@ -211,9 +215,9 @@ class _LogInScreenState extends State<LogInScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Text(
-                        "Don't have an account? ",
-                        style: TextStyle(
+                      Text(
+                        loc.loginNoAccount,
+                        style: const TextStyle(
                           fontFamily: 'inter',
                           fontSize: 14,
                           color: Color(0xFF666666),
@@ -223,9 +227,9 @@ class _LogInScreenState extends State<LogInScreen> {
                         onTap: () {
                           context.router.push(const SignUpRoute());
                         },
-                        child: const Text(
-                          'Create Account',
-                          style: TextStyle(
+                        child: Text(
+                          loc.loginCreateAccount,
+                          style: const TextStyle(
                             fontFamily: 'CormorantGaramond',
                             fontSize: 14,
                             fontWeight: FontWeight.w600,

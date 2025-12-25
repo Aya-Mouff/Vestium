@@ -53,13 +53,13 @@ class DBHelper {
           );
         ''');
 
-        // Insert initial item categories
-        await db.execute('INSERT INTO items_categories (category_name) VALUES ("Tops")');
-        await db.execute('INSERT INTO items_categories (category_name) VALUES ("Bottoms")');
-        await db.execute('INSERT INTO items_categories (category_name) VALUES ("Dresses")');
-        await db.execute('INSERT INTO items_categories (category_name) VALUES ("Outerwear")');
-        await db.execute('INSERT INTO items_categories (category_name) VALUES ("Shoes")');
-        await db.execute('INSERT INTO items_categories (category_name) VALUES ("Accessories")');
+        // Insert initial item categories - FIXED: Changed " to '
+        await db.execute('INSERT INTO items_categories (category_name) VALUES (\'Tops\')');
+        await db.execute('INSERT INTO items_categories (category_name) VALUES (\'Bottoms\')');
+        await db.execute('INSERT INTO items_categories (category_name) VALUES (\'Dresses\')');
+        await db.execute('INSERT INTO items_categories (category_name) VALUES (\'Outerwear\')');
+        await db.execute('INSERT INTO items_categories (category_name) VALUES (\'Shoes\')');
+        await db.execute('INSERT INTO items_categories (category_name) VALUES (\'Accessories\')');
 
         // Items
         await db.execute('''
@@ -97,15 +97,15 @@ class DBHelper {
           );
         ''');
 
-        // Insert initial outfit categories
-        await db.execute('INSERT INTO outfit_categories (category_name) VALUES ("Casual")');
-        await db.execute('INSERT INTO outfit_categories (category_name) VALUES ("Formal")');
-        await db.execute('INSERT INTO outfit_categories (category_name) VALUES ("Workwear")');
-        await db.execute('INSERT INTO outfit_categories (category_name) VALUES ("Athletic")');
-        await db.execute('INSERT INTO outfit_categories (category_name) VALUES ("Party")');
-        await db.execute('INSERT INTO outfit_categories (category_name) VALUES ("Date Night")');
-        await db.execute('INSERT INTO outfit_categories (category_name) VALUES ("Vacation")');
-        await db.execute('INSERT INTO outfit_categories (category_name) VALUES ("Seasonal")');
+        // Insert initial outfit categories - FIXED: Changed " to '
+        await db.execute('INSERT INTO outfit_categories (category_name) VALUES (\'Casual\')');
+        await db.execute('INSERT INTO outfit_categories (category_name) VALUES (\'Formal\')');
+        await db.execute('INSERT INTO outfit_categories (category_name) VALUES (\'Workwear\')');
+        await db.execute('INSERT INTO outfit_categories (category_name) VALUES (\'Athletic\')');
+        await db.execute('INSERT INTO outfit_categories (category_name) VALUES (\'Party\')');
+        await db.execute('INSERT INTO outfit_categories (category_name) VALUES (\'Date Night\')');
+        await db.execute('INSERT INTO outfit_categories (category_name) VALUES (\'Vacation\')');
+        await db.execute('INSERT INTO outfit_categories (category_name) VALUES (\'Seasonal\')');
 
         // Outfits (CREATE WITHOUT category_id field)
         await db.execute('''

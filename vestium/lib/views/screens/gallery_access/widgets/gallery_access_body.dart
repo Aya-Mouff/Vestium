@@ -81,12 +81,12 @@
 //   Future<void> _onAllowAccessPressed(BuildContext context) async {
 //     // First check current permission status
 //     var status = await Permission.photos.status;
-    
+
 //     if (status.isDenied) {
 //       // Request permission
 //       status = await Permission.photos.request();
 //     }
-    
+
 //     if (status.isGranted || status.isLimited) {
 //       // Permission granted - navigate to SelectOutfitScreen
 //       if (context.mounted) {
@@ -166,6 +166,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:vestium/app_router.dart';
+import 'package:vestium/l10n/app_localizations.dart';
 import '../cubit/gallery_access_cubit.dart';
 import '../cubit/gallery_access_state.dart';
 import 'gallery_icon_widget.dart';
@@ -178,40 +179,31 @@ class GalleryAccessBody extends StatelessWidget {
   const GalleryAccessBody({super.key});
 
   void _showSettingsDialog(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
         backgroundColor: const Color(0xFFFFFFFF),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-        ),
-        title: const Text(
-          'Permission Required',
-          style: TextStyle(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: Text(
+          loc.galleryAccessPermissionRequired,
+          style: const TextStyle(
             fontFamily: 'Inter',
             fontSize: 18,
             fontWeight: FontWeight.w600,
             color: Color(0xFF3E2723),
           ),
         ),
-        content: const Text(
-          'Gallery access has been permanently denied. Please enable it in app settings.',
-          style: TextStyle(
-            fontFamily: 'Inter',
-            fontSize: 15,
-            color: Color(0xFF795548),
-          ),
+        content: Text(
+          loc.galleryAccessPermissionDenied,
+          style: const TextStyle(fontFamily: 'Inter', fontSize: 15, color: Color(0xFF795548)),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).maybePop(),
-            child: const Text(
-              'Cancel',
-              style: TextStyle(
-                fontFamily: 'Inter',
-                fontSize: 15,
-                color: Color(0xFF795548),
-              ),
+            child: Text(
+              loc.galleryAccessCancel,
+              style: const TextStyle(fontFamily: 'Inter', fontSize: 15, color: Color(0xFF795548)),
             ),
           ),
           ElevatedButton(
@@ -224,13 +216,7 @@ class GalleryAccessBody extends StatelessWidget {
               foregroundColor: const Color(0xFFFFFFFF),
               elevation: 0,
             ),
-            child: const Text(
-              'Settings',
-              style: TextStyle(
-                fontFamily: 'Inter',
-                fontSize: 15,
-              ),
-            ),
+            child: Text(loc.galleryAccessSettings, style: const TextStyle(fontFamily: 'Inter', fontSize: 15)),
           ),
         ],
       ),
@@ -243,7 +229,7 @@ class GalleryAccessBody extends StatelessWidget {
 
   Future<void> _onAllowAccessPressed(BuildContext context) async {
     final path = await context.read<GalleryAccessCubit>().requestGalleryAccess();
-    
+
     if (path != null) {
       // Image was selected, navigate to next screen
       if (context.mounted) {
@@ -258,15 +244,12 @@ class GalleryAccessBody extends StatelessWidget {
       listener: (context, state) {
         // Handle errors
         if (state.errorMessage != null && context.mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(state.errorMessage!),
-              backgroundColor: const Color(0xFF795548),
-            ),
-          );
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(state.errorMessage!), backgroundColor: const Color(0xFF795548)));
           context.read<GalleryAccessCubit>().clearError();
         }
-        
+
         // Handle navigation when permission is already granted
         if (state.permissionGranted == true && !state.isLoading && !state.checkingExistingPermission) {
           Future.microtask(() {
@@ -275,7 +258,7 @@ class GalleryAccessBody extends StatelessWidget {
             }
           });
         }
-        
+
         // Handle permanently denied permission
         if (state.permissionGranted == false && !state.isLoading && context.mounted) {
           _showSettingsDialog(context);
@@ -287,14 +270,10 @@ class GalleryAccessBody extends StatelessWidget {
           if (state.checkingExistingPermission) {
             return Scaffold(
               backgroundColor: const Color(0xFFF5ECE7),
-              body: const Center(
-                child: CircularProgressIndicator(
-                  color: Color(0xFF795548),
-                ),
-              ),
+              body: const Center(child: CircularProgressIndicator(color: Color(0xFF795548))),
             );
           }
-          
+
           // Show the actual permission screen
           return Scaffold(
             backgroundColor: const Color(0xFFF5ECE7),
@@ -317,10 +296,7 @@ class GalleryAccessBody extends StatelessWidget {
                           isLoading: state.isLoading,
                         ),
                         const SizedBox(height: 16),
-                        GalleryMaybeLaterButton(
-                          onPressed: () => _maybeLater(context),
-                          isLoading: state.isLoading,
-                        ),
+                        GalleryMaybeLaterButton(onPressed: () => _maybeLater(context), isLoading: state.isLoading),
                       ],
                     ),
                     const SizedBox(height: 32),

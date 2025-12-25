@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:vestium/l10n/app_localizations.dart';
 import 'package:vestium/databases/services/outfit_creation_service.dart';
 //import 'package:vestium/databases/services/outfit_screenshot_service.dart';
 import '../../../app_router.dart';
@@ -17,10 +18,7 @@ import 'package:flutter/rendering.dart'; // Add this
 class OutfitCreatorScreen extends StatefulWidget {
   final int userId;
 
-  const OutfitCreatorScreen({
-    super.key,
-    @PathParam('userId') required this.userId,
-  });
+  const OutfitCreatorScreen({super.key, @PathParam('userId') required this.userId});
 
   @override
   State<OutfitCreatorScreen> createState() => _OutfitCreatorScreenState();
@@ -28,8 +26,7 @@ class OutfitCreatorScreen extends StatefulWidget {
 
 class _OutfitCreatorScreenState extends State<OutfitCreatorScreen> {
   late CreateOutfitCubit _cubit;
-  final TransformationController _transformationController =
-      TransformationController();
+  final TransformationController _transformationController = TransformationController();
   double _currentScale = 1.0;
 
   // ✅ CANVAS KEY FOR SCREENSHOT CAPTURE
@@ -213,11 +210,7 @@ class _OutfitCreatorScreenState extends State<OutfitCreatorScreen> {
               padding: EdgeInsets.all(24.0),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
-                children: [
-                  CircularProgressIndicator(),
-                  SizedBox(height: 16),
-                  Text('Capturing outfit...'),
-                ],
+                children: [CircularProgressIndicator(), SizedBox(height: 16), Text('Capturing outfit...')],
               ),
             ),
           ),
@@ -232,9 +225,7 @@ class _OutfitCreatorScreenState extends State<OutfitCreatorScreen> {
       try {
         print('📸 Capturing canvas screenshot...');
 
-        final RenderRepaintBoundary boundary =
-            _canvasKey.currentContext!.findRenderObject()
-                as RenderRepaintBoundary;
+        final RenderRepaintBoundary boundary = _canvasKey.currentContext!.findRenderObject() as RenderRepaintBoundary;
 
         final ui.Image image = await boundary.toImage(pixelRatio: 3.0);
         final byteData = await image.toByteData(format: ui.ImageByteFormat.png);
@@ -242,10 +233,7 @@ class _OutfitCreatorScreenState extends State<OutfitCreatorScreen> {
         if (byteData != null) {
           final buffer = byteData.buffer.asUint8List();
           final tempDir = await getTemporaryDirectory();
-          capturedImagePath = p.join(
-            tempDir.path,
-            'outfit_temp_capture_${DateTime.now().millisecondsSinceEpoch}.png',
-          );
+          capturedImagePath = p.join(tempDir.path, 'outfit_temp_capture_${DateTime.now().millisecondsSinceEpoch}.png');
 
           await File(capturedImagePath).writeAsBytes(buffer);
           print('✅ Canvas captured to temp file: $capturedImagePath');
@@ -293,21 +281,13 @@ class _OutfitCreatorScreenState extends State<OutfitCreatorScreen> {
 
   void _showSuccessSnackbar(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: const Color(0xFF4CAF50),
-        behavior: SnackBarBehavior.floating,
-      ),
+      SnackBar(content: Text(message), backgroundColor: const Color(0xFF4CAF50), behavior: SnackBarBehavior.floating),
     );
   }
 
   void _showErrorSnackbar(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: const Color(0xFFF44336),
-        behavior: SnackBarBehavior.floating,
-      ),
+      SnackBar(content: Text(message), backgroundColor: const Color(0xFFF44336), behavior: SnackBarBehavior.floating),
     );
   }
 
@@ -365,9 +345,7 @@ class _OutfitCreatorScreenState extends State<OutfitCreatorScreen> {
           child: BlocBuilder<CreateOutfitCubit, CreateOutfitState>(
             builder: (context, state) {
               if (state is CreateOutfitLoading) {
-                return const Center(
-                  child: CircularProgressIndicator(color: Color(0xFF6B5344)),
-                );
+                return const Center(child: CircularProgressIndicator(color: Color(0xFF6B5344)));
               }
 
               if (state is CreateOutfitError) {
@@ -375,9 +353,7 @@ class _OutfitCreatorScreenState extends State<OutfitCreatorScreen> {
               }
 
               if (state is! CreateOutfitItemsLoaded) {
-                return const Center(
-                  child: CircularProgressIndicator(color: Color(0xFF6B5344)),
-                );
+                return const Center(child: CircularProgressIndicator(color: Color(0xFF6B5344)));
               }
 
               return _buildMainContent(state);
@@ -389,6 +365,7 @@ class _OutfitCreatorScreenState extends State<OutfitCreatorScreen> {
   }
 
   Widget _buildErrorState(CreateOutfitError state) {
+    final loc = AppLocalizations.of(context)!;
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -397,10 +374,7 @@ class _OutfitCreatorScreenState extends State<OutfitCreatorScreen> {
           const SizedBox(height: 16),
           Text(state.message, textAlign: TextAlign.center),
           const SizedBox(height: 16),
-          ElevatedButton(
-            onPressed: () => _cubit.loadClothingItems(),
-            child: const Text('Try Again'),
-          ),
+          ElevatedButton(onPressed: () => _cubit.loadClothingItems(), child: Text(loc.createOutfitTryAgain)),
         ],
       ),
     );
@@ -409,10 +383,7 @@ class _OutfitCreatorScreenState extends State<OutfitCreatorScreen> {
   Widget _buildMainContent(CreateOutfitItemsLoaded state) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        final canvasSize = Size(
-          constraints.maxWidth,
-          constraints.maxHeight - 180,
-        );
+        final canvasSize = Size(constraints.maxWidth, constraints.maxHeight - 180);
 
         return Column(
           children: [
@@ -425,12 +396,8 @@ class _OutfitCreatorScreenState extends State<OutfitCreatorScreen> {
                     onScaleStart: (details) {},
                     onScaleUpdate: (details) {
                       if (details.scale != 1.0) {
-                        final newScale = (_currentScale * details.scale).clamp(
-                          0.5,
-                          3.0,
-                        );
-                        _transformationController.value = Matrix4.identity()
-                          ..scale(newScale);
+                        final newScale = (_currentScale * details.scale).clamp(0.5, 3.0);
+                        _transformationController.value = Matrix4.identity()..scale(newScale);
                       }
                     },
                     child: InteractiveViewer(
@@ -450,10 +417,7 @@ class _OutfitCreatorScreenState extends State<OutfitCreatorScreen> {
                           child: Stack(
                             children: [
                               // Grid background
-                              CustomPaint(
-                                size: canvasSize,
-                                painter: _GridPainter(),
-                              ),
+                              CustomPaint(size: canvasSize, painter: _GridPainter()),
                               // Placed items
                               ...state.sortedPlacedItems.map((placedItem) {
                                 return SimpleZoomItem(
@@ -472,38 +436,24 @@ class _OutfitCreatorScreenState extends State<OutfitCreatorScreen> {
                   ),
 
                   // Zoom controls
-                  Positioned(
-                    right: 16,
-                    bottom: 16,
-                    child: _buildZoomControls(),
-                  ),
+                  Positioned(right: 16, bottom: 16, child: _buildZoomControls()),
 
                   // Item counter
                   Positioned(
                     top: 16,
                     left: 16,
                     child: Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 12,
-                        vertical: 8,
-                      ),
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                       decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(20),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withValues(alpha: .1),
-                            blurRadius: 8,
-                          ),
-                        ],
+                        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: .1), blurRadius: 8)],
                       ),
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Icon(
-                            state.placedItems.isEmpty
-                                ? Icons.layers_outlined
-                                : Icons.layers,
+                            state.placedItems.isEmpty ? Icons.layers_outlined : Icons.layers,
                             size: 16,
                             color: const Color(0xFF6B5344),
                           ),
@@ -538,9 +488,7 @@ class _OutfitCreatorScreenState extends State<OutfitCreatorScreen> {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(color: Colors.black.withValues(alpha: .1), blurRadius: 8),
-        ],
+        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: .1), blurRadius: 8)],
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -554,11 +502,7 @@ class _OutfitCreatorScreenState extends State<OutfitCreatorScreen> {
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
             child: Text(
               '${(_currentScale * 100).toInt()}%',
-              style: const TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.w600,
-                color: Color(0xFF6B5344),
-              ),
+              style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: Color(0xFF6B5344)),
             ),
           ),
           IconButton(
@@ -709,13 +653,7 @@ class _OutfitCreatorScreenState extends State<OutfitCreatorScreen> {
       height: 180,
       decoration: BoxDecoration(
         color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: .1),
-            blurRadius: 8,
-            offset: const Offset(0, -2),
-          ),
-        ],
+        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: .1), blurRadius: 8, offset: const Offset(0, -2))],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -735,21 +673,11 @@ class _OutfitCreatorScreenState extends State<OutfitCreatorScreen> {
                   ),
                 ),
                 Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 10,
-                    vertical: 4,
-                  ),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFF5ECE7),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                  decoration: BoxDecoration(color: const Color(0xFFF5ECE7), borderRadius: BorderRadius.circular(12)),
                   child: Text(
                     '${state.availableItems.length} total',
-                    style: const TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w500,
-                      color: Color(0xFF6B5344),
-                    ),
+                    style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500, color: Color(0xFF6B5344)),
                   ),
                 ),
               ],
@@ -758,10 +686,7 @@ class _OutfitCreatorScreenState extends State<OutfitCreatorScreen> {
           Expanded(
             child: state.availableItems.isEmpty
                 ? const Center(
-                    child: Text(
-                      'No items in your wardrobe',
-                      style: TextStyle(color: Color(0xFF999999)),
-                    ),
+                    child: Text('No items in your wardrobe', style: TextStyle(color: Color(0xFF999999))),
                   )
                 : ListView.separated(
                     scrollDirection: Axis.horizontal,
@@ -770,18 +695,13 @@ class _OutfitCreatorScreenState extends State<OutfitCreatorScreen> {
                     separatorBuilder: (_, __) => const SizedBox(width: 12),
                     itemBuilder: (context, index) {
                       final item = state.availableItems[index];
-                      final isInOutfit = state.placedItems.any(
-                        (pi) => pi.itemId == item.itemId,
-                      );
+                      final isInOutfit = state.placedItems.any((pi) => pi.itemId == item.itemId);
 
                       return GestureDetector(
                         onTap: () {
                           if (!isInOutfit) {
                             // ADD item to canvas
-                            final position = Offset(
-                              (canvasSize.width - 100) / 2,
-                              (canvasSize.height - 120) / 2,
-                            );
+                            final position = Offset((canvasSize.width - 100) / 2, (canvasSize.height - 120) / 2);
                             _cubit.addItemToOutfitWithPosition(item, position);
                           } else {
                             // ⭐ NEW: REMOVE item from canvas ⭐
@@ -795,9 +715,7 @@ class _OutfitCreatorScreenState extends State<OutfitCreatorScreen> {
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(12),
                             border: Border.all(
-                              color: isInOutfit
-                                  ? const Color(0xFF6B5344)
-                                  : const Color(0xFFE0E0E0),
+                              color: isInOutfit ? const Color(0xFF6B5344) : const Color(0xFFE0E0E0),
                               width: isInOutfit ? 2 : 1,
                             ),
                           ),
@@ -813,15 +731,8 @@ class _OutfitCreatorScreenState extends State<OutfitCreatorScreen> {
                                   right: 4,
                                   child: Container(
                                     padding: const EdgeInsets.all(4),
-                                    decoration: const BoxDecoration(
-                                      color: Color(0xFF6B5344),
-                                      shape: BoxShape.circle,
-                                    ),
-                                    child: const Icon(
-                                      Icons.check,
-                                      size: 12,
-                                      color: Colors.white,
-                                    ),
+                                    decoration: const BoxDecoration(color: Color(0xFF6B5344), shape: BoxShape.circle),
+                                    child: const Icon(Icons.check, size: 12, color: Colors.white),
                                   ),
                                 ),
                             ],
@@ -841,9 +752,7 @@ class _OutfitCreatorScreenState extends State<OutfitCreatorScreen> {
     if (imagePath == null || imagePath.isEmpty) {
       return Container(
         color: const Color(0xFFF5ECE7),
-        child: const Center(
-          child: Icon(Icons.photo, color: Color(0xFFA1887F), size: 32),
-        ),
+        child: const Center(child: Icon(Icons.photo, color: Color(0xFFA1887F), size: 32)),
       );
     }
 
@@ -852,9 +761,7 @@ class _OutfitCreatorScreenState extends State<OutfitCreatorScreen> {
       fit: BoxFit.cover,
       errorBuilder: (_, __, ___) => Container(
         color: const Color(0xFFF5ECE7),
-        child: const Center(
-          child: Icon(Icons.broken_image, color: Color(0xFFA1887F), size: 32),
-        ),
+        child: const Center(child: Icon(Icons.broken_image, color: Color(0xFFA1887F), size: 32)),
       ),
     );
   }

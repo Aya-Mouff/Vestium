@@ -48,6 +48,7 @@
 
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:vestium/l10n/app_localizations.dart';
 
 class OutfitImagePreview extends StatelessWidget {
   final String imageUrl;
@@ -62,17 +63,10 @@ class OutfitImagePreview extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
-          BoxShadow(
-            color: const Color(0xFF795548).withValues(alpha: .15),
-            blurRadius: 20,
-            offset: const Offset(0, 4),
-          ),
+          BoxShadow(color: const Color(0xFF795548).withValues(alpha: .15), blurRadius: 20, offset: const Offset(0, 4)),
         ],
       ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(24),
-        child: _buildImage(),
-      ),
+      child: ClipRRect(borderRadius: BorderRadius.circular(24), child: _buildImage()),
     );
   }
 
@@ -101,14 +95,14 @@ class OutfitImagePreview extends StatelessWidget {
     // Otherwise, it's a file path from the file system
     try {
       final file = File(imageUrl);
-      
+
       return FutureBuilder<bool>(
         future: file.exists(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return _loadingPlaceholder();
           }
-          
+
           if (snapshot.hasData && snapshot.data == true) {
             return Image.file(
               file,
@@ -134,30 +128,35 @@ class OutfitImagePreview extends StatelessWidget {
   Widget _loadingPlaceholder() {
     return Container(
       color: const Color(0xFFE9D9CF),
-      child: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            SizedBox(
-              width: 32,
-              height: 32,
-              child: CircularProgressIndicator(
-                color: const Color(0xFF795548).withValues(alpha: .6),
-                strokeWidth: 2.5,
-              ),
+      child: Builder(
+        builder: (context) {
+          final loc = AppLocalizations.of(context)!;
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SizedBox(
+                  width: 32,
+                  height: 32,
+                  child: CircularProgressIndicator(
+                    color: const Color(0xFF795548).withValues(alpha: .6),
+                    strokeWidth: 2.5,
+                  ),
+                ),
+                const SizedBox(height: 12),
+                Text(
+                  loc.editOutfitImageLoading,
+                  style: TextStyle(
+                    fontFamily: 'Inter',
+                    fontSize: 14,
+                    fontWeight: FontWeight.w300,
+                    color: const Color(0xFF795548).withValues(alpha: .7),
+                  ),
+                ),
+              ],
             ),
-            const SizedBox(height: 12),
-            Text(
-              'Loading image...',
-              style: TextStyle(
-                fontFamily: 'Inter',
-                fontSize: 14,
-                fontWeight: FontWeight.w300,
-                color: const Color(0xFF795548).withValues(alpha: .7),
-              ),
-            ),
-          ],
-        ),
+          );
+        },
       ),
     );
   }
@@ -165,27 +164,28 @@ class OutfitImagePreview extends StatelessWidget {
   Widget _errorPlaceholder() {
     return Container(
       color: const Color(0xFFD7CCC8),
-      child: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.image_not_supported_rounded,
-              size: 64,
-              color: const Color(0xFF795548).withValues(alpha: .6),
+      child: Builder(
+        builder: (context) {
+          final loc = AppLocalizations.of(context)!;
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.image_not_supported_rounded, size: 64, color: const Color(0xFF795548).withValues(alpha: .6)),
+                const SizedBox(height: 12),
+                Text(
+                  loc.editOutfitImageNotAvailable,
+                  style: TextStyle(
+                    fontFamily: 'Inter',
+                    fontSize: 14,
+                    fontWeight: FontWeight.w300,
+                    color: const Color(0xFF795548).withValues(alpha: .7),
+                  ),
+                ),
+              ],
             ),
-            const SizedBox(height: 12),
-            Text(
-              'Image not available',
-              style: TextStyle(
-                fontFamily: 'Inter',
-                fontSize: 14,
-                fontWeight: FontWeight.w300,
-                color: const Color(0xFF795548).withValues(alpha: .7),
-              ),
-            ),
-          ],
-        ),
+          );
+        },
       ),
     );
   }

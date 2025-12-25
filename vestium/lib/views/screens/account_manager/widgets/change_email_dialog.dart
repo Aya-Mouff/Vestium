@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:vestium/l10n/app_localizations.dart';
 import '../cubit/account_manager_cubit.dart';
 import '../cubit/account_manager_state.dart';
 
@@ -31,6 +32,7 @@ class _ChangeEmailDialogState extends State<ChangeEmailDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
     final cubit = context.read<AccountManagerCubit>();
 
     return Dialog(
@@ -41,9 +43,9 @@ class _ChangeEmailDialogState extends State<ChangeEmailDialog> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Text(
-                'Change Email',
-                style: TextStyle(
+              Text(
+                loc.accountManagerChangeEmailDialogTitle,
+                style: const TextStyle(
                   fontFamily: 'CormorantGaramond',
                   fontSize: 18,
                   fontWeight: FontWeight.w600,
@@ -51,22 +53,18 @@ class _ChangeEmailDialogState extends State<ChangeEmailDialog> {
                 ),
               ),
               const SizedBox(height: 8),
-              const Text(
-                'Enter your new email and confirm with your password',
-                style: TextStyle(
-                  fontFamily: 'inter',
-                  fontSize: 14,
-                  color: Color(0xFF666666),
-                ),
+              Text(
+                loc.accountManagerChangeEmailDialogDescription,
+                style: TextStyle(fontFamily: 'inter', fontSize: 14, color: Color(0xFF666666)),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 24),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    'New Email',
-                    style: TextStyle(
+                  Text(
+                    loc.accountManagerNewEmail,
+                    style: const TextStyle(
                       fontFamily: 'CormorantGaramond',
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
@@ -78,27 +76,18 @@ class _ChangeEmailDialogState extends State<ChangeEmailDialog> {
                     controller: _emailController,
                     keyboardType: TextInputType.emailAddress,
                     decoration: InputDecoration(
-                      hintText: 'newemail@example.com',
+                      hintText: loc.accountManagerNewEmailHint,
                       filled: true,
                       fillColor: const Color(0xFFF0EBE6),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
-                        borderSide: const BorderSide(
-                          color: Color(0xFFA1887F),
-                          width: 1.5,
-                        ),
+                        borderSide: const BorderSide(color: Color(0xFFA1887F), width: 1.5),
                       ),
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
-                        borderSide: const BorderSide(
-                          color: Color(0xFFA1887F),
-                          width: 1.5,
-                        ),
+                        borderSide: const BorderSide(color: Color(0xFFA1887F), width: 1.5),
                       ),
-                      contentPadding: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 14,
-                      ),
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
                     ),
                   ),
                 ],
@@ -107,9 +96,9 @@ class _ChangeEmailDialogState extends State<ChangeEmailDialog> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    'Current Password',
-                    style: TextStyle(
+                  Text(
+                    loc.accountManagerCurrentPassword,
+                    style: const TextStyle(
                       fontFamily: 'CormorantGaramond',
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
@@ -125,9 +114,7 @@ class _ChangeEmailDialogState extends State<ChangeEmailDialog> {
                       fillColor: const Color(0xFFF0EBE6),
                       suffixIcon: IconButton(
                         icon: Icon(
-                          _obscurePassword
-                              ? Icons.visibility_off
-                              : Icons.visibility,
+                          _obscurePassword ? Icons.visibility_off : Icons.visibility,
                           color: const Color(0xFFA1887F),
                         ),
                         onPressed: () {
@@ -138,22 +125,13 @@ class _ChangeEmailDialogState extends State<ChangeEmailDialog> {
                       ),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
-                        borderSide: const BorderSide(
-                          color: Color(0xFFA1887F),
-                          width: 1.5,
-                        ),
+                        borderSide: const BorderSide(color: Color(0xFFA1887F), width: 1.5),
                       ),
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
-                        borderSide: const BorderSide(
-                          color: Color(0xFFA1887F),
-                          width: 1.5,
-                        ),
+                        borderSide: const BorderSide(color: Color(0xFFA1887F), width: 1.5),
                       ),
-                      contentPadding: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 14,
-                      ),
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
                     ),
                   ),
                 ],
@@ -167,21 +145,18 @@ class _ChangeEmailDialogState extends State<ChangeEmailDialog> {
                       newEmail: _emailController.text.trim(),
                       currentPassword: _passwordController.text,
                     );
-                    if (context.mounted &&
-                        cubit.state.status != AccountManagerStatus.error) {
+                    if (context.mounted && cubit.state.status != AccountManagerStatus.error) {
                       Navigator.pop(context);
                     }
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF6B5344),
                     padding: const EdgeInsets.symmetric(vertical: 14),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                   ),
-                  child: const Text(
-                    'Change Email',
-                    style: TextStyle(
+                  child: Text(
+                    loc.accountManagerChangeEmailButton,
+                    style: const TextStyle(
                       fontFamily: 'CormorantGaramond',
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
@@ -195,8 +170,8 @@ class _ChangeEmailDialogState extends State<ChangeEmailDialog> {
                 width: double.infinity,
                 child: TextButton(
                   onPressed: () => Navigator.pop(context),
-                  child: const Text(
-                    'Cancel',
+                  child: Text(
+                    loc.accountManagerCancel,
                     style: TextStyle(
                       fontFamily: 'CormorantGaramond',
                       fontSize: 16,

@@ -1,36 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:vestium/l10n/app_localizations.dart';
 
 class AllowAccessButton extends StatelessWidget {
   final VoidCallback onPressed;
   final bool isLoading;
 
-  const AllowAccessButton({
-    super.key,
-    required this.onPressed,
-    this.isLoading = false,
-  });
+  const AllowAccessButton({super.key, required this.onPressed, this.isLoading = false});
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
     return Container(
       width: double.infinity,
       height: 56,
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: [
-            const Color(0xFF795548),
-            const Color(0xFF795548).withValues(alpha: 0.9),
-          ],
+          colors: [const Color(0xFF795548), const Color(0xFF795548).withValues(alpha: 0.9)],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
-          BoxShadow(
-            color: const Color(0xFF795548).withValues(alpha: 0.3),
-            blurRadius: 12,
-            offset: const Offset(0, 4),
-          ),
+          BoxShadow(color: const Color(0xFF795548).withValues(alpha: 0.3), blurRadius: 12, offset: const Offset(0, 4)),
         ],
       ),
       child: Material(
@@ -48,9 +39,9 @@ class AllowAccessButton extends StatelessWidget {
                       valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                     ),
                   )
-                : const Text(
-                    'Allow Camera Access',
-                    style: TextStyle(
+                : Text(
+                    loc.cameraAccessAllowButton,
+                    style: const TextStyle(
                       fontFamily: 'Inter',
                       fontSize: 16,
                       fontWeight: FontWeight.w500,

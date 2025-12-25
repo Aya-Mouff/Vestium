@@ -33,12 +33,12 @@
 //                   vertical: 12,
 //                 ),
 //                 decoration: BoxDecoration(
-//                   color: isSelected 
+//                   color: isSelected
 //                       ? const Color(0xFF795548)
 //                       : const Color(0xFFF5ECE7),
 //                   borderRadius: BorderRadius.circular(20),
 //                   border: Border.all(
-//                     color: isSelected 
+//                     color: isSelected
 //                         ? const Color(0xFF795548)
 //                         : const Color(0xFFA1887F),
 //                     width: 1,
@@ -50,7 +50,7 @@
 //                     fontFamily: 'CormorantGaramond',
 //                     fontSize: 16,
 //                     fontWeight: FontWeight.w500,
-//                     color: isSelected 
+//                     color: isSelected
 //                         ? Colors.white
 //                         : const Color(0xFF3E2723),
 //                   ),
@@ -67,6 +67,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:vestium/l10n/app_localizations.dart';
 import '../cubit/save_outfit_cubit.dart';
 import '../cubit/save_outfit_state.dart';
 
@@ -75,6 +76,8 @@ class CategorySelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
+
     return BlocBuilder<SaveOutfitCubit, SaveOutfitState>(
       builder: (context, state) {
         if (state is! SaveOutfitDataLoaded) {
@@ -88,8 +91,8 @@ class CategorySelector extends StatelessWidget {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              'Categories',
+            Text(
+              loc.saveOutfitCategories,
               style: TextStyle(
                 fontFamily: 'CormorantGaramond',
                 fontSize: 16,
@@ -105,23 +108,14 @@ class CategorySelector extends StatelessWidget {
               children: categories.map((category) {
                 final isSelected = selectedIds.contains(category.categoryId);
                 return GestureDetector(
-                  onTap: isEnabled
-                      ? () => context.read<SaveOutfitCubit>().toggleCategory(category.categoryId!)
-                      : null,
+                  onTap: isEnabled ? () => context.read<SaveOutfitCubit>().toggleCategory(category.categoryId!) : null,
                   child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 24,
-                      vertical: 12,
-                    ),
+                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                     decoration: BoxDecoration(
-                      color: isSelected 
-                          ? const Color(0xFF795548)
-                          : const Color(0xFFFFFFFF),
+                      color: isSelected ? const Color(0xFF795548) : const Color(0xFFFFFFFF),
                       borderRadius: BorderRadius.circular(24),
                       border: Border.all(
-                        color: isSelected 
-                            ? const Color(0xFF795548)
-                            : const Color(0xFFD7CCC8),
+                        color: isSelected ? const Color(0xFF795548) : const Color(0xFFD7CCC8),
                         width: 1,
                       ),
                     ),
@@ -131,9 +125,7 @@ class CategorySelector extends StatelessWidget {
                         fontFamily: 'Inter',
                         fontSize: 14,
                         fontWeight: FontWeight.w200,
-                        color: isSelected 
-                            ? const Color(0xFFFFFFFF)
-                            : const Color(0xFF795548),
+                        color: isSelected ? const Color(0xFFFFFFFF) : const Color(0xFF795548),
                         letterSpacing: 0.2,
                       ),
                     ),

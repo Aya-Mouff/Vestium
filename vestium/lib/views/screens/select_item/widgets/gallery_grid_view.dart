@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:vestium/l10n/app_localizations.dart';
 import '../../gallery_access/cubit/gallery_access_cubit.dart';
 import '../cubit/select_item_cubit.dart';
 
@@ -26,21 +27,18 @@ class GalleryGridView extends StatelessWidget {
   }
 
   Widget _buildEmptyGalleryView(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(32.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(
-              Icons.photo_library_outlined,
-              size: 64,
-              color: Colors.grey,
-            ),
+            const Icon(Icons.photo_library_outlined, size: 64, color: Colors.grey),
             const SizedBox(height: 24),
-            const Text(
-              'No Photos Selected',
-              style: TextStyle(
+            Text(
+              loc.selectItemEmptyTitle,
+              style: const TextStyle(
                 fontFamily: 'CormorantGaramond',
                 fontSize: 32,
                 fontWeight: FontWeight.w400,
@@ -49,16 +47,16 @@ class GalleryGridView extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 12),
-            const Text(
-              'Tap the button below to select an image from your gallery',
+            Text(
+              loc.selectItemEmptyDescription,
               textAlign: TextAlign.center,
-              style: TextStyle(
-                    fontFamily: 'Inter',
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
-                    color: Color(0xFF3E2723),
-                    letterSpacing: 0.1,
-                  ),
+              style: const TextStyle(
+                fontFamily: 'Inter',
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+                color: Color(0xFF3E2723),
+                letterSpacing: 0.1,
+              ),
             ),
             const SizedBox(height: 24),
             SizedBox(
@@ -68,18 +66,11 @@ class GalleryGridView extends StatelessWidget {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF8B6B5C),
                   padding: const EdgeInsets.symmetric(vertical: 16),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16),
-                  ),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                 ),
                 child: const Text(
                   'Select from Gallery',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                    fontFamily: 'Inter',
-                    fontWeight: FontWeight.w600,
-                  ),
+                  style: TextStyle(color: Colors.white, fontSize: 16, fontFamily: 'Inter', fontWeight: FontWeight.w600),
                 ),
               ),
             ),
@@ -102,9 +93,8 @@ class GalleryGridView extends StatelessWidget {
         itemCount: galleryItems.length,
         itemBuilder: (context, index) {
           final galleryItem = galleryItems[index];
-          final isSelected = selectedItem != null && 
-              selectedItem!['id'] == galleryItem['id'];
-          
+          final isSelected = selectedItem != null && selectedItem!['id'] == galleryItem['id'];
+
           return _GalleryCard(
             galleryItem: galleryItem,
             isSelected: isSelected,
@@ -118,9 +108,9 @@ class GalleryGridView extends StatelessWidget {
   Future<void> _pickImageFromGallery(BuildContext context) async {
     final galleryCubit = context.read<GalleryAccessCubit>();
     final selectItemCubit = context.read<SelectItemCubit>();
-    
+
     final imagePath = await galleryCubit.requestGalleryAccess();
-    
+
     if (imagePath != null) {
       selectItemCubit.addGalleryItem(imagePath);
     }
@@ -132,11 +122,7 @@ class _GalleryCard extends StatelessWidget {
   final bool isSelected;
   final VoidCallback onTap;
 
-  const _GalleryCard({
-    required this.galleryItem,
-    required this.isSelected,
-    required this.onTap,
-  });
+  const _GalleryCard({required this.galleryItem, required this.isSelected, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -147,24 +133,10 @@ class _GalleryCard extends StatelessWidget {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),
           color: Colors.white,
-          border: isSelected 
-              ? Border.all(color: const Color(0xFF8B6B5C), width: 2)
-              : null,
+          border: isSelected ? Border.all(color: const Color(0xFF8B6B5C), width: 2) : null,
           boxShadow: isSelected
-              ? [
-                  BoxShadow(
-                    color: Color(0xFF8B6B5C).withValues(alpha: 0.3),
-                    blurRadius: 8,
-                    offset: const Offset(0, 2),
-                  )
-                ]
-              : [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.1),
-                    blurRadius: 4,
-                    offset: const Offset(0, 2),
-                  )
-                ],
+              ? [BoxShadow(color: Color(0xFF8B6B5C).withValues(alpha: 0.3), blurRadius: 8, offset: const Offset(0, 2))]
+              : [BoxShadow(color: Colors.black.withValues(alpha: 0.1), blurRadius: 4, offset: const Offset(0, 2))],
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -211,7 +183,7 @@ class _GalleryCard extends StatelessWidget {
 
   Widget _buildImageContent() {
     final filePath = galleryItem['filePath'] as String?;
-    
+
     if (filePath != null) {
       return Image.file(
         File(filePath),
@@ -233,19 +205,9 @@ class _GalleryCard extends StatelessWidget {
       child: const Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
-            Icons.photo_library_outlined,
-            size: 40,
-            color: Colors.grey,
-          ),
+          Icon(Icons.photo_library_outlined, size: 40, color: Colors.grey),
           SizedBox(height: 8),
-          Text(
-            'Failed to load',
-            style: TextStyle(
-              fontSize: 10,
-              color: Colors.grey,
-            ),
-          ),
+          Text('Failed to load', style: TextStyle(fontSize: 10, color: Colors.grey)),
         ],
       ),
     );

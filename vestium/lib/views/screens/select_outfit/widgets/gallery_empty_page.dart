@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:vestium/l10n/app_localizations.dart';
 
 class GalleryEmptyPage extends StatelessWidget {
   const GalleryEmptyPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return const Center(
-      child: Text(
-        'Gallery will appear here once access is managed.',
-        textAlign: TextAlign.center,
-      ),
-    );
+    final loc = AppLocalizations.of(context)!;
+    return Center(child: Text(loc.galleryEmptyMessage, textAlign: TextAlign.center));
   }
 }

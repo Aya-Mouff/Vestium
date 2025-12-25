@@ -41,7 +41,7 @@
 //               BlocConsumer<CameraAccessCubit, CameraAccessState>(
 //                 listener: (context, state) {
 //                   _checkPermissionStatus(context);
-                  
+
 //                   if (state.errorMessage != null && context.mounted) {
 //                     ScaffoldMessenger.of(context).showSnackBar(
 //                       SnackBar(
@@ -78,7 +78,7 @@
 
 //   Future<void> _checkPermissionStatus(BuildContext context) async {
 //     final status = await Permission.camera.status;
-    
+
 //     if (status.isGranted && context.mounted) {
 //       _navigateToTakePicScreen(context);
 //     }
@@ -92,6 +92,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:vestium/app_router.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:vestium/l10n/app_localizations.dart';
 import '../cubit/camera_access_cubit.dart';
 import '../cubit/camera_access_state.dart';
 import 'camera_icon_widget.dart';
@@ -117,7 +118,7 @@ class CameraAccessBody extends StatelessWidget {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<CameraAccessCubit>().checkAndSkipIfAlreadyGranted();
     });
-    
+
     return Scaffold(
       backgroundColor: const Color(0xFFF5ECE7),
       body: SafeArea(
@@ -135,14 +136,14 @@ class CameraAccessBody extends StatelessWidget {
               BlocConsumer<CameraAccessCubit, CameraAccessState>(
                 listener: (context, state) {
                   _checkPermissionStatus(context);
-                  
+
                   // ✅ ADD THIS: Check if shouldNavigate is true
                   if (state.shouldNavigate && context.mounted) {
                     _navigateToTakePicScreen(context);
                     // Reset the flag
                     context.read<CameraAccessCubit>().clearNavigationFlag();
                   }
-                  
+
                   if (state.errorMessage != null && context.mounted) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
@@ -162,9 +163,7 @@ class CameraAccessBody extends StatelessWidget {
                         isLoading: state.isLoading,
                       ),
                       const SizedBox(height: 16),
-                      MaybeLaterButton(
-                        onPressed: () => _handleMaybeLater(context),
-                      ),
+                      MaybeLaterButton(onPressed: () => _handleMaybeLater(context)),
                     ],
                   );
                 },
@@ -179,7 +178,7 @@ class CameraAccessBody extends StatelessWidget {
 
   Future<void> _checkPermissionStatus(BuildContext context) async {
     final status = await Permission.camera.status;
-    
+
     if (status.isGranted && context.mounted) {
       _navigateToTakePicScreen(context);
     }

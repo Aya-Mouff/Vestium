@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:vestium/l10n/app_localizations.dart';
 import '../cubit/item_details_cubit.dart';
 import '../cubit/item_details_state.dart';
 
@@ -27,12 +28,14 @@ class _ItemDescriptionFieldState extends State<ItemDescriptionField> {
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'Description (optional)',
-          style: TextStyle(
+        Text(
+          loc.itemDetailsDescription,
+          style: const TextStyle(
             fontFamily: 'CormorantGaramond',
             fontSize: 16,
             fontWeight: FontWeight.w400,
@@ -49,15 +52,12 @@ class _ItemDescriptionFieldState extends State<ItemDescriptionField> {
             if (_controller.text != state.description) {
               _controller.value = TextEditingValue(
                 text: state.description,
-                selection: TextSelection.collapsed(
-                  offset: state.description.length,
-                ),
+                selection: TextSelection.collapsed(offset: state.description.length),
               );
             }
             return TextField(
               controller: _controller,
-              onChanged: (value) =>
-                  context.read<ItemDetailsCubit>().updateDescription(value),
+              onChanged: (value) => context.read<ItemDetailsCubit>().updateDescription(value),
               maxLines: 4,
               style: const TextStyle(
                 fontFamily: 'Inter',
@@ -66,7 +66,7 @@ class _ItemDescriptionFieldState extends State<ItemDescriptionField> {
                 color: Color(0xFF3E2723),
               ),
               decoration: InputDecoration(
-                hintText: 'Add notes about this item...',
+                hintText: loc.itemDetailsDescriptionHint,
                 hintStyle: TextStyle(
                   fontFamily: 'Inter',
                   fontSize: 15,
@@ -75,25 +75,13 @@ class _ItemDescriptionFieldState extends State<ItemDescriptionField> {
                 ),
                 filled: true,
                 fillColor: const Color(0xFFFFFFFF),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(16),
-                  borderSide: BorderSide.none,
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(16),
-                  borderSide: BorderSide.none,
-                ),
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(16), borderSide: BorderSide.none),
+                enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(16), borderSide: BorderSide.none),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(16),
-                  borderSide: const BorderSide(
-                    color: Color(0xFF795548),
-                    width: 1.5,
-                  ),
+                  borderSide: const BorderSide(color: Color(0xFF795548), width: 1.5),
                 ),
-                contentPadding: const EdgeInsets.symmetric(
-                  horizontal: 20,
-                  vertical: 16,
-                ),
+                contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
               ),
             );
           },

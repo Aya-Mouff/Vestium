@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:vestium/l10n/app_localizations.dart';
 
 class ProfileEditMode extends StatelessWidget {
   final String? profileImage;
@@ -23,6 +24,8 @@ class ProfileEditMode extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
+
     return Padding(
       padding: const EdgeInsets.all(24.0),
       child: Column(
@@ -33,10 +36,7 @@ class ProfileEditMode extends StatelessWidget {
                 child: Container(
                   width: 80,
                   height: 80,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: const Color(0xFF795548),
-                  ),
+                  decoration: BoxDecoration(shape: BoxShape.circle, color: const Color(0xFF795548)),
                   child: profileImage != null && profileImage!.isNotEmpty
                       ? Image(
                           image: _getImageProvider(profileImage!),
@@ -44,22 +44,10 @@ class ProfileEditMode extends StatelessWidget {
                           width: 80,
                           height: 80,
                           errorBuilder: (context, error, stackTrace) {
-                            return const Center(
-                              child: Icon(
-                                Icons.person,
-                                size: 40,
-                                color: Colors.white,
-                              ),
-                            );
+                            return const Center(child: Icon(Icons.person, size: 40, color: Colors.white));
                           },
                         )
-                      : const Center(
-                          child: Icon(
-                            Icons.person,
-                            size: 40,
-                            color: Colors.white,
-                          ),
-                        ),
+                      : const Center(child: Icon(Icons.person, size: 40, color: Colors.white)),
                 ),
               ),
               Positioned(
@@ -75,36 +63,27 @@ class ProfileEditMode extends StatelessWidget {
                       shape: BoxShape.circle,
                       border: Border.all(color: Colors.white, width: 2),
                     ),
-                    child: const Icon(
-                      Icons.edit,
-                      color: Colors.white,
-                      size: 14,
-                    ),
+                    child: const Icon(Icons.edit, color: Colors.white, size: 14),
                   ),
                 ),
               ),
             ],
           ),
           const SizedBox(height: 24),
-          _buildField('Name', nameController, 'My Name'),
+          _buildField(loc.settingsEditName, nameController, loc.settingsEditNameHint),
           const SizedBox(height: 16),
-          _buildField('Username', usernameController, 'my_username'),
+          _buildField(loc.settingsEditUsername, usernameController, loc.settingsEditUsernameHint),
           const SizedBox(height: 16),
-          _buildField(
-            'Bio',
-            bioController,
-            'Fashion enthusiast ✨ | Style inspiration',
-            maxLines: 3,
-          ),
+          _buildField(loc.settingsEditBio, bioController, loc.settingsEditBioHint, maxLines: 3),
           const SizedBox(height: 24),
           Row(
             children: [
               Expanded(
                 child: TextButton(
                   onPressed: onCancel,
-                  child: const Text(
-                    'Cancel',
-                    style: TextStyle(
+                  child: Text(
+                    loc.settingsEditCancel,
+                    style: const TextStyle(
                       fontSize: 16,
                       color: Color(0xFF795548),
                       fontWeight: FontWeight.w500,
@@ -117,12 +96,10 @@ class ProfileEditMode extends StatelessWidget {
               Expanded(
                 child: ElevatedButton(
                   onPressed: onSave,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF795548),
-                  ),
-                  child: const Text(
-                    'Save',
-                    style: TextStyle(
+                  style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF795548)),
+                  child: Text(
+                    loc.settingsEditSave,
+                    style: const TextStyle(
                       fontSize: 16,
                       color: Colors.white,
                       fontWeight: FontWeight.w500,
@@ -144,8 +121,8 @@ class ProfileEditMode extends StatelessWidget {
       return FileImage(File(path));
     }
     // Check if it starts with common file path indicators
-    if (path.startsWith('/') || 
-        path.contains('data/user') || 
+    if (path.startsWith('/') ||
+        path.contains('data/user') ||
         path.contains('storage/emulated') ||
         path.contains('cache')) {
       return FileImage(File(path));
@@ -154,12 +131,7 @@ class ProfileEditMode extends StatelessWidget {
     return AssetImage(path);
   }
 
-  Widget _buildField(
-    String label,
-    TextEditingController controller,
-    String hint, {
-    int maxLines = 1,
-  }) {
+  Widget _buildField(String label, TextEditingController controller, String hint, {int maxLines = 1}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -176,25 +148,14 @@ class ProfileEditMode extends StatelessWidget {
         TextField(
           controller: controller,
           maxLines: maxLines,
-          style: const TextStyle(
-            fontSize: 16,
-            color: Color(0xFF3E2723),
-            fontFamily: 'Inter',
-          ),
+          style: const TextStyle(fontSize: 16, color: Color(0xFF3E2723), fontFamily: 'Inter'),
           decoration: InputDecoration(
             hintText: hint,
-            hintStyle: const TextStyle(
-              color: Color(0xFF795548),
-              fontFamily: 'Inter',
-            ),
+            hintStyle: const TextStyle(color: Color(0xFF795548), fontFamily: 'Inter'),
             filled: true,
             fillColor: const Color(0xFFF5F5F5),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-              borderSide: BorderSide.none,
-            ),
-            contentPadding:
-                const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide.none),
+            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           ),
         ),
       ],

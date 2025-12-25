@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:auto_route/auto_route.dart';
+import 'package:vestium/l10n/app_localizations.dart';
 
 class OutfitDetailsAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String outfitId;
@@ -11,6 +12,7 @@ class OutfitDetailsAppBar extends StatelessWidget implements PreferredSizeWidget
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
     return AppBar(
       backgroundColor: Colors.white,
       elevation: 0,
@@ -18,8 +20,8 @@ class OutfitDetailsAppBar extends StatelessWidget implements PreferredSizeWidget
         icon: const Icon(Icons.arrow_back, color: Color(0xFF3E2723)),
         onPressed: () => context.router.maybePop(),
       ),
-      title: const Text(
-        'Outfit Details',
+      title: Text(
+        loc.outfitDetailsTitle,
         style: TextStyle(
           fontFamily: 'CormorantGaramond',
           fontSize: 20,

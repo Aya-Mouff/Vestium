@@ -27,7 +27,7 @@
 //           items: [
 //             'All Seasons',
 //             'Spring',
-//             'Summer', 
+//             'Summer',
 //             'Fall',
 //             'Winter',
 //           ].map((season) {
@@ -91,6 +91,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:vestium/l10n/app_localizations.dart';
 import '../cubit/save_outfit_cubit.dart';
 import '../cubit/save_outfit_state.dart';
 
@@ -99,12 +100,14 @@ class SeasonSelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'Season',
-          style: TextStyle(
+        Text(
+          loc.saveOutfitSeason,
+          style: const TextStyle(
             fontFamily: 'CormorantGaramond',
             fontSize: 16,
             fontWeight: FontWeight.w400,
@@ -114,21 +117,36 @@ class SeasonSelector extends StatelessWidget {
         ),
         const SizedBox(height: 8),
         Container(
-          decoration: BoxDecoration(
-            color: const Color(0xFFFFFFFF),
-            borderRadius: BorderRadius.circular(16),
-          ),
+          decoration: BoxDecoration(color: const Color(0xFFFFFFFF), borderRadius: BorderRadius.circular(16)),
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: BlocBuilder<SaveOutfitCubit, SaveOutfitState>(
             builder: (context, state) {
               final isEnabled = state is SaveOutfitDataLoaded && !state.isSaving;
               final selectedSeason = state is SaveOutfitDataLoaded ? state.selectedSeason : null;
 
+              // Helper to get localized season display
+              String _getLocalizedSeason(String season) {
+                switch (season) {
+                  case 'Spring':
+                    return loc.seasonSpring;
+                  case 'Summer':
+                    return loc.seasonSummer;
+                  case 'Fall':
+                    return loc.seasonFall;
+                  case 'Winter':
+                    return loc.seasonWinter;
+                  case 'All Season':
+                    return loc.seasonAllSeason;
+                  default:
+                    return season;
+                }
+              }
+
               return DropdownButtonHideUnderline(
                 child: DropdownButton<String>(
                   value: selectedSeason,
                   hint: Text(
-                    'Select season',
+                    loc.saveOutfitSeasonHint,
                     style: TextStyle(
                       fontFamily: 'Inter',
                       fontSize: 15,
@@ -137,10 +155,7 @@ class SeasonSelector extends StatelessWidget {
                     ),
                   ),
                   isExpanded: true,
-                  icon: const Icon(
-                    Icons.keyboard_arrow_down,
-                    color: Color(0xFF795548),
-                  ),
+                  icon: const Icon(Icons.keyboard_arrow_down, color: Color(0xFF795548)),
                   style: const TextStyle(
                     fontFamily: 'Inter',
                     fontSize: 15,
@@ -149,21 +164,10 @@ class SeasonSelector extends StatelessWidget {
                   ),
                   dropdownColor: const Color(0xFFFFFFFF),
                   borderRadius: BorderRadius.circular(16),
-                  items: [
-                    'All',
-                    'Spring',
-                    'Summer', 
-                    'Fall',
-                    'Winter',
-                  ].map((season) {
-                    return DropdownMenuItem<String>(
-                      value: season,
-                      child: Text(season),
-                    );
+                  items: ['All Season', 'Spring', 'Summer', 'Fall', 'Winter'].map((season) {
+                    return DropdownMenuItem<String>(value: season, child: Text(_getLocalizedSeason(season)));
                   }).toList(),
-                  onChanged: isEnabled
-                      ? (value) => context.read<SaveOutfitCubit>().updateSeason(value)
-                      : null,
+                  onChanged: isEnabled ? (value) => context.read<SaveOutfitCubit>().updateSeason(value) : null,
                 ),
               );
             },

@@ -1,6 +1,7 @@
 // lib/wardrobe_screen/widgets/filter_chips_widget.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:vestium/l10n/app_localizations.dart';
 import '../cubit/wardrobe_cubit.dart';
 import '../cubit/wardrobe_state.dart';
 
@@ -9,6 +10,7 @@ class FilterChipsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
     return BlocBuilder<WardrobeCubit, WardrobeState>(
       builder: (context, state) {
         if (state.categories.isEmpty && !state.isLoading) {
@@ -17,12 +19,10 @@ class FilterChipsWidget extends StatelessWidget {
 
         // Create filters: "All" + categories
         final filters = <Map<String, dynamic>>[
-          {'label': 'All', 'icon': null},
-          ...state.categories.map((category) => {
-                'label': category.categoryName,
-                'icon': null,
-                'id': category.categoryId,
-              }),
+          {'label': loc.wardrobeAll, 'icon': null},
+          ...state.categories.map(
+            (category) => {'label': category.categoryName, 'icon': null, 'id': category.categoryId},
+          ),
         ];
 
         return SizedBox(
@@ -48,9 +48,7 @@ class FilterChipsWidget extends StatelessWidget {
                   child: Container(
                     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                     decoration: BoxDecoration(
-                      color: isSelected
-                          ? const Color(0xFF8B6B61)
-                          : const Color(0xFFF0E4DC),
+                      color: isSelected ? const Color(0xFF8B6B61) : const Color(0xFFF0E4DC),
                       borderRadius: BorderRadius.circular(30),
                     ),
                     child: Row(
@@ -60,18 +58,11 @@ class FilterChipsWidget extends StatelessWidget {
                           const SizedBox(
                             width: 16,
                             height: 16,
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2,
-                              color: Colors.white,
-                            ),
+                            child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
                           )
                         else ...[
                           if (isSelected)
-                            const Icon(
-                              Icons.check,
-                              size: 16,
-                              color: Colors.white,
-                            )
+                            const Icon(Icons.check, size: 16, color: Colors.white)
                           else
                             const SizedBox(width: 4),
                           const SizedBox(width: 4),
@@ -80,9 +71,7 @@ class FilterChipsWidget extends StatelessWidget {
                             style: TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.w500,
-                              color: isSelected
-                                  ? Colors.white
-                                  : const Color(0xFF8B6B61),
+                              color: isSelected ? Colors.white : const Color(0xFF8B6B61),
                             ),
                           ),
                         ],

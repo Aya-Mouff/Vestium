@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vestium/l10n/app_localizations.dart';
 import 'dart:io';
 
 class CommentInputField extends StatelessWidget {
@@ -6,12 +7,7 @@ class CommentInputField extends StatelessWidget {
   final Function(String text) onSend;
   final dynamic currentUser;
 
-  const CommentInputField({
-    super.key,
-    required this.canComment,
-    required this.onSend,
-    required this.currentUser,
-  });
+  const CommentInputField({super.key, required this.canComment, required this.onSend, required this.currentUser});
 
   Widget _buildProfileImage(String imagePath) {
     if (imagePath.startsWith('assets/')) {
@@ -35,19 +31,16 @@ class CommentInputField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
     final controller = TextEditingController();
 
     if (!canComment || currentUser == null) {
       return Container(
         padding: const EdgeInsets.all(16),
         color: Colors.white,
-        child: const Text(
-          "You must be logged in to comment",
-          style: TextStyle(
-            fontFamily: "Inter",
-            fontSize: 14,
-            color: Colors.grey,
-          ),
+        child: Text(
+          loc.commentsLoginRequired,
+          style: TextStyle(fontFamily: "Inter", fontSize: 14, color: Colors.grey),
         ),
       );
     }
@@ -58,12 +51,7 @@ class CommentInputField extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.2),
-            spreadRadius: 1,
-            blurRadius: 5,
-            offset: const Offset(0, -2),
-          ),
+          BoxShadow(color: Colors.grey.withOpacity(0.2), spreadRadius: 1, blurRadius: 5, offset: const Offset(0, -2)),
         ],
       ),
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -76,7 +64,7 @@ class CommentInputField extends StatelessWidget {
               child: TextField(
                 controller: controller,
                 decoration: InputDecoration(
-                  hintText: 'Add a comment...',
+                  hintText: loc.commentsAddComment,
                   filled: true,
                   fillColor: const Color(0x20D5CCC8),
                   enabledBorder: OutlineInputBorder(
@@ -87,10 +75,7 @@ class CommentInputField extends StatelessWidget {
                     borderRadius: BorderRadius.circular(36205500),
                     borderSide: const BorderSide(color: Color(0xFF795548), width: 2),
                   ),
-                  contentPadding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 10,
-                  ),
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                 ),
                 style: const TextStyle(fontFamily: 'Inter', fontSize: 14),
                 maxLines: null,
@@ -107,10 +92,7 @@ class CommentInputField extends StatelessWidget {
               child: Container(
                 width: 36,
                 height: 36,
-                decoration: const BoxDecoration(
-                  color: Color(0xFF795548),
-                  shape: BoxShape.circle,
-                ),
+                decoration: const BoxDecoration(color: Color(0xFF795548), shape: BoxShape.circle),
                 child: const Icon(Icons.send, size: 18, color: Colors.white),
               ),
             ),

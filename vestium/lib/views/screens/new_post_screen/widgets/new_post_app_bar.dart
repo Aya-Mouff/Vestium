@@ -1,20 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:vestium/l10n/app_localizations.dart';
 
 class NewPostAppBar extends StatelessWidget implements PreferredSizeWidget {
   final bool isLoading;
   final VoidCallback onPostPressed;
 
-  const NewPostAppBar({
-    super.key,
-    required this.isLoading,
-    required this.onPostPressed,
-  });
+  const NewPostAppBar({super.key, required this.isLoading, required this.onPostPressed});
 
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
     return AppBar(
       backgroundColor: Colors.white,
       elevation: 0,
@@ -23,14 +21,9 @@ class NewPostAppBar extends StatelessWidget implements PreferredSizeWidget {
         onPressed: () => Navigator.of(context).pop(),
       ),
       centerTitle: true,
-      title: const Text(
-        'New Post',
-        style: TextStyle(
-          color: Colors.black,
-          fontSize: 16,
-          fontFamily: 'Inter',
-          fontWeight: FontWeight.w500,
-        ),
+      title: Text(
+        loc.newPostTitle,
+        style: const TextStyle(color: Colors.black, fontSize: 16, fontFamily: 'Inter', fontWeight: FontWeight.w500),
       ),
       actions: [
         Padding(
@@ -39,27 +32,18 @@ class NewPostAppBar extends StatelessWidget implements PreferredSizeWidget {
             onPressed: isLoading ? null : onPostPressed,
             style: ElevatedButton.styleFrom(
               backgroundColor: const Color(0xFF8B6B5C),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20),
-              ),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
               padding: const EdgeInsets.symmetric(horizontal: 24),
             ),
             child: isLoading
                 ? const SizedBox(
                     width: 16,
                     height: 16,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2,
-                      color: Colors.white,
-                    ),
+                    child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
                   )
-                : const Text(
-                    'Post',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontFamily: 'Inter',
-                      fontWeight: FontWeight.w600,
-                    ),
+                : Text(
+                    loc.newPostButton,
+                    style: const TextStyle(color: Colors.white, fontFamily: 'Inter', fontWeight: FontWeight.w600),
                   ),
           ),
         ),

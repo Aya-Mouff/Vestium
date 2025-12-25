@@ -1,6 +1,7 @@
 // post_actions.dart - Fixed version
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:vestium/l10n/app_localizations.dart';
 import '../cubit/home_screen_cubit.dart';
 import '../cubit/home_screen_state.dart';
 import 'package:auto_route/auto_route.dart';
@@ -22,6 +23,7 @@ class PostActions extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
       child: Column(
@@ -33,7 +35,7 @@ class PostActions extends StatelessWidget {
               BlocBuilder<HomeCubit, HomeState>(
                 builder: (context, state) {
                   final isLiked = post['isLiked'] as bool;
-                  
+
                   return IconButton(
                     icon: isLiked
                         ? const Icon(Icons.favorite, size: 24, color: Colors.red)
@@ -41,10 +43,7 @@ class PostActions extends StatelessWidget {
                     onPressed: () {
                       if (currentUserId == -1) {
                         ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('You must be logged in to like posts!'),
-                            duration: Duration(seconds: 2),
-                          ),
+                          SnackBar(content: Text(loc.homeLikeRequiresLogin), duration: const Duration(seconds: 2)),
                         );
                         return;
                       }
@@ -62,12 +61,7 @@ class PostActions extends StatelessWidget {
               IconButton(
                 icon: const Icon(Icons.mode_comment_outlined, size: 24),
                 onPressed: () {
-                  context.router.push(
-                    CommentsRoute(
-                      postId: postId,
-                      userId: currentUserId,
-                    ),
-                  );
+                  context.router.push(CommentsRoute(postId: postId, userId: currentUserId));
                 },
                 padding: EdgeInsets.zero,
                 constraints: const BoxConstraints(),
@@ -81,14 +75,10 @@ class PostActions extends StatelessWidget {
           BlocBuilder<HomeCubit, HomeState>(
             builder: (context, state) {
               final likesCount = post['likesCount'] as int;
-              
+
               return Text(
-                '$likesCount likes',
-                style: const TextStyle(
-                  fontFamily: 'Inter',
-                  fontWeight: FontWeight.w600,
-                  fontSize: 13,
-                ),
+                loc.homeLikesCount(likesCount.toString()),
+                style: const TextStyle(fontFamily: 'Inter', fontWeight: FontWeight.w600, fontSize: 13),
               );
             },
           ),
@@ -96,42 +86,34 @@ class PostActions extends StatelessWidget {
           const SizedBox(height: 4),
 
           // Caption
-          post['caption'] != '' 
-          ? RichText(
-            text: TextSpan(
-              children: [
-                TextSpan(
-                  text: post['caption'],
-                  style: const TextStyle(
-                      fontFamily: 'Inter',
-                      fontWeight: FontWeight.w400,
-                      fontSize: 13,
-                      color: Colors.black),
-                ),
-              ],
-            ),
-          )
-          : const SizedBox.shrink(),
+          post['caption'] != ''
+              ? RichText(
+                  text: TextSpan(
+                    children: [
+                      TextSpan(
+                        text: post['caption'],
+                        style: const TextStyle(
+                          fontFamily: 'Inter',
+                          fontWeight: FontWeight.w400,
+                          fontSize: 13,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ],
+                  ),
+                )
+              : const SizedBox.shrink(),
 
           const SizedBox(height: 8),
 
           // Comments count
           GestureDetector(
             onTap: () {
-              context.router.push(
-                CommentsRoute(
-                  postId: postId,
-                  userId: currentUserId,
-                ),
-              );
+              context.router.push(CommentsRoute(postId: postId, userId: currentUserId));
             },
             child: Text(
-              "View all ${post['commentsCount']} comments",
-              style: TextStyle(
-                fontFamily: 'Inter',
-                fontSize: 13,
-                color: Colors.grey.shade600,
-              ),
+              loc.homeViewAllComments(post['commentsCount'].toString()),
+              style: TextStyle(fontFamily: 'Inter', fontSize: 13, color: Colors.grey.shade600),
             ),
           ),
         ],

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vestium/l10n/app_localizations.dart';
 
 class EmailField extends StatelessWidget {
   final TextEditingController controller;
@@ -8,12 +9,14 @@ class EmailField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
+    
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'Email',
-          style: TextStyle(
+        Text(
+          loc.fieldEmailLabel,
+          style: const TextStyle(
             fontFamily: 'CormorantGaramond',
             fontSize: 14,
             fontWeight: FontWeight.w600,
@@ -25,7 +28,7 @@ class EmailField extends StatelessWidget {
           controller: controller,
           cursorColor: const Color(0xFF6B5344),
           decoration: InputDecoration(
-            hintText: 'you@example.com',
+            hintText: loc.fieldEmailHint,
             hintStyle: const TextStyle(
               fontFamily: 'inter',
               color: Color(0xFFA1887F),

@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:vestium/l10n/app_localizations.dart';
 
 class TitleDescriptionWidget extends StatelessWidget {
   const TitleDescriptionWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return const Column(
+    final loc = AppLocalizations.of(context)!;
+    return Column(
       children: [
         Text(
-          'Camera Access',
-          style: TextStyle(
+          loc.cameraAccessTitle,
+          style: const TextStyle(
             fontFamily: 'CormorantGaramond',
             fontSize: 32,
             fontWeight: FontWeight.w400,
@@ -17,11 +19,11 @@ class TitleDescriptionWidget extends StatelessWidget {
             letterSpacing: 0.5,
           ),
         ),
-        SizedBox(height: 20),
+        const SizedBox(height: 20),
         Text(
-          'Vestium needs access to your camera to capture photos of your clothing items and add them to your virtual wardrobe.',
+          loc.cameraAccessDescription,
           textAlign: TextAlign.center,
-          style: TextStyle(
+          style: const TextStyle(
             fontFamily: 'Inter',
             fontSize: 16,
             fontWeight: FontWeight.w200,

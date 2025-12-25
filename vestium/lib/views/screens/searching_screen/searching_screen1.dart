@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:vestium/l10n/app_localizations.dart';
 
 import '../../widgets/nav_bar.dart';
 import '../../../app_router.dart';
@@ -16,19 +17,12 @@ import 'widgets/search_header.dart';
 class SearchScreen extends StatelessWidget {
   final int userId;
 
-  const SearchScreen({
-    super.key,
-    @PathParam('userId') required this.userId,
-  });
+  const SearchScreen({super.key, @PathParam('userId') required this.userId});
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => SearchCubit(
-        FollowRepo(),
-        UserRepo(),
-        currentUserId: userId,
-      ),
+      create: (_) => SearchCubit(FollowRepo(), UserRepo(), currentUserId: userId),
       child: _SearchView(userId: userId),
     );
   }
@@ -60,25 +54,13 @@ class _SearchViewState extends State<_SearchView> {
     super.dispose();
   }
 
-  void _navigateToProfile({
-    required int profileUserId,
-    required int currentUserId,
-  }) {
+  void _navigateToProfile({required int profileUserId, required int currentUserId}) {
     if (profileUserId == currentUserId) {
       // Navigate to MyProfileScreen for current user
-      context.router.push(
-        MyProfileRoute(
-          userId: currentUserId,
-        ),
-      );
+      context.router.push(MyProfileRoute(userId: currentUserId));
     } else {
       // Navigate to UserProfileScreen for other users
-      context.router.push(
-        UserProfileRoute(
-          userId: profileUserId,
-          currentUserId: currentUserId,
-        ),
-      );
+      context.router.push(UserProfileRoute(userId: profileUserId, currentUserId: currentUserId));
     }
   }
 
@@ -91,9 +73,7 @@ class _SearchViewState extends State<_SearchView> {
         // keep controller in sync with state.query (for recent taps)
         if (_searchController.text != state.query) {
           _searchController.text = state.query;
-          _searchController.selection = TextSelection.fromPosition(
-            TextPosition(offset: _searchController.text.length),
-          );
+          _searchController.selection = TextSelection.fromPosition(TextPosition(offset: _searchController.text.length));
         }
 
         return Scaffold(
@@ -125,20 +105,17 @@ class _SearchViewState extends State<_SearchView> {
               ],
             ),
           ),
-          bottomNavigationBar: CustomNavBar(
-            currentPage: 'search',
-            userId: widget.userId,
-          ),
+          bottomNavigationBar: CustomNavBar(currentPage: 'search', userId: widget.userId),
         );
       },
     );
   }
 
   Widget _buildResults(SearchState state, SearchCubit cubit) {
+    final loc = AppLocalizations.of(context)!;
+
     if (state.isLoading) {
-      return const Expanded(
-        child: Center(child: CircularProgressIndicator()),
-      );
+      return const Expanded(child: Center(child: CircularProgressIndicator()));
     }
 
     if (state.errorMessage != null) {
@@ -146,11 +123,7 @@ class _SearchViewState extends State<_SearchView> {
         child: Center(
           child: Text(
             state.errorMessage!,
-            style: const TextStyle(
-              fontSize: 16,
-              color: Color(0xFF795548),
-              fontFamily: 'Inter',
-            ),
+            style: const TextStyle(fontSize: 16, color: Color(0xFF795548), fontFamily: 'Inter'),
           ),
         ),
       );
@@ -162,28 +135,16 @@ class _SearchViewState extends State<_SearchView> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(
-                Icons.search_off,
-                size: 64,
-                color: Colors.grey[400],
-              ),
+              Icon(Icons.search_off, size: 64, color: Colors.grey[400]),
               const SizedBox(height: 16),
               Text(
-                'No results found',
-                style: TextStyle(
-                  fontSize: 18,
-                  color: Colors.grey[600],
-                  fontFamily: 'Inter',
-                ),
+                loc.searchNoResults,
+                style: TextStyle(fontSize: 18, color: Colors.grey[600], fontFamily: 'Inter'),
               ),
               const SizedBox(height: 8),
               Text(
-                'Try searching for something else',
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Colors.grey[500],
-                  fontFamily: 'Inter',
-                ),
+                loc.searchTrySomethingElse,
+                style: TextStyle(fontSize: 14, color: Colors.grey[500], fontFamily: 'Inter'),
               ),
             ],
           ),
@@ -207,10 +168,7 @@ class _SearchViewState extends State<_SearchView> {
               final profileUserId = int.tryParse(user['id'].toString()) ?? 0;
               if (profileUserId == 0) return;
 
-              _navigateToProfile(
-                profileUserId: profileUserId,
-                currentUserId: widget.userId,
-              );
+              _navigateToProfile(profileUserId: profileUserId, currentUserId: widget.userId);
             },
             onToggleFollow: () => cubit.toggleFollow(index),
           );

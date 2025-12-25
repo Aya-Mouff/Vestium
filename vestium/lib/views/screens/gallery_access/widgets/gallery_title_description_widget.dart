@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:vestium/l10n/app_localizations.dart';
 
 class GalleryTitleDescriptionWidget extends StatelessWidget {
   const GalleryTitleDescriptionWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return const Column(
+    final loc = AppLocalizations.of(context)!;
+    return Column(
       children: [
         Text(
-          'Gallery Access',
-          style: TextStyle(
+          loc.galleryAccessTitle,
+          style: const TextStyle(
             fontFamily: 'Inter',
             fontSize: 28,
             fontWeight: FontWeight.w600,
@@ -17,11 +19,11 @@ class GalleryTitleDescriptionWidget extends StatelessWidget {
             letterSpacing: 0.2,
           ),
         ),
-        SizedBox(height: 20),
+        const SizedBox(height: 20),
         Text(
-          'Vestium needs access to your gallery to pic pictures of your clothing items and add them to your virtual wardrobe.',
+          loc.galleryAccessDescription,
           textAlign: TextAlign.center,
-          style: TextStyle(
+          style: const TextStyle(
             fontFamily: 'Inter',
             fontSize: 15,
             fontWeight: FontWeight.w400,

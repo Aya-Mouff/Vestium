@@ -86,6 +86,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:vestium/l10n/app_localizations.dart';
 import '../cubit/item_details_cubit.dart';
 import '../cubit/item_details_state.dart';
 import 'package:vestium/repo/item_category_repo.dart';
@@ -112,12 +113,12 @@ class _CategoriesSelectionState extends State<CategoriesSelection> {
     try {
       // Fetch categories from database
       final categories = await _categoryRepo.getAll();
-      
+
       // If no categories in database, return initial categories
       if (categories.isEmpty) {
         return await _categoryRepo.getInitialCategories();
       }
-      
+
       return categories;
     } catch (e) {
       print('❌ Error fetching categories: $e');
@@ -156,12 +157,14 @@ class _CategoriesSelectionState extends State<CategoriesSelection> {
   }
 
   Widget _buildLoadingState() {
+    final loc = AppLocalizations.of(context)!;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'Categories',
-          style: TextStyle(
+        Text(
+          loc.itemDetailsCategories,
+          style: const TextStyle(
             fontFamily: 'CormorantGaramond',
             fontSize: 16,
             fontWeight: FontWeight.w400,
@@ -172,29 +175,19 @@ class _CategoriesSelectionState extends State<CategoriesSelection> {
         const SizedBox(height: 12),
         Container(
           padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: const Color(0xFFFFFFFF),
-            borderRadius: BorderRadius.circular(16),
-          ),
-          child: const Row(
+          decoration: BoxDecoration(color: const Color(0xFFFFFFFF), borderRadius: BorderRadius.circular(16)),
+          child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              SizedBox(
+              const SizedBox(
                 width: 20,
                 height: 20,
-                child: CircularProgressIndicator(
-                  strokeWidth: 2,
-                  color: Color(0xFF795548),
-                ),
+                child: CircularProgressIndicator(strokeWidth: 2, color: Color(0xFF795548)),
               ),
-              SizedBox(width: 12),
+              const SizedBox(width: 12),
               Text(
-                'Loading categories...',
-                style: TextStyle(
-                  fontFamily: 'Inter',
-                  fontSize: 14,
-                  color: Color(0xFF795548),
-                ),
+                loc.itemDetailsCategoriesLoading,
+                style: const TextStyle(fontFamily: 'Inter', fontSize: 14, color: Color(0xFF795548)),
               ),
             ],
           ),
@@ -204,12 +197,14 @@ class _CategoriesSelectionState extends State<CategoriesSelection> {
   }
 
   Widget _buildErrorState(String error) {
+    final loc = AppLocalizations.of(context)!;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'Categories',
-          style: TextStyle(
+        Text(
+          loc.itemDetailsCategories,
+          style: const TextStyle(
             fontFamily: 'CormorantGaramond',
             fontSize: 16,
             fontWeight: FontWeight.w400,
@@ -227,19 +222,11 @@ class _CategoriesSelectionState extends State<CategoriesSelection> {
           ),
           child: Column(
             children: [
-              const Icon(
-                Icons.error_outline,
-                color: Color(0xFF795548),
-                size: 32,
-              ),
+              const Icon(Icons.error_outline, color: Color(0xFF795548), size: 32),
               const SizedBox(height: 8),
-              const Text(
-                'Failed to load categories',
-                style: TextStyle(
-                  fontFamily: 'Inter',
-                  fontSize: 14,
-                  color: Color(0xFF795548),
-                ),
+              Text(
+                loc.itemDetailsCategoriesError,
+                style: const TextStyle(fontFamily: 'Inter', fontSize: 14, color: Color(0xFF795548)),
               ),
               const SizedBox(height: 8),
               ElevatedButton(
@@ -249,10 +236,7 @@ class _CategoriesSelectionState extends State<CategoriesSelection> {
                   foregroundColor: const Color(0xFFFFFFFF),
                   padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
                 ),
-                child: const Text(
-                  'Retry',
-                  style: TextStyle(fontSize: 12),
-                ),
+                child: Text(loc.itemDetailsCategoriesRetry, style: const TextStyle(fontSize: 12)),
               ),
             ],
           ),
@@ -262,12 +246,14 @@ class _CategoriesSelectionState extends State<CategoriesSelection> {
   }
 
   Widget _buildEmptyState() {
+    final loc = AppLocalizations.of(context)!;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'Categories',
-          style: TextStyle(
+        Text(
+          loc.itemDetailsCategories,
+          style: const TextStyle(
             fontFamily: 'CormorantGaramond',
             fontSize: 16,
             fontWeight: FontWeight.w400,
@@ -283,14 +269,10 @@ class _CategoriesSelectionState extends State<CategoriesSelection> {
             borderRadius: BorderRadius.circular(16),
             border: Border.all(color: const Color(0xFFD7CCC8)),
           ),
-          child: const Center(
+          child: Center(
             child: Text(
-              'No categories found. Add some in Settings.',
-              style: TextStyle(
-                fontFamily: 'Inter',
-                fontSize: 14,
-                color: Color(0xFF795548),
-              ),
+              loc.itemDetailsCategoriesEmpty,
+              style: const TextStyle(fontFamily: 'Inter', fontSize: 14, color: Color(0xFF795548)),
             ),
           ),
         ),
@@ -299,12 +281,14 @@ class _CategoriesSelectionState extends State<CategoriesSelection> {
   }
 
   Widget _buildCategoriesList(List<ItemCategory> categories, BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'Categories',
-          style: TextStyle(
+        Text(
+          loc.itemDetailsCategories,
+          style: const TextStyle(
             fontFamily: 'CormorantGaramond',
             fontSize: 16,
             fontWeight: FontWeight.w400,
@@ -327,19 +311,12 @@ class _CategoriesSelectionState extends State<CategoriesSelection> {
                     }
                   },
                   child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 24,
-                      vertical: 12,
-                    ),
+                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                     decoration: BoxDecoration(
-                      color: isSelected
-                          ? const Color(0xFF795548)
-                          : const Color(0xFFFFFFFF),
+                      color: isSelected ? const Color(0xFF795548) : const Color(0xFFFFFFFF),
                       borderRadius: BorderRadius.circular(24),
                       border: Border.all(
-                        color: isSelected
-                            ? const Color(0xFF795548)
-                            : const Color(0xFFD7CCC8),
+                        color: isSelected ? const Color(0xFF795548) : const Color(0xFFD7CCC8),
                         width: 1,
                       ),
                     ),
@@ -349,9 +326,7 @@ class _CategoriesSelectionState extends State<CategoriesSelection> {
                         fontFamily: 'Inter',
                         fontSize: 14,
                         fontWeight: FontWeight.w200,
-                        color: isSelected
-                            ? const Color(0xFFFFFFFF)
-                            : const Color(0xFF795548),
+                        color: isSelected ? const Color(0xFFFFFFFF) : const Color(0xFF795548),
                         letterSpacing: 0.2,
                       ),
                     ),

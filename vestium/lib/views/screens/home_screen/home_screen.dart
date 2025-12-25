@@ -2,6 +2,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:vestium/l10n/app_localizations.dart';
 import 'cubit/home_screen_cubit.dart';
 import 'cubit/home_screen_state.dart';
 import '../../widgets/nav_bar.dart';
@@ -46,37 +47,32 @@ class _HomeScreenState extends State<HomeScreen> {
         });
       }
     }
-    
+
     // Load more posts when reaching bottom
-    if (_scrollController.position.pixels >= 
-        _scrollController.position.maxScrollExtent - 200) {
+    if (_scrollController.position.pixels >= _scrollController.position.maxScrollExtent - 200) {
       _loadMorePosts();
     }
   }
 
   Future<void> _refreshFeed() async {
     print('Refresh triggered');
-    
+    final loc = AppLocalizations.of(context)!;
+
     try {
       // Clear any existing errors
       if (mounted) {
         ScaffoldMessenger.of(context).hideCurrentSnackBar();
       }
-      
+
       print('Calling cubit.refreshPosts()');
       await _cubit.refreshPosts();
       print('Cubit refresh completed');
-      
-      
     } catch (e) {
       print('Refresh error: $e');
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Refresh failed: $e'),
-            backgroundColor: Colors.red,
-          ),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(loc.homeRefreshFailed(e.toString())), backgroundColor: Colors.red));
       }
     }
   }
@@ -89,6 +85,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
     return BlocProvider.value(
       value: _cubit,
       child: Scaffold(
@@ -98,31 +95,28 @@ class _HomeScreenState extends State<HomeScreen> {
           backgroundColor: Colors.white,
           elevation: 0,
           leading: Image.asset("assets/images/logos/logo.png"),
-          title: const Text("Vestium", style: TextStyle(fontFamily: 'AlexBrush', fontSize: 25)),
+          title: Text(loc.homeAppTitle, style: const TextStyle(fontFamily: 'AlexBrush', fontSize: 25)),
           centerTitle: true,
-          actions: [ 
-            IconButton( 
-              icon: const Icon(Icons.favorite_border, color: Colors.black87), 
-              onPressed: () { 
-                context.router.push(NotificationsRoute(userId: widget.userId)); 
-              }, 
-            ), 
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.favorite_border, color: Colors.black87),
+              onPressed: () {
+                context.router.push(NotificationsRoute(userId: widget.userId));
+              },
+            ),
           ],
         ),
         body: BlocConsumer<HomeCubit, HomeState>(
           listener: (context, state) {
             if (state is HomeError) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(state.message),
-                  backgroundColor: Colors.red,
-                ),
-              );
+              ScaffoldMessenger.of(
+                context,
+              ).showSnackBar(SnackBar(content: Text(state.message), backgroundColor: Colors.red));
             }
           },
           builder: (context, state) {
             final hasNewPosts = _cubit.hasNewPosts;
-            
+
             return Stack(
               children: [
                 // Use Flutter's built-in RefreshIndicator
@@ -136,46 +130,38 @@ class _HomeScreenState extends State<HomeScreen> {
                       // Posts list
                       if (state is HomeLoaded)
                         SliverList(
-                          delegate: SliverChildBuilderDelegate(
-                            (context, index) {
-                              if (index < state.posts.length) {
-                                final post = state.posts[index];
-                                return PostCard(
-                                  post: post,
-                                  userId: post['userId'],
-                                  currentUserId: widget.userId ?? CurrentUserService.currentUserId ?? 0,
-                                );
-                              }
-                              return null;
-                            },
-                            childCount: state.posts.length,
-                          ),
+                          delegate: SliverChildBuilderDelegate((context, index) {
+                            if (index < state.posts.length) {
+                              final post = state.posts[index];
+                              return PostCard(
+                                post: post,
+                                userId: post['userId'],
+                                currentUserId: widget.userId ?? CurrentUserService.currentUserId ?? 0,
+                              );
+                            }
+                            return null;
+                          }, childCount: state.posts.length),
                         ),
-                      
+
                       // Loading more indicator
                       if (state is HomeLoaded && _cubit.isLoadingMore)
                         const SliverToBoxAdapter(
                           child: Padding(
                             padding: EdgeInsets.all(20),
-                            child: Center(
-                              child: CircularProgressIndicator(),
-                            ),
+                            child: Center(child: CircularProgressIndicator()),
                           ),
                         ),
-                      
+
                       // End of feed message with safe area
                       if (state is HomeLoaded && !state.hasMorePosts && !_cubit.isLoadingMore)
                         SliverToBoxAdapter(
                           child: Column(
                             children: [
-                              const Padding(
-                                padding: EdgeInsets.all(20),
+                              Padding(
+                                padding: const EdgeInsets.all(20),
                                 child: Text(
-                                  'You\'ve reached the end of your feed',
-                                  style: TextStyle(
-                                    color: Colors.grey,
-                                    fontSize: 14,
-                                  ),
+                                  loc.homeReachedEndOfFeed,
+                                  style: const TextStyle(color: Colors.grey, fontSize: 14),
                                 ),
                               ),
                               // Safe area at bottom
@@ -189,15 +175,11 @@ class _HomeScreenState extends State<HomeScreen> {
                             ],
                           ),
                         ),
-                      
+
                       // Loading indicator
                       if (state is HomeLoading)
-                        const SliverFillRemaining(
-                          child: Center(
-                            child: CircularProgressIndicator(),
-                          ),
-                        ),
-                      
+                        const SliverFillRemaining(child: Center(child: CircularProgressIndicator())),
+
                       // Error state
                       if (state is HomeError)
                         SliverFillRemaining(
@@ -207,54 +189,44 @@ class _HomeScreenState extends State<HomeScreen> {
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  Text(
-                                    state.message,
-                                    style: const TextStyle(color: Colors.red),
-                                  ),
+                                  Text(state.message, style: const TextStyle(color: Colors.red)),
                                   const SizedBox(height: 20),
                                   ElevatedButton(
                                     onPressed: () {
                                       _cubit.loadPosts();
                                     },
-                                    child: const Text('Retry'),
+                                    child: Text(loc.homeRetryButton),
                                   ),
                                 ],
                               ),
                             ),
                           ),
                         ),
-                      
+
                       // Empty state
                       if (state is HomeLoaded && state.posts.isEmpty)
                         SliverFillRemaining(
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              const Text(
-                                'No posts yet. Follow some users to see their posts!',
+                              Text(
+                                loc.homeNoPostsYet,
                                 textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  color: Colors.grey,
-                                ),
+                                style: const TextStyle(fontSize: 16, color: Colors.grey),
                               ),
                               const SizedBox(height: 20),
                               ElevatedButton(
                                 onPressed: () {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                      content: Text('Go to the search tab to find users to follow!'),
-                                    ),
-                                  );
+                                  ScaffoldMessenger.of(
+                                    context,
+                                  ).showSnackBar(SnackBar(content: Text(loc.homeSearchTabHint)));
                                 },
-                                child: const Text('Find Users'),
+                                child: Text(loc.homeFindUsersButton),
                               ),
                               // Safe area at bottom
                               SafeArea(
                                 top: false,
-                                child: Container(
-                                  height: MediaQuery.of(context).padding.bottom + 80,
-                                ),
+                                child: Container(height: MediaQuery.of(context).padding.bottom + 80),
                               ),
                             ],
                           ),
@@ -262,7 +234,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ],
                   ),
                 ),
-                
+
                 // New posts indicator
                 if (hasNewPosts && _showNewPostsIndicator)
                   Positioned(
@@ -279,44 +251,25 @@ class _HomeScreenState extends State<HomeScreen> {
                       },
                       child: Container(
                         margin: const EdgeInsets.symmetric(horizontal: 20),
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 16,
-                          vertical: 8,
-                        ),
+                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                         decoration: BoxDecoration(
                           color: Colors.blue,
                           borderRadius: BorderRadius.circular(20),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.2),
-                              blurRadius: 10,
-                            ),
-                          ],
+                          boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.2), blurRadius: 10)],
                         ),
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            const Icon(
-                              Icons.arrow_upward,
-                              color: Colors.white,
-                              size: 16,
-                            ),
+                            const Icon(Icons.arrow_upward, color: Colors.white, size: 16),
                             const SizedBox(width: 8),
-                            const Text(
-                              'New posts',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                              ),
+                            Text(
+                              loc.homeNewPosts,
+                              style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
                             ),
                             const SizedBox(width: 8),
                             IconButton(
-                              icon: const Icon(
-                                Icons.close,
-                                color: Colors.white,
-                                size: 16,
-                              ),
+                              icon: const Icon(Icons.close, color: Colors.white, size: 16),
                               onPressed: () {
                                 _cubit.clearNewPostsBuffer();
                               },

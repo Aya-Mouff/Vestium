@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:vestium/l10n/app_localizations.dart';
 import 'package:vestium/app_router.dart';
 import 'package:vestium/views/screens/account_manager/cubit/account_manager_cubit.dart';
 import 'package:vestium/views/screens/account_manager/cubit/account_manager_state.dart';
@@ -36,6 +37,8 @@ class _AccountManagerView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
+
     return BlocConsumer<AccountManagerCubit, AccountManagerState>(
       listener: (context, state) {
         if (state.message == null) return;
@@ -53,9 +56,7 @@ class _AccountManagerView extends StatelessWidget {
             backgroundColor: const Color(0xFF6B5344),
             behavior: SnackBarBehavior.floating,
             margin: const EdgeInsets.all(16),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
             duration: const Duration(seconds: 3),
           ),
         );
@@ -73,9 +74,9 @@ class _AccountManagerView extends StatelessWidget {
               color: const Color(0xFF2C2C2C),
               onPressed: () => Navigator.pop(context),
             ),
-            title: const Text(
-              'Account Manager',
-              style: TextStyle(
+            title: Text(
+              loc.accountManagerTitle,
+              style: const TextStyle(
                 fontFamily: 'CormorantGaramond',
                 color: Color(0xFF2C2C2C),
                 fontSize: 18,
@@ -96,8 +97,8 @@ class _AccountManagerView extends StatelessWidget {
                     _AccountOptionCard(
                       icon: Icons.email_outlined,
                       iconColor: const Color(0xFF6B5B4F),
-                      title: 'Change Email',
-                      subtitle: 'Update your email address',
+                      title: loc.accountManagerChangeEmail,
+                      subtitle: loc.accountManagerChangeEmailSubtitle,
                       onTap: () => showDialog(
                         context: context,
                         builder: (dialogContext) => BlocProvider.value(
@@ -111,8 +112,8 @@ class _AccountManagerView extends StatelessWidget {
                     _AccountOptionCard(
                       icon: Icons.lock_outline,
                       iconColor: const Color(0xFF6B5B4F),
-                      title: 'Change Password',
-                      subtitle: 'Update your password',
+                      title: loc.accountManagerChangePassword,
+                      subtitle: loc.accountManagerChangePasswordSubtitle,
                       onTap: () => showDialog(
                         context: context,
                         builder: (dialogContext) => BlocProvider.value(
@@ -126,8 +127,8 @@ class _AccountManagerView extends StatelessWidget {
                     _AccountOptionCard(
                       icon: Icons.person_outline,
                       iconColor: const Color(0xFF6B5B4F),
-                      title: 'Change Full Name',
-                      subtitle: 'Update your display name',
+                      title: loc.accountManagerChangeFullName,
+                      subtitle: loc.accountManagerChangeFullNameSubtitle,
                       onTap: () => showDialog(
                         context: context,
                         builder: (dialogContext) => BlocProvider.value(
@@ -137,11 +138,11 @@ class _AccountManagerView extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 24),
-                    const Padding(
-                      padding: EdgeInsets.only(left: 4.0, bottom: 8.0),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 4.0, bottom: 8.0),
                       child: Text(
-                        'DANGER ZONE',
-                        style: TextStyle(
+                        loc.accountManagerDangerZone,
+                        style: const TextStyle(
                           fontFamily: 'CormorantGaramond',
                           fontSize: 12,
                           fontWeight: FontWeight.w600,
@@ -154,9 +155,9 @@ class _AccountManagerView extends StatelessWidget {
                       icon: Icons.delete_outline,
                       iconColor: const Color(0xFFD32F2F),
                       backgroundColor: const Color(0xFFFCE4E4),
-                      title: 'Delete Account',
+                      title: loc.accountManagerDeleteAccount,
                       titleColor: const Color(0xFFD32F2F),
-                      subtitle: 'Permanently delete your account',
+                      subtitle: loc.accountManagerDeleteAccountSubtitle,
                       subtitleColor: const Color(0xFFD32F2F).withOpacity(0.7),
                       onTap: () => showDialog(
                         context: context,
@@ -215,23 +216,14 @@ class _AccountOptionCard extends StatelessWidget {
         decoration: BoxDecoration(
           color: backgroundColor ?? Colors.white,
           borderRadius: BorderRadius.circular(12),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.03),
-              blurRadius: 8,
-              offset: const Offset(0, 2),
-            ),
-          ],
+          boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.03), blurRadius: 8, offset: const Offset(0, 2))],
         ),
         child: Row(
           children: [
             Container(
               width: 40,
               height: 40,
-              decoration: BoxDecoration(
-                color: iconColor.withOpacity(0.1),
-                borderRadius: BorderRadius.circular(8),
-              ),
+              decoration: BoxDecoration(color: iconColor.withOpacity(0.1), borderRadius: BorderRadius.circular(8)),
               child: Icon(icon, color: iconColor, size: 20),
             ),
             const SizedBox(width: 16),
@@ -251,11 +243,7 @@ class _AccountOptionCard extends StatelessWidget {
                   const SizedBox(height: 4),
                   Text(
                     subtitle,
-                    style: TextStyle(
-                      fontFamily: 'inter',
-                      fontSize: 13,
-                      color: subtitleColor ?? Colors.grey[600],
-                    ),
+                    style: TextStyle(fontFamily: 'inter', fontSize: 13, color: subtitleColor ?? Colors.grey[600]),
                   ),
                 ],
               ),

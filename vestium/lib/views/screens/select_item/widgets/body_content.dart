@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:vestium/l10n/app_localizations.dart';
 import '../../gallery_access/cubit/gallery_access_cubit.dart';
 import '../../gallery_access/cubit/gallery_access_state.dart';
 import '../cubit/select_item_state.dart';
@@ -19,9 +20,7 @@ class BodyContent extends StatelessWidget {
         BlocListener<GalleryAccessCubit, GalleryAccessState>(
           listener: (context, state) {
             if (state.errorMessage != null) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(state.errorMessage!)),
-              );
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.errorMessage!)));
               context.read<GalleryAccessCubit>().clearError();
             }
           },
@@ -29,9 +28,7 @@ class BodyContent extends StatelessWidget {
         BlocListener<SelectItemCubit, SelectItemState>(
           listener: (context, state) {
             if (state.error != null) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(state.error!)),
-              );
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.error!)));
               context.read<SelectItemCubit>().clearError();
             }
           },
@@ -45,8 +42,7 @@ class BodyContent extends StatelessWidget {
                 child: GalleryGridView(
                   galleryItems: state.galleryItems,
                   selectedItem: state.selectedGalleryItem,
-                  onItemSelected: (galleryItem) =>
-                      context.read<SelectItemCubit>().selectGalleryItem(galleryItem),
+                  onItemSelected: (galleryItem) => context.read<SelectItemCubit>().selectGalleryItem(galleryItem),
                 ),
               ),
               ContinueButton(
@@ -66,21 +62,21 @@ class BodyContent extends StatelessWidget {
 
   void _navigateToEditItemScreen(BuildContext context, Map<String, dynamic> selectedItem) {
     final imagePath = selectedItem['filePath'] as String?;
-    
+
     if (imagePath != null) {
       // Navigate to EditItemScreen with the image path
       // context.router.push(
       //   EditItemRoute(imagePath: imagePath),
       // );
       Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => BlocProvider(
-                create: (_) => EditItemCubit(),
-                child: EditItemScreen(imagePath: imagePath),
-              ),
-            ),
-          );
+        context,
+        MaterialPageRoute(
+          builder: (context) => BlocProvider(
+            create: (_) => EditItemCubit(),
+            child: EditItemScreen(imagePath: imagePath),
+          ),
+        ),
+      );
     }
   }
 }

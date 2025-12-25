@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vestium/l10n/app_localizations.dart';
 
 class FullNameField extends StatelessWidget {
   final TextEditingController controller;
@@ -8,12 +9,14 @@ class FullNameField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
+    
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'Full Name',
-          style: TextStyle(
+        Text(
+          loc.fieldFullNameLabel,
+          style: const TextStyle(
             fontFamily: 'CormorantGaramond',
             fontSize: 14,
             fontWeight: FontWeight.w600,
@@ -25,7 +28,7 @@ class FullNameField extends StatelessWidget {
           controller: controller,
           cursorColor: const Color(0xFF6B5344),
           decoration: InputDecoration(
-            hintText: 'Your name',
+            hintText: loc.fieldFullNameHint,
             hintStyle: const TextStyle(
               fontFamily: 'inter',
               color: Color(0xFFA1887F),

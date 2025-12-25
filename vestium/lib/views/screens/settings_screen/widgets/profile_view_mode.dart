@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:vestium/l10n/app_localizations.dart';
 
 class ProfileViewMode extends StatelessWidget {
   final String displayName;
@@ -17,6 +18,8 @@ class ProfileViewMode extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
+
     return Padding(
       padding: const EdgeInsets.all(20.0),
       child: Row(
@@ -25,10 +28,7 @@ class ProfileViewMode extends StatelessWidget {
             child: Container(
               width: 70,
               height: 70,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: const Color(0xFF795548),
-              ),
+              decoration: BoxDecoration(shape: BoxShape.circle, color: const Color(0xFF795548)),
               child: profileImage != null && profileImage!.isNotEmpty
                   ? Image(
                       image: _getImageProvider(profileImage!),
@@ -38,9 +38,7 @@ class ProfileViewMode extends StatelessWidget {
                       errorBuilder: (context, error, stackTrace) {
                         return Center(
                           child: Text(
-                            displayName.isNotEmpty
-                                ? displayName[0].toUpperCase()
-                                : '?',
+                            displayName.isNotEmpty ? displayName[0].toUpperCase() : '?',
                             style: const TextStyle(
                               fontSize: 28,
                               fontWeight: FontWeight.bold,
@@ -53,9 +51,7 @@ class ProfileViewMode extends StatelessWidget {
                     )
                   : Center(
                       child: Text(
-                        displayName.isNotEmpty
-                            ? displayName[0].toUpperCase()
-                            : '?',
+                        displayName.isNotEmpty ? displayName[0].toUpperCase() : '?',
                         style: const TextStyle(
                           fontSize: 28,
                           fontWeight: FontWeight.bold,
@@ -84,27 +80,17 @@ class ProfileViewMode extends StatelessWidget {
                 const SizedBox(height: 4),
                 Text(
                   '@$displayUsername',
-                  style: const TextStyle(
-                    fontSize: 14,
-                    color: Color(0xFF795548),
-                    fontFamily: 'Inter',
-                  ),
+                  style: const TextStyle(fontSize: 14, color: Color(0xFF795548), fontFamily: 'Inter'),
                 ),
               ],
             ),
           ),
           TextButton(
             onPressed: onEdit,
-            style: TextButton.styleFrom(
-              foregroundColor: const Color(0xFF795548),
-            ),
-            child: const Text(
-              'Edit',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w500,
-                fontFamily: 'Inter',
-              ),
+            style: TextButton.styleFrom(foregroundColor: const Color(0xFF795548)),
+            child: Text(
+              loc.settingsEdit,
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500, fontFamily: 'Inter'),
             ),
           ),
         ],
@@ -118,8 +104,8 @@ class ProfileViewMode extends StatelessWidget {
       return FileImage(File(path));
     }
     // Check if it starts with common file path indicators
-    if (path.startsWith('/') || 
-        path.contains('data/user') || 
+    if (path.startsWith('/') ||
+        path.contains('data/user') ||
         path.contains('storage/emulated') ||
         path.contains('cache')) {
       return FileImage(File(path));

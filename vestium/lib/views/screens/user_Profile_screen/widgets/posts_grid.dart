@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vestium/l10n/app_localizations.dart';
 import 'package:auto_route/auto_route.dart';
 import '../../../../app_router.dart';
 import '../../../../databases/db_models.dart';
@@ -9,20 +10,16 @@ class PostsGrid extends StatelessWidget {
   final int profileUserId;
   final int currentUserId;
 
-  const PostsGrid({
-    super.key,
-    required this.posts,
-    required this.profileUserId,
-    required this.currentUserId,
-  });
+  const PostsGrid({super.key, required this.posts, required this.profileUserId, required this.currentUserId});
 
   @override
   Widget build(BuildContext context) {
     if (posts.isEmpty) {
+      final loc = AppLocalizations.of(context)!;
       return SizedBox(
         height: 200,
         child: Center(
-          child: Text('No posts yet', style: TextStyle(color: Colors.grey.shade600)),
+          child: Text(loc.userProfileNoPostsYet, style: TextStyle(color: Colors.grey.shade600)),
         ),
       );
     }
@@ -41,11 +38,7 @@ class PostsGrid extends StatelessWidget {
         return GestureDetector(
           onTap: () {
             context.router.push(
-              PostsDetailsRoute(
-                postId: post.postId!,
-                userId: profileUserId,
-                currentUserId: currentUserId,
-              ),
+              PostsDetailsRoute(postId: post.postId!, userId: profileUserId, currentUserId: currentUserId),
             );
           },
           child: ClipRRect(
@@ -66,9 +59,7 @@ class PostsGrid extends StatelessWidget {
         errorBuilder: (context, error, stackTrace) {
           return Container(
             color: const Color(0xFFE9D9CF),
-            child: const Center(
-              child: Icon(Icons.photo, color: Color(0xFF7B5247), size: 40),
-            ),
+            child: const Center(child: Icon(Icons.photo, color: Color(0xFF7B5247), size: 40)),
           );
         },
       );
@@ -80,9 +71,7 @@ class PostsGrid extends StatelessWidget {
         errorBuilder: (context, error, stackTrace) {
           return Container(
             color: const Color(0xFFE9D9CF),
-            child: const Center(
-              child: Icon(Icons.photo, color: Color(0xFF7B5247), size: 40),
-            ),
+            child: const Center(child: Icon(Icons.photo, color: Color(0xFF7B5247), size: 40)),
           );
         },
       );

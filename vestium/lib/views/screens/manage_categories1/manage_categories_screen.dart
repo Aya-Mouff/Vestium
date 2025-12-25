@@ -2,6 +2,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:vestium/l10n/app_localizations.dart';
 import 'cubit/manage_categories_cubit.dart';
 import 'widgets/add_category_row.dart';
 import 'widgets/categories_list.dart';
@@ -27,6 +28,8 @@ class _ManageCategoriesView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
+
     return Scaffold(
       backgroundColor: const Color(0xFFF5EDE8),
       appBar: AppBar(
@@ -39,8 +42,8 @@ class _ManageCategoriesView extends StatelessWidget {
             // or context.router.pop();
           },
         ),
-        title: const Text(
-          'Manage Categories For Items',
+        title: Text(
+          loc.manageCategoriesTitle,
           style: TextStyle(
             color: Colors.black,
             fontSize: 16,
@@ -49,13 +52,7 @@ class _ManageCategoriesView extends StatelessWidget {
           ),
         ),
       ),
-      body: Column(
-        children: const [
-          AddCategoryRow(),
-          CategoriesList(),
-          BottomInfoText(),
-        ],
-      ),
+      body: Column(children: const [AddCategoryRow(), CategoriesList(), BottomInfoText()]),
     );
   }
 }

@@ -85,28 +85,25 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:vestium/l10n/app_localizations.dart';
 import '../cubit/edit_outfit_cubit.dart';
 import '../cubit/edit_outfit_state.dart';
 
 class SeasonDropdown extends StatelessWidget {
-  final List<String> seasons = [
-    'Spring',
-    'Summer',
-    'Fall',
-    'Winter',
-    'All Season',
-  ];
+  final List<String> seasons = ['Spring', 'Summer', 'Fall', 'Winter', 'All Season'];
 
   SeasonDropdown({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'Season',
-          style: TextStyle(
+        Text(
+          loc.editOutfitSeasonLabel,
+          style: const TextStyle(
             fontFamily: 'CormorantGaramond',
             fontSize: 16,
             fontWeight: FontWeight.w400,
@@ -118,20 +115,35 @@ class SeasonDropdown extends StatelessWidget {
           decoration: BoxDecoration(
             color: const Color(0xFFF5ECE7),
             borderRadius: BorderRadius.circular(16),
-            border: Border.all(
-              color: const Color(0xFFE9D9CF),
-              width: 1,
-            ),
+            border: Border.all(color: const Color(0xFFE9D9CF), width: 1),
           ),
           child: BlocBuilder<EditOutfitCubit, EditOutfitState>(
             builder: (context, state) {
+              // Helper to get localized season display
+              String _getLocalizedSeason(String season) {
+                switch (season) {
+                  case 'Spring':
+                    return loc.seasonSpring;
+                  case 'Summer':
+                    return loc.seasonSummer;
+                  case 'Fall':
+                    return loc.seasonFall;
+                  case 'Winter':
+                    return loc.seasonWinter;
+                  case 'All Season':
+                    return loc.seasonAllSeason;
+                  default:
+                    return season;
+                }
+              }
+
               return DropdownButtonHideUnderline(
                 child: DropdownButton<String>(
                   value: state.selectedSeason,
                   hint: Container(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: Text(
-                      'Select season',
+                      loc.editOutfitSeasonHint,
                       style: TextStyle(
                         fontFamily: 'Inter',
                         fontSize: 15,
@@ -166,7 +178,7 @@ class SeasonDropdown extends StatelessWidget {
                       child: Container(
                         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                         child: Text(
-                          'Select season',
+                          loc.editOutfitSeasonHint,
                           style: TextStyle(
                             fontFamily: 'Inter',
                             fontSize: 14,
@@ -182,7 +194,7 @@ class SeasonDropdown extends StatelessWidget {
                         child: Container(
                           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                           child: Text(
-                            season,
+                            _getLocalizedSeason(season),
                             style: TextStyle(
                               fontFamily: 'Inter',
                               fontSize: 15,

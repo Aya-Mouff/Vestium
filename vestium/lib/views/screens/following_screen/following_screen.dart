@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:vestium/l10n/app_localizations.dart';
 
 import '../../../repo/follow_repo.dart';
 import '../../../repo/user_repo.dart';
@@ -14,24 +15,13 @@ class FollowingScreen extends StatelessWidget {
   final int userId;
   final int currentUserId;
 
-  const FollowingScreen({
-    super.key,
-    required this.userId,
-    required this.currentUserId,
-  });
+  const FollowingScreen({super.key, required this.userId, required this.currentUserId});
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => FollowingCubit(
-        FollowRepo(),
-        UserRepo(),
-        userId: userId,
-      )..loadFollowing(),
-      child: _FollowingView(
-        userId: userId,
-        currentUserId: currentUserId,
-      ),
+      create: (_) => FollowingCubit(FollowRepo(), UserRepo(), userId: userId)..loadFollowing(),
+      child: _FollowingView(userId: userId, currentUserId: currentUserId),
     );
   }
 }
@@ -40,10 +30,7 @@ class _FollowingView extends StatefulWidget {
   final int userId;
   final int currentUserId;
 
-  const _FollowingView({
-    required this.userId,
-    required this.currentUserId,
-  });
+  const _FollowingView({required this.userId, required this.currentUserId});
 
   @override
   State<_FollowingView> createState() => _FollowingViewState();
@@ -68,6 +55,8 @@ class _FollowingViewState extends State<_FollowingView> {
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
+
     return BlocBuilder<FollowingCubit, FollowingState>(
       builder: (context, state) {
         return Scaffold(
@@ -81,8 +70,8 @@ class _FollowingViewState extends State<_FollowingView> {
                 Navigator.pop(context);
               },
             ),
-            title: const Text(
-              'Following',
+            title: Text(
+              loc.followingTitle,
               style: TextStyle(
                 color: Color(0xFF2C2C2C),
                 fontSize: 18,
@@ -95,9 +84,7 @@ class _FollowingViewState extends State<_FollowingView> {
           body: Column(
             children: [
               FollowingSearchBar(controller: _searchController),
-              Expanded(
-                child: _buildFollowingList(state, widget.userId, widget.currentUserId),
-              ),
+              Expanded(child: _buildFollowingList(state, widget.userId, widget.currentUserId)),
             ],
           ),
         );
@@ -114,25 +101,17 @@ class _FollowingViewState extends State<_FollowingView> {
       return Center(
         child: Text(
           state.errorMessage!,
-          style: TextStyle(
-            fontSize: 16,
-            color: Colors.grey[600],
-            fontFamily: 'Inter',
-          ),
+          style: TextStyle(fontSize: 16, color: Colors.grey[600], fontFamily: 'Inter'),
         ),
       );
     }
 
-    if (state.filteredFollowing.isEmpty &&
-        _searchController.text.isNotEmpty) {
+    if (state.filteredFollowing.isEmpty && _searchController.text.isNotEmpty) {
+      final loc = AppLocalizations.of(context)!;
       return Center(
         child: Text(
-          'No results found',
-          style: TextStyle(
-            fontSize: 16,
-            color: Colors.grey[600],
-            fontFamily: 'Inter',
-          ),
+          loc.followingNotFound,
+          style: TextStyle(fontSize: 16, color: Colors.grey[600], fontFamily: 'Inter'),
         ),
       );
     }
@@ -144,7 +123,7 @@ class _FollowingViewState extends State<_FollowingView> {
         final person = state.filteredFollowing[index];
         final personId = int.tryParse(person['id']?.toString() ?? '') ?? 0;
         final personUserId = person['userId'] ?? personId;
-        
+
         return FollowingItem(
           name: person['name'] ?? '',
           username: person['username'] ?? '',
@@ -152,10 +131,9 @@ class _FollowingViewState extends State<_FollowingView> {
           isFollowing: person['isFollowing'] ?? false,
           personUserId: personUserId, // Pass the person's ID
           currentUserId: currentUserId, // Pass current user ID
-          onFollowTap: () =>
-              context.read<FollowingCubit>().toggleFollow(index),
+          onFollowTap: () => context.read<FollowingCubit>().toggleFollow(index),
         );
-      }
+      },
     );
   }
 }

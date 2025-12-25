@@ -1,6 +1,7 @@
 // manage_categories/widgets/categories_list.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:vestium/l10n/app_localizations.dart';
 import '../cubit/manage_categories_cubit.dart';
 import '../cubit/manage_categories_state.dart';
 
@@ -9,6 +10,8 @@ class CategoriesList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
+
     return Expanded(
       child: BlocBuilder<ManageCategoriesCubit, ManageCategoriesState>(
         builder: (context, state) {
@@ -24,12 +27,8 @@ class CategoriesList extends StatelessWidget {
 
               return Container(
                 margin: const EdgeInsets.only(bottom: 10),
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(10),
-                ),
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(10)),
                 child: Row(
                   children: [
                     Expanded(
@@ -47,12 +46,8 @@ class CategoriesList extends StatelessWidget {
                           ),
                           const SizedBox(height: 2),
                           Text(
-                            '${category.itemCount} items',
-                            style: const TextStyle(
-                              fontSize: 12,
-                              color: Color(0xFF795548),
-                              fontFamily: 'Inter',
-                            ),
+                            loc.manageCategoriesItemCount(category.itemCount),
+                            style: const TextStyle(fontSize: 12, color: Color(0xFF795548), fontFamily: 'Inter'),
                           ),
                         ],
                       ),
@@ -83,6 +78,7 @@ class CategoriesList extends StatelessWidget {
   }
 
   void _showEditDialog(BuildContext context, int index) {
+    final loc = AppLocalizations.of(context)!;
     final cubit = context.read<ManageCategoriesCubit>();
     final category = cubit.state.categories[index];
     final controller = TextEditingController(text: category.name);
@@ -90,30 +86,24 @@ class CategoriesList extends StatelessWidget {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text(
-          'Edit Category',
-          style: TextStyle(fontFamily: 'Inter', color: Colors.black),
+        title: Text(
+          loc.manageCategoriesEditTitle,
+          style: const TextStyle(fontFamily: 'Inter', color: Colors.black),
         ),
         content: TextField(
           controller: controller,
           style: const TextStyle(fontFamily: 'Inter', color: Colors.black),
-          decoration: const InputDecoration(
-            hintText: 'Category name',
-            hintStyle: TextStyle(
-              fontFamily: 'Inter',
-              color: Color(0xFF795548),
-            ),
+          decoration: InputDecoration(
+            hintText: loc.manageCategoriesEditHint,
+            hintStyle: TextStyle(fontFamily: 'Inter', color: Color(0xFF795548)),
           ),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text(
-              'Cancel',
-              style: TextStyle(
-                fontFamily: 'Inter',
-                color: Color(0xFF795548),
-              ),
+            child: Text(
+              loc.manageCategoriesCancel,
+              style: const TextStyle(fontFamily: 'Inter', color: Color(0xFF795548)),
             ),
           ),
           TextButton(
@@ -127,12 +117,9 @@ class CategoriesList extends StatelessWidget {
               // (the list will rebuild via BlocBuilder)
               Navigator.pop(context);
             },
-            child: const Text(
-              'Save',
-              style: TextStyle(
-                fontFamily: 'Inter',
-                color: Color(0xFF795548),
-              ),
+            child: Text(
+              loc.manageCategoriesSave,
+              style: TextStyle(fontFamily: 'Inter', color: Color(0xFF795548)),
             ),
           ),
         ],
@@ -141,29 +128,27 @@ class CategoriesList extends StatelessWidget {
   }
 
   void _showDeleteDialog(BuildContext context, int index) {
+    final loc = AppLocalizations.of(context)!;
     final cubit = context.read<ManageCategoriesCubit>();
     final category = cubit.state.categories[index];
 
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text(
-          'Delete Category',
-          style: TextStyle(fontFamily: 'Inter', color: Colors.black),
+        title: Text(
+          loc.manageCategoriesDeleteTitle,
+          style: const TextStyle(fontFamily: 'Inter', color: Colors.black),
         ),
         content: Text(
-          'Are you sure you want to delete "${category.name}"?',
+          loc.manageCategoriesDeleteMessage(category.name),
           style: const TextStyle(fontFamily: 'Inter', color: Colors.black),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text(
-              'Cancel',
-              style: TextStyle(
-                fontFamily: 'Inter',
-                color: Color(0xFF795548),
-              ),
+            child: Text(
+              loc.manageCategoriesCancel,
+              style: const TextStyle(fontFamily: 'Inter', color: Color(0xFF795548)),
             ),
           ),
           TextButton(
@@ -171,12 +156,9 @@ class CategoriesList extends StatelessWidget {
               await cubit.deleteCategory(index);
               Navigator.pop(context);
             },
-            child: const Text(
-              'Delete',
-              style: TextStyle(
-                color: Colors.red,
-                fontFamily: 'Inter',
-              ),
+            child: Text(
+              loc.manageCategoriesDelete,
+              style: TextStyle(color: Colors.red, fontFamily: 'Inter'),
             ),
           ),
         ],

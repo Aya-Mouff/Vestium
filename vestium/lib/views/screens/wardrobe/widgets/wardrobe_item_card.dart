@@ -86,6 +86,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'dart:io';
 import 'package:auto_route/auto_route.dart';
 import 'package:vestium/app_router.dart';
+import 'package:vestium/l10n/app_localizations.dart';
 import '../cubit/wardrobe_cubit.dart';
 import 'package:vestium/databases/db_models.dart';
 
@@ -99,20 +100,18 @@ class WardrobeItemCard extends StatelessWidget {
     // Get screen dimensions for responsive sizing
     final screenWidth = MediaQuery.of(context).size.width;
     // final screenHeight = MediaQuery.of(context).size.height;
-    
+
     // Calculate responsive sizes
-    final imageHeight = screenWidth * 0.8; 
+    final imageHeight = screenWidth * 0.8;
     final cardPadding = screenWidth * 0.02;
-    final itemNameFontSize = screenWidth * 0.035; 
+    final itemNameFontSize = screenWidth * 0.035;
     final categoryFontSize = screenWidth * 0.025;
-    
+
     return GestureDetector(
       onTap: () async {
         if (item.itemId != null) {
-          final result = await context.router.push(
-            EditItemDetailsRoute(itemId: item.itemId!),
-          );
-          
+          final result = await context.router.push(EditItemDetailsRoute(itemId: item.itemId!));
+
           if (result == true && context.mounted) {
             context.read<WardrobeCubit>().refresh();
           }
@@ -121,10 +120,11 @@ class WardrobeItemCard extends StatelessWidget {
       child: FutureBuilder<List<ItemCategory>>(
         future: context.read<WardrobeCubit>().getCategoriesForItem(item.itemId!),
         builder: (context, snapshot) {
+          final loc = AppLocalizations.of(context)!;
           final categories = snapshot.data ?? [];
           final categoryText = categories.isNotEmpty
               ? categories.take(2).map((c) => c.categoryName ?? '').where((name) => name.isNotEmpty).join(', ')
-              : 'No category';
+              : loc.wardrobeNoCategory;
 
           return Container(
             decoration: BoxDecoration(
@@ -147,13 +147,9 @@ class WardrobeItemCard extends StatelessWidget {
                     topLeft: Radius.circular(screenWidth * 0.04),
                     topRight: Radius.circular(screenWidth * 0.04),
                   ),
-                  child: SizedBox(
-                    height: imageHeight,
-                    width: double.infinity,
-                    child: _buildImage(),
-                  ),
+                  child: SizedBox(height: imageHeight, width: double.infinity, child: _buildImage()),
                 ),
-                
+
                 // Text section
                 Padding(
                   padding: EdgeInsets.fromLTRB(
@@ -168,7 +164,7 @@ class WardrobeItemCard extends StatelessWidget {
                     children: [
                       // Item name
                       Text(
-                        item.itemName ?? 'Unnamed Item',
+                        item.itemName ?? loc.wardrobeUnnamedItem,
                         style: TextStyle(
                           fontFamily: 'CormorantGaramond',
                           fontSize: itemNameFontSize.clamp(12, 16), // Min 12, Max 16
@@ -179,9 +175,9 @@ class WardrobeItemCard extends StatelessWidget {
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                       ),
-                      
+
                       SizedBox(height: cardPadding * 0.2),
-                      
+
                       // Category
                       Text(
                         categoryText,
@@ -214,7 +210,7 @@ class WardrobeItemCard extends StatelessWidget {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return _buildImagePlaceholder();
           }
-          
+
           if (snapshot.data == true) {
             return Image.file(
               File(item.imagePath!),
@@ -226,7 +222,7 @@ class WardrobeItemCard extends StatelessWidget {
               },
             );
           }
-          
+
           return _buildPlaceholder();
         },
       );
@@ -250,10 +246,7 @@ class WardrobeItemCard extends StatelessWidget {
         child: SizedBox(
           width: 24, // Fixed but reasonable
           height: 24,
-          child: CircularProgressIndicator(
-            strokeWidth: 2,
-            color: Color(0xFF795548),
-          ),
+          child: CircularProgressIndicator(strokeWidth: 2, color: Color(0xFF795548)),
         ),
       ),
     );

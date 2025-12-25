@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:auto_route/auto_route.dart';
+import 'package:vestium/l10n/app_localizations.dart';
 import '../../../../app_router.dart';
 
 class FollowerItem extends StatelessWidget {
@@ -25,24 +26,16 @@ class FollowerItem extends StatelessWidget {
   void _navigateToProfile(BuildContext context) {
     if (followerUserId == currentUserId) {
       // Navigate to MyProfileScreen for current user
-      context.router.push(
-        MyProfileRoute(
-          userId: currentUserId,
-        ),
-      );
+      context.router.push(MyProfileRoute(userId: currentUserId));
     } else {
       // Navigate to UserProfileScreen for other users
-      context.router.push(
-        UserProfileRoute(
-          userId: followerUserId,
-          currentUserId: currentUserId,
-        ),
-      );
+      context.router.push(UserProfileRoute(userId: followerUserId, currentUserId: currentUserId));
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
     final isCurrentUser = followerUserId == currentUserId;
 
     return Container(
@@ -53,13 +46,7 @@ class FollowerItem extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.03),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
+        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.03), blurRadius: 8, offset: const Offset(0, 2))],
       ),
       child: Row(
         children: [
@@ -69,8 +56,7 @@ class FollowerItem extends StatelessWidget {
             child: CircleAvatar(
               radius: 24,
               backgroundColor: const Color(0xFF795548),
-              backgroundImage:
-                  profileImage.isNotEmpty ? AssetImage(profileImage) : null,
+              backgroundImage: profileImage.isNotEmpty ? AssetImage(profileImage) : null,
               child: profileImage.isEmpty
                   ? Text(
                       name.isNotEmpty ? name[0].toUpperCase() : '?',
@@ -109,11 +95,7 @@ class FollowerItem extends StatelessWidget {
                   onTap: () => _navigateToProfile(context),
                   child: Text(
                     '@$username',
-                    style: const TextStyle(
-                      fontSize: 13,
-                      color: Color(0xFF795548),
-                      fontFamily: 'Inter',
-                    ),
+                    style: const TextStyle(fontSize: 13, color: Color(0xFF795548), fontFamily: 'Inter'),
                   ),
                 ),
               ],
@@ -129,21 +111,16 @@ class FollowerItem extends StatelessWidget {
                 height: 35.99,
                 decoration: BoxDecoration(
                   color: isFollowing ? Colors.transparent : const Color(0xFF795548),
-                  border: Border.all(
-                    color: const Color(0xFF795548),
-                    width: 1,
-                  ),
+                  border: Border.all(color: const Color(0xFF795548), width: 1),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Center(
                   child: Text(
-                    isFollowing ? 'Following' : 'Follow',
+                    isFollowing ? loc.followersFollowing : loc.followersFollow,
                     style: TextStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.w600,
-                      color: isFollowing
-                          ? const Color(0xFF795548)
-                          : Colors.white,
+                      color: isFollowing ? const Color(0xFF795548) : Colors.white,
                       fontFamily: 'Inter',
                     ),
                   ),

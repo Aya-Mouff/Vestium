@@ -1,6 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:auto_route/auto_route.dart';
+import 'package:vestium/l10n/app_localizations.dart';
 import '../cubit/notifications_screen_cubit.dart';
 import '../cubit/notifications_screen_state.dart';
 import '../../../../app_router.dart';
@@ -11,12 +12,7 @@ class NotificationItemWidget extends StatelessWidget {
   final NotificationsCubit cubit;
   final int currentUserId;
 
-  const NotificationItemWidget({
-    super.key,
-    required this.item,
-    required this.cubit,
-    required this.currentUserId,
-  });
+  const NotificationItemWidget({super.key, required this.item, required this.cubit, required this.currentUserId});
 
   Widget _buildProfileImage(String imagePath) {
     if (imagePath.startsWith('assets/')) {
@@ -46,9 +42,7 @@ class NotificationItemWidget extends StatelessWidget {
         errorBuilder: (context, error, stackTrace) {
           return Container(
             color: const Color(0xFFE9D9CF),
-            child: const Center(
-              child: Icon(Icons.photo, color: Color(0xFF7B5247), size: 20),
-            ),
+            child: const Center(child: Icon(Icons.photo, color: Color(0xFF7B5247), size: 20)),
           );
         },
       );
@@ -59,9 +53,7 @@ class NotificationItemWidget extends StatelessWidget {
         errorBuilder: (context, error, stackTrace) {
           return Container(
             color: const Color(0xFFE9D9CF),
-            child: const Center(
-              child: Icon(Icons.photo, color: Color(0xFF7B5247), size: 20),
-            ),
+            child: const Center(child: Icon(Icons.photo, color: Color(0xFF7B5247), size: 20)),
           );
         },
       );
@@ -70,6 +62,8 @@ class NotificationItemWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
+
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
       decoration: BoxDecoration(
@@ -100,8 +94,7 @@ class NotificationItemWidget extends StatelessWidget {
                         shape: BoxShape.circle,
                         border: Border.all(color: Colors.white, width: 2),
                       ),
-                      child: Icon(cubit.getNotificationIcon(item.type),
-                          size: 12, color: Colors.white),
+                      child: Icon(cubit.getNotificationIcon(item.type), size: 12, color: Colors.white),
                     ),
                   ),
                 ],
@@ -118,33 +111,34 @@ class NotificationItemWidget extends StatelessWidget {
                         TextSpan(
                           text: item.sourceUsername,
                           style: const TextStyle(
-                              fontFamily: 'CormorantGaramond',
-                              fontWeight: FontWeight.w600,
-                              fontSize: 16,
-                              color: Colors.black),
+                            fontFamily: 'CormorantGaramond',
+                            fontWeight: FontWeight.w600,
+                            fontSize: 16,
+                            color: Colors.black,
+                          ),
                           recognizer: TapGestureRecognizer()
                             ..onTap = () {
-                              context.router.push(UserProfileRoute(userId: item.sourceUserId, currentUserId: currentUserId));
+                              context.router.push(
+                                UserProfileRoute(userId: item.sourceUserId, currentUserId: currentUserId),
+                              );
                             },
                         ),
                         TextSpan(
-                          text: cubit.getNotificationText(item.type, commentText: item.commentText),
+                          text: cubit.getNotificationText(item.type, loc, commentText: item.commentText),
                           style: const TextStyle(
-                              fontFamily: 'Inter',
-                              fontWeight: FontWeight.w400,
-                              fontSize: 14,
-                              color: Colors.black87),
+                            fontFamily: 'Inter',
+                            fontWeight: FontWeight.w400,
+                            fontSize: 14,
+                            color: Colors.black87,
+                          ),
                         ),
                       ],
                     ),
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    cubit.getTimeAgo(item.createdAt),
-                    style: TextStyle(
-                        fontFamily: 'Inter',
-                        fontSize: 12,
-                        color: Colors.grey.shade600),
+                    cubit.getTimeAgo(item.createdAt, loc),
+                    style: TextStyle(fontFamily: 'Inter', fontSize: 12, color: Colors.grey.shade600),
                   ),
                 ],
               ),
@@ -157,14 +151,8 @@ class NotificationItemWidget extends StatelessWidget {
                   return Container(
                     width: 50,
                     height: 50,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8),
-                      color: const Color(0xFFE9D9CF),
-                    ),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(8),
-                      child: _buildPostImage(imagePath),
-                    ),
+                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(8), color: const Color(0xFFE9D9CF)),
+                    child: ClipRRect(borderRadius: BorderRadius.circular(8), child: _buildPostImage(imagePath)),
                   );
                 },
               ),

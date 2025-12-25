@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:vestium/l10n/app_localizations.dart';
 import '../cubit/edit_item_cubit.dart';
 
 class RemoveBgControls extends StatelessWidget {
   final VoidCallback? onReset;
 
-  const RemoveBgControls({
-    super.key,
-    this.onReset,
-  });
+  const RemoveBgControls({super.key, this.onReset});
 
   @override
   Widget build(BuildContext context) {
@@ -37,11 +35,12 @@ class _EraserSizeLabel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(
-          'Eraser Size',
+          loc.editItemEraserSizeLabel,
           style: TextStyle(
             fontFamily: 'Inter',
             fontSize: 14,
@@ -52,10 +51,7 @@ class _EraserSizeLabel extends StatelessWidget {
         ),
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-          decoration: BoxDecoration(
-            color: const Color(0xFFD7CCC8),
-            borderRadius: BorderRadius.circular(12),
-          ),
+          decoration: BoxDecoration(color: const Color(0xFFD7CCC8), borderRadius: BorderRadius.circular(12)),
           child: Text(
             '${eraserSize.round()}px',
             style: const TextStyle(
@@ -118,20 +114,13 @@ class _ActionButtons extends StatelessWidget {
             icon: const Icon(Icons.refresh, size: 18),
             label: const Text(
               'Reset',
-              style: TextStyle(
-                fontFamily: 'Inter',
-                fontSize: 14,
-                fontWeight: FontWeight.w200,
-                letterSpacing: 0.2,
-              ),
+              style: TextStyle(fontFamily: 'Inter', fontSize: 14, fontWeight: FontWeight.w200, letterSpacing: 0.2),
             ),
             style: OutlinedButton.styleFrom(
               foregroundColor: const Color(0xFF795548),
               side: const BorderSide(color: Color(0xFF795548), width: 1.5),
               padding: const EdgeInsets.symmetric(vertical: 12),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
             ),
           ),
         ),
@@ -145,8 +134,9 @@ class _InstructionText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
     return Text(
-      'Draw on the image to remove background',
+      loc.editItemInstructionText,
       textAlign: TextAlign.center,
       style: TextStyle(
         fontFamily: 'Inter',

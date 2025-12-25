@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:auto_route/auto_route.dart';
+import 'package:vestium/l10n/app_localizations.dart';
 import '../../../../app_router.dart';
-
-
-
 
 class FilterChips extends StatelessWidget {
   final List<String> categories;
@@ -21,17 +19,18 @@ class FilterChips extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       padding: const EdgeInsets.symmetric(horizontal: 24),
       child: Row(
         children: [
           // Always show 'All' chip first
-          _buildChip('All', selectedCategory == 'All'),
+          _buildChip(loc.wardrobeAll, selectedCategory == 'All'),
           // Show user's categories (excluding any 'All' that might be in the list)
-          ...categories.where((cat) => cat != 'All').map(
-            (category) => _buildChip(category, selectedCategory == category),
-          ),
+          ...categories
+              .where((cat) => cat != 'All')
+              .map((category) => _buildChip(category, selectedCategory == category)),
           // Add category button at the end
           _buildAddCategoryChip(context),
         ],
@@ -41,7 +40,7 @@ class FilterChips extends StatelessWidget {
 
   Widget _buildChip(String label, bool selected) {
     return GestureDetector(
-      onTap: () => onSelect(label),
+      onTap: () => onSelect(selected ? 'All' : label),
       child: Container(
         margin: const EdgeInsets.only(right: 8),
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
@@ -50,13 +49,7 @@ class FilterChips extends StatelessWidget {
           borderRadius: BorderRadius.circular(20),
           border: Border.all(color: const Color(0xFF7B5247), width: 0.8),
         ),
-        child: Text(
-          label,
-          style: TextStyle(
-            fontSize: 13,
-            color: selected ? Colors.white : const Color(0xFF7B5247),
-          ),
-        ),
+        child: Text(label, style: TextStyle(fontSize: 13, color: selected ? Colors.white : const Color(0xFF7B5247))),
       ),
     );
   }
@@ -75,7 +68,7 @@ class FilterChips extends StatelessWidget {
           onTap: () {
             context.pushRoute(ManageOutfitCategoriesRoute(userId: userId));
           },
-          child: const Icon(Icons.add, size: 16, color: Color(0xFF7B5247))
+          child: const Icon(Icons.add, size: 16, color: Color(0xFF7B5247)),
         ),
       ),
     );

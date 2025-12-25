@@ -70,6 +70,7 @@
 // lib/wardrobe_screen/widgets/wardrobe_app_bar.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:vestium/l10n/app_localizations.dart';
 import '../cubit/wardrobe_cubit.dart';
 import '../cubit/wardrobe_state.dart';
 
@@ -77,7 +78,7 @@ class WardrobeAppBar extends StatelessWidget implements PreferredSizeWidget {
   const WardrobeAppBar({super.key});
 
   @override
-  Size get preferredSize => const Size.fromHeight(120); 
+  Size get preferredSize => const Size.fromHeight(120);
 
   @override
   Widget build(BuildContext context) {
@@ -98,27 +99,32 @@ class WardrobeAppBar extends StatelessWidget implements PreferredSizeWidget {
           SizedBox(
             height: 90, // Fixed height for title area
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16,),
+              padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   // Title
-                  const Expanded(
+                  Expanded(
                     child: Align(
                       alignment: Alignment.centerLeft,
-                      child: Text(
-                        'My Wardrobe',
-                        style: TextStyle(
-                          fontFamily: 'CormorantGaramond',
-                          fontSize: 24,
-                          fontWeight: FontWeight.w400,
-                          color: Color(0xFF3E2723), // Dark brown text
-                          letterSpacing: 0.2,
-                        ),
+                      child: Builder(
+                        builder: (context) {
+                          final loc = AppLocalizations.of(context)!;
+                          return Text(
+                            loc.wardrobeMyWardrobe,
+                            style: const TextStyle(
+                              fontFamily: 'CormorantGaramond',
+                              fontSize: 24,
+                              fontWeight: FontWeight.w400,
+                              color: Color(0xFF3E2723), // Dark brown text
+                              letterSpacing: 0.2,
+                            ),
+                          );
+                        },
                       ),
                     ),
                   ),
-                  
+
                   // Refresh button - KEEP YOUR ORIGINAL LOGIC
                   BlocBuilder<WardrobeCubit, WardrobeState>(
                     builder: (context, state) {
@@ -137,9 +143,7 @@ class WardrobeAppBar extends StatelessWidget implements PreferredSizeWidget {
                                 color: Color(0xFF795548), // Primary brown
                                 size: 24,
                               ),
-                        onPressed: state.isLoading
-                            ? null
-                            : () => context.read<WardrobeCubit>().refresh(),
+                        onPressed: state.isLoading ? null : () => context.read<WardrobeCubit>().refresh(),
                       );
                     },
                   ),
@@ -147,7 +151,7 @@ class WardrobeAppBar extends StatelessWidget implements PreferredSizeWidget {
               ),
             ),
           ),
-          
+
           // Categories section - This replaces the FilterChipsWidget
           SizedBox(
             height: 50, // Fixed height for categories
@@ -159,10 +163,7 @@ class WardrobeAppBar extends StatelessWidget implements PreferredSizeWidget {
                     child: SizedBox(
                       width: 20,
                       height: 20,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                        color: Color(0xFF795548),
-                      ),
+                      child: CircularProgressIndicator(strokeWidth: 2, color: Color(0xFF795548)),
                     ),
                   );
                 }
@@ -170,11 +171,9 @@ class WardrobeAppBar extends StatelessWidget implements PreferredSizeWidget {
                 // Create filters: "All" + categories (KEEPING YOUR LOGIC)
                 final filters = <Map<String, dynamic>>[
                   {'label': 'All', 'icon': null},
-                  ...state.categories.map((category) => {
-                    'label': category.categoryName,
-                    'icon': null,
-                    'id': category.categoryId,
-                  }),
+                  ...state.categories.map(
+                    (category) => {'label': category.categoryName, 'icon': null, 'id': category.categoryId},
+                  ),
                 ];
 
                 return ListView.builder(
@@ -185,7 +184,7 @@ class WardrobeAppBar extends StatelessWidget implements PreferredSizeWidget {
                     final f = filters[i];
                     final label = f['label'] as String?;
                     final isSelected = state.selectedFilter == label;
-                    
+
                     // KEEPING YOUR ORIGINAL TAP LOGIC
                     return Padding(
                       padding: const EdgeInsets.only(right: 12),
@@ -196,10 +195,7 @@ class WardrobeAppBar extends StatelessWidget implements PreferredSizeWidget {
                           }
                         },
                         child: Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 20,
-                            vertical: 10,
-                          ),
+                          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                           decoration: BoxDecoration(
                             color: isSelected
                                 ? const Color(0xFF795548) // Selected: primary brown
