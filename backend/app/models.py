@@ -275,3 +275,30 @@ class SyncQueue(db.Model):
             'processed': self.processed,
             'processed_at': self.processed_at.isoformat() if self.processed_at else None
         }
+
+
+# User Device Model (for multi-device push notification support)
+class UserDevice(db.Model):
+    __tablename__ = 'user_devices'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.user_id', ondelete='CASCADE'), nullable=False)
+    device_token = db.Column(db.String(255), nullable=False, unique=True)
+    device_name = db.Column(db.String(100))  # e.g., "iPhone 12", "Samsung Galaxy S21"
+    device_type = db.Column(db.String(20))  # e.g., "ios", "android"
+    date_registered = db.Column(db.DateTime, default=datetime.utcnow)
+    last_active = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    
+    # Relationship back to User
+    user = db.relationship('User', backref=db.backref('devices', lazy=True, cascade='all, delete-orphan'))
+    
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'user_id': self.user_id,
+            'device_token': self.device_token,
+            'device_name': self.device_name,
+            'device_type': self.device_type,
+            'date_registered': self.date_registered.isoformat() if self.date_registered else None,
+            'last_active': self.last_active.isoformat() if self.last_active else None
+        }

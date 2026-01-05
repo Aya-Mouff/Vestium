@@ -111,6 +111,7 @@ def create_app():
     from app.routes.outfits import outfits_bp
     from app.routes.posts import posts_bp
     from app.routes.feed import feed_bp
+    from app.routes.devices import devices_bp
     
     app.register_blueprint(auth_bp, url_prefix='/api/auth')
     app.register_blueprint(users_bp, url_prefix='/api/users')
@@ -118,6 +119,7 @@ def create_app():
     app.register_blueprint(outfits_bp, url_prefix='/api/outfits')
     app.register_blueprint(posts_bp, url_prefix='/api/posts')
     app.register_blueprint(feed_bp, url_prefix='/api/feed')
+    app.register_blueprint(devices_bp, url_prefix='/api/devices')
     
     # Health check endpoint
     @app.route('/api/health')
