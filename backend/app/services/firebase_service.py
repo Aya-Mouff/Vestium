@@ -243,53 +243,113 @@ class FirebaseService:
     
     def send_like_notification(self, post_id: int, liker_id: int, post_owner_id: int):
         """Send notification when someone likes a post"""
-        from app.models import User
+        from app.models import User, Notification
         liker = User.query.get(liker_id)
         liker_name = liker.username if liker else "Someone"
         
+        message = f"{liker_name} liked your post"
+        
+        # Save notification to database
+        try:
+            notification = Notification(
+                user_id=post_owner_id,
+                type='like',
+                actor_id=liker_id,
+                post_id=post_id,
+                message=message
+            )
+            db.session.add(notification)
+            db.session.commit()
+            logger.info(f"✅ Like notification saved to database for user {post_owner_id}")
+        except Exception as e:
+            logger.error(f"❌ Failed to save like notification to database: {e}")
+            db.session.rollback()
+        
+        # Send push notification
         return self.send_to_user(
             user_id=post_owner_id,
             title="New Like",
-            body=f"{liker_name} liked your post",
+            body=message,
             data={
                 'type': 'like',
                 'post_id': str(post_id),
-                'liker_id': str(liker_id)
+                'liker_id': str(liker_id),
+                'notification_id': str(notification.notification_id) if notification else None
             }
         )
     
     def send_comment_notification(self, post_id: int, commenter_id: int, post_owner_id: int):
         """Send notification when someone comments on a post"""
-        from app.models import User
+        from app.models import User, Notification
         commenter = User.query.get(commenter_id)
         commenter_name = commenter.username if commenter else "Someone"
         
+        message = f"{commenter_name} commented on your post"
+        
+        # Save notification to database
+        try:
+            notification = Notification(
+                user_id=post_owner_id,
+                type='comment',
+                actor_id=commenter_id,
+                post_id=post_id,
+                message=message
+            )
+            db.session.add(notification)
+            db.session.commit()
+            logger.info(f"✅ Comment notification saved to database for user {post_owner_id}")
+        except Exception as e:
+            logger.error(f"❌ Failed to save comment notification to database: {e}")
+            db.session.rollback()
+        
+        # Send push notification
         return self.send_to_user(
             user_id=post_owner_id,
             title="New Comment",
-            body=f"{commenter_name} commented on your post",
+            body=message,
             data={
                 'type': 'comment',
                 'post_id': str(post_id),
-                'commenter_id': str(commenter_id)
+                'commenter_id': str(commenter_id),
+                'notification_id': str(notification.notification_id) if notification else None
             }
         )
     
     def send_follow_notification(self, follower_id: int, following_id: int):
         """Send notification when someone follows a user"""
-        from app.models import User
+        from app.models import User, Notification
         follower = User.query.get(follower_id)
         follower_name = follower.username if follower else "Someone"
         
+        message = f"{follower_name} started following you"
+        
+        # Save notification to database
+        try:
+            notification = Notification(
+                user_id=following_id,
+                type='follow',
+                actor_id=follower_id,
+                message=message
+            )
+            db.session.add(notification)
+            db.session.commit()
+            logger.info(f"✅ Follow notification saved to database for user {following_id}")
+        except Exception as e:
+            logger.error(f"❌ Failed to save follow notification to database: {e}")
+            db.session.rollback()
+        
+        # Send push notification
         return self.send_to_user(
             user_id=following_id,
             title="New Follower",
-            body=f"{follower_name} started following you",
+            body=message,
             data={
                 'type': 'follow',
-                'follower_id': str(follower_id)
+                'follower_id': str(follower_id),
+                'notification_id': str(notification.notification_id) if notification else None
             }
         )
+
 
 # Singleton instance - THIS MUST BE AT THE END OF THE FILE
 firebase_service = FirebaseService()

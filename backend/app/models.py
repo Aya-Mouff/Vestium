@@ -302,3 +302,59 @@ class UserDevice(db.Model):
             'date_registered': self.date_registered.isoformat() if self.date_registered else None,
             'last_active': self.last_active.isoformat() if self.last_active else None
         }
+
+
+# Notification Model (for storing notification history)
+class Notification(db.Model):
+    __tablename__ = 'notifications'
+    
+    notification_id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.user_id', ondelete='CASCADE'), nullable=False)
+    type = db.Column(db.String(50), nullable=False)  # 'follow', 'like', 'comment'
+    actor_id = db.Column(db.Integer, db.ForeignKey('user.user_id', ondelete='CASCADE'), nullable=True)  # Who triggered the notification
+    post_id = db.Column(db.Integer, db.ForeignKey('posts.post_id', ondelete='CASCADE'), nullable=True)  # Related post (for likes/comments)
+    message = db.Column(db.Text, nullable=False)  # Notification message text
+    is_read = db.Column(db.Boolean, default=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    
+    # Relationships
+    user = db.relationship('User', foreign_keys=[user_id], backref=db.backref('notifications', lazy=True, cascade='all, delete-orphan'))
+    actor = db.relationship('User', foreign_keys=[actor_id], backref='triggered_notifications')
+    post = db.relationship('Post', backref='notifications')
+    
+    def to_dict(self, include_actor=True, include_post=False):
+        """Convert notification to dictionary
+        
+        Args:
+            include_actor: Whether to include actor (user who triggered) details
+            include_post: Whether to include post details (for like/comment notifications)
+        """
+        data = {
+            'notification_id': self.notification_id,
+            'user_id': self.user_id,
+            'type': self.type,
+            'actor_id': self.actor_id,
+            'post_id': self.post_id,
+            'message': self.message,
+            'is_read': self.is_read,
+            'created_at': self.created_at.isoformat() if self.created_at else None
+        }
+        
+        # Include actor details if requested
+        if include_actor and self.actor:
+            data['actor'] = {
+                'user_id': self.actor.user_id,
+                'username': self.actor.username,
+                'full_name': self.actor.full_name,
+                'pfp': self.actor.pfp
+            }
+        
+        # Include post details if requested
+        if include_post and self.post:
+            data['post'] = {
+                'post_id': self.post.post_id,
+                'image_path': self.post.image_path,
+                'caption': self.post.caption
+            }
+        
+        return data
