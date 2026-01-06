@@ -250,6 +250,7 @@ class FirebaseService:
         message = f"{liker_name} liked your post"
         
         # Save notification to database
+        notification = None
         try:
             notification = Notification(
                 user_id=post_owner_id,
@@ -287,6 +288,7 @@ class FirebaseService:
         message = f"{commenter_name} commented on your post"
         
         # Save notification to database
+        notification = None
         try:
             notification = Notification(
                 user_id=post_owner_id,
@@ -324,6 +326,7 @@ class FirebaseService:
         message = f"{follower_name} started following you"
         
         # Save notification to database
+        notification = None
         try:
             notification = Notification(
                 user_id=following_id,
