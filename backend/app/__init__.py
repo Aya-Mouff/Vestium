@@ -103,8 +103,7 @@ def create_app():
     
     # Import models
     from app import models
-    
-    # Register blueprints
+      # Register blueprints
     from app.routes.auth import auth_bp
     from app.routes.users import users_bp
     from app.routes.items import items_bp
@@ -123,6 +122,7 @@ def create_app():
     app.register_blueprint(devices_bp, url_prefix='/api/devices')
     app.register_blueprint(notifications_bp, url_prefix='/api/notifications')
     
+   
     # Health check endpoint
     @app.route('/api/health')
     def health_check():
