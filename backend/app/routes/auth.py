@@ -137,10 +137,16 @@ def refresh():
             return jsonify({'error': 'User not found'}), 404
         
         # Verify refresh token matches stored token
-        jwt_token = get_jwt()
-        if user.refresh_token != jwt_token['jti']:
-            return jsonify({'error': 'Invalid refresh token'}), 401
+        # jwt_token = get_jwt()
+        # if user.refresh_token != jwt_token['jti']:
+        #     return jsonify({'error': 'Invalid refresh token'}), 401
         
+        # Get current token string from header
+        current_token = request.headers.get('Authorization', '').replace('Bearer ', '').strip()
+
+        if not current_token or user.refresh_token != current_token:
+            return jsonify({'error': 'Invalid refresh token'}), 401
+
         # Create new access token
         new_access_token = create_access_token(identity=str(user.user_id))
         
@@ -182,4 +188,46 @@ def get_current_user():
         }), 200
         
     except Exception as e:
+        return jsonify({'error': str(e)}), 500 
+    
+@auth_bp.route('/change-password', methods=['PUT'])
+@jwt_required()
+def change_password():
+    try:
+        current_user_id = int(get_jwt_identity())
+        user = User.query.get(current_user_id)
+
+        if not user:
+            return jsonify({'error': 'User not found'}), 404
+
+        data = request.get_json() or {}
+
+        current_password = data.get('current_password', '')
+        new_password = data.get('new_password', '')
+
+        # Validate presence
+        if not current_password or not new_password:
+            return jsonify({'error': 'current_password and new_password are required'}), 400
+
+        # Verify current password
+        if not user.check_password(current_password):
+            return jsonify({'error': 'Current password is incorrect'}), 401
+
+        # Validate new password strength (reuse your existing validator)
+        is_valid, message = validate_password(new_password)
+        if not is_valid:
+            return jsonify({'error': message}), 400
+
+        # Prevent using the same password
+        if user.check_password(new_password):
+            return jsonify({'error': 'New password must be different from current password'}), 400
+
+        # Update password
+        user.set_password(new_password)
+        db.session.commit()
+
+        return jsonify({'message': 'Password updated successfully'}), 200
+
+    except Exception as e:
+        db.session.rollback()
         return jsonify({'error': str(e)}), 500
