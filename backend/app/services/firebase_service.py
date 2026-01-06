@@ -3,6 +3,7 @@ import os
 import json
 import logging
 from flask import current_app
+from app import db
 
 logger = logging.getLogger(__name__)
 
@@ -156,65 +157,202 @@ class FirebaseService:
             return False
     
     def send_to_user(self, user_id: int, title: str, body: str, data: dict = None) -> bool:
-        """Send notification to a user (you need to store device tokens in your DB)"""
-        # In a real app, you would fetch the device token from your database
-        # For now, this is a placeholder
-        from app.models import User
+        """
+        Send notification to ALL registered devices of a user.
         
-        user = User.query.get(user_id)
-        if user and hasattr(user, 'device_token') and user.device_token:
-            return self.send_notification(user.device_token, title, body, data)
-        return False
+        Args:
+            user_id: The user's ID
+            title: Notification title
+            body: Notification body text
+            data: Optional dictionary of extra data
+        
+        Returns:
+            bool: True if at least one notification was sent successfully
+        """
+        if not self.initialized:
+            logger.warning("🔥 Firebase not initialized. Skipping notification.")
+            return False
+        
+        try:
+            from firebase_admin import messaging
+            from app.models import UserDevice
+            
+            # Get ALL device tokens for this user
+            user_devices = UserDevice.query.filter_by(user_id=user_id).all()
+            
+            if not user_devices:
+                logger.warning(f"🔥 No devices registered for user {user_id}")
+                return False
+            
+            logger.info(f"🔥 Sending notification to {len(user_devices)} device(s) for user {user_id}")
+            
+            success_count = 0
+            failed_tokens = []
+            
+            # Send to each device
+            for device in user_devices:
+                try:
+                    message = messaging.Message(
+                        notification=messaging.Notification(
+                            title=title,
+                            body=body
+                        ),
+                        data=data or {},
+                        token=device.device_token
+                    )
+                    
+                    response = messaging.send(message)
+                    success_count += 1
+                    logger.info(f"✅ Notification sent to device {device.id} ({device.device_name}): {response}")
+                    
+                except messaging.UnregisteredError:
+                    # Token is invalid/unregistered - mark for deletion
+                    logger.warning(f"⚠️ Device token {device.id} is invalid/unregistered")
+                    failed_tokens.append(device)
+                    
+                except messaging.SenderIdMismatchError:
+                    logger.error(f"❌ Sender ID mismatch for device {device.id}")
+                    failed_tokens.append(device)
+                    
+                except Exception as e:
+                    error_msg = str(e).lower()
+                    if 'not-found' in error_msg or 'invalid' in error_msg or 'unregistered' in error_msg:
+                        logger.warning(f"⚠️ Invalid token for device {device.id}: {str(e)}")
+                        failed_tokens.append(device)
+                    else:
+                        logger.error(f"❌ Failed to send to device {device.id}: {str(e)}")
+            
+            # Clean up invalid tokens
+            if failed_tokens:
+                logger.info(f"🧹 Cleaning up {len(failed_tokens)} invalid device token(s)")
+                for device in failed_tokens:
+                    try:
+                        db.session.delete(device)
+                    except:
+                        pass
+                db.session.commit()
+            
+            # Return True if at least one notification was sent successfully
+            return success_count > 0
+            
+        except Exception as e:
+            logger.error(f"❌ Error in send_to_user: {str(e)}")
+            import traceback
+            logger.error(traceback.format_exc())
+            return False
     
     def send_like_notification(self, post_id: int, liker_id: int, post_owner_id: int):
         """Send notification when someone likes a post"""
-        from app.models import User
+        from app.models import User, Notification
         liker = User.query.get(liker_id)
         liker_name = liker.username if liker else "Someone"
         
+        message = f"{liker_name} liked your post"
+        
+        # Save notification to database
+        notification = None
+        try:
+            notification = Notification(
+                user_id=post_owner_id,
+                type='like',
+                actor_id=liker_id,
+                post_id=post_id,
+                message=message
+            )
+            db.session.add(notification)
+            db.session.commit()
+            logger.info(f"✅ Like notification saved to database for user {post_owner_id}")
+        except Exception as e:
+            logger.error(f"❌ Failed to save like notification to database: {e}")
+            db.session.rollback()
+        
+        # Send push notification
         return self.send_to_user(
             user_id=post_owner_id,
             title="New Like",
-            body=f"{liker_name} liked your post",
+            body=message,
             data={
                 'type': 'like',
                 'post_id': str(post_id),
-                'liker_id': str(liker_id)
+                'liker_id': str(liker_id),
+                'notification_id': str(notification.notification_id) if notification else None
             }
         )
     
     def send_comment_notification(self, post_id: int, commenter_id: int, post_owner_id: int):
         """Send notification when someone comments on a post"""
-        from app.models import User
+        from app.models import User, Notification
         commenter = User.query.get(commenter_id)
         commenter_name = commenter.username if commenter else "Someone"
         
+        message = f"{commenter_name} commented on your post"
+        
+        # Save notification to database
+        notification = None
+        try:
+            notification = Notification(
+                user_id=post_owner_id,
+                type='comment',
+                actor_id=commenter_id,
+                post_id=post_id,
+                message=message
+            )
+            db.session.add(notification)
+            db.session.commit()
+            logger.info(f"✅ Comment notification saved to database for user {post_owner_id}")
+        except Exception as e:
+            logger.error(f"❌ Failed to save comment notification to database: {e}")
+            db.session.rollback()
+        
+        # Send push notification
         return self.send_to_user(
             user_id=post_owner_id,
             title="New Comment",
-            body=f"{commenter_name} commented on your post",
+            body=message,
             data={
                 'type': 'comment',
                 'post_id': str(post_id),
-                'commenter_id': str(commenter_id)
+                'commenter_id': str(commenter_id),
+                'notification_id': str(notification.notification_id) if notification else None
             }
         )
     
     def send_follow_notification(self, follower_id: int, following_id: int):
         """Send notification when someone follows a user"""
-        from app.models import User
+        from app.models import User, Notification
         follower = User.query.get(follower_id)
         follower_name = follower.username if follower else "Someone"
         
+        message = f"{follower_name} started following you"
+        
+        # Save notification to database
+        notification = None
+        try:
+            notification = Notification(
+                user_id=following_id,
+                type='follow',
+                actor_id=follower_id,
+                message=message
+            )
+            db.session.add(notification)
+            db.session.commit()
+            logger.info(f"✅ Follow notification saved to database for user {following_id}")
+        except Exception as e:
+            logger.error(f"❌ Failed to save follow notification to database: {e}")
+            db.session.rollback()
+        
+        # Send push notification
         return self.send_to_user(
             user_id=following_id,
             title="New Follower",
-            body=f"{follower_name} started following you",
+            body=message,
             data={
                 'type': 'follow',
-                'follower_id': str(follower_id)
+                'follower_id': str(follower_id),
+                'notification_id': str(notification.notification_id) if notification else None
             }
         )
+
 
 # Singleton instance - THIS MUST BE AT THE END OF THE FILE
 firebase_service = FirebaseService()

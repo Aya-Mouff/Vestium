@@ -1,3 +1,8 @@
+
+
+from dotenv import load_dotenv
+load_dotenv()
+
 # vestium-backend/run.py
 from app import create_app
 

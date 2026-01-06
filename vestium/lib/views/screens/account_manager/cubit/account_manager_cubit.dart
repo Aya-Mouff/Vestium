@@ -64,7 +64,7 @@ class AccountManagerCubit extends Cubit<AccountManagerState> {
 
     try {
       final currentId = CurrentUserService.currentUserId ?? userId;
-      if (currentId == null || currentId == -1) {
+      if (currentId == -1) {
         throw Exception('No current user');
       }
 
@@ -117,7 +117,7 @@ class AccountManagerCubit extends Cubit<AccountManagerState> {
 
     try {
       final currentId = CurrentUserService.currentUserId ?? userId;
-      if (currentId == null || currentId == -1) {
+      if (currentId == -1) {
         throw Exception('No current user');
       }
 
@@ -203,7 +203,7 @@ class AccountManagerCubit extends Cubit<AccountManagerState> {
 
     try {
       final currentId = CurrentUserService.currentUserId ?? userId;
-      if (currentId == null || currentId == -1) {
+      if (currentId == -1) {
         throw Exception('No current user');
       }
 
@@ -253,7 +253,7 @@ class AccountManagerCubit extends Cubit<AccountManagerState> {
 
     try {
       final currentId = CurrentUserService.currentUserId ?? userId;
-      if (currentId == null || currentId == -1) {
+      if (currentId == -1) {
         throw Exception('No current user');
       }
 

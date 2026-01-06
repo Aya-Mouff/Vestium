@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../cubit/manage_outfit_categories_cubit.dart';
-import '../cubit/manage_outfit_categories_state.dart';
 
 class AddOutfitCategoryRow extends StatefulWidget {
   const AddOutfitCategoryRow({super.key});

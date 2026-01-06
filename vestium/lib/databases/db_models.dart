@@ -29,30 +29,30 @@ class User {
   });
 
   factory User.fromMap(Map<String, dynamic> map) => User(
-        userId: map['user_id'],
-        username: map['username'],
-        fullName: map['full_name'],
-        bio: map['bio'],
-        pfp: map['pfp'],
-        email: map['email'],
-        password: map['password'],
-        dateCreated: map['date_created'],
-        cameraPermission: map['camera_permission'],
-        galleryPermission: map['gallery_permission'],
-      );
+    userId: map['user_id'],
+    username: map['username'],
+    fullName: map['full_name'],
+    bio: map['bio'],
+    pfp: map['pfp'],
+    email: map['email'],
+    password: map['password'],
+    dateCreated: map['date_created'],
+    cameraPermission: map['camera_permission'],
+    galleryPermission: map['gallery_permission'],
+  );
 
   Map<String, dynamic> toMap() => {
-        'user_id': userId,
-        'username': username,
-        'full_name': fullName,
-        'bio': bio,
-        'pfp': pfp,
-        'email': email,
-        'password': password,
-        'date_created': dateCreated,
-        'camera_permission': cameraPermission,
-        'gallery_permission': galleryPermission,
-      };
+    'user_id': userId,
+    'username': username,
+    'full_name': fullName,
+    'bio': bio,
+    'pfp': pfp,
+    'email': email,
+    'password': password,
+    'date_created': dateCreated,
+    'camera_permission': cameraPermission,
+    'gallery_permission': galleryPermission,
+  };
 
   // ADD THIS copyWith METHOD:
   User copyWith({
@@ -82,7 +82,6 @@ class User {
   }
 }
 
-
 // ------------------------
 // FOLLOWINGS / FOLLOWERS
 // (composite primary key)
@@ -106,10 +105,18 @@ class FollowingFollower {
       );
 
   Map<String, dynamic> toMap() => {
-        'following_id': followingId,
-        'follower_id': followerId,
-        'date': date,
-      };
+    'following_id': followingId,
+    'follower_id': followerId,
+    'date': date,
+  };
+
+  static FollowingFollower fromJson(Map<String, dynamic> json) {
+  return FollowingFollower(
+    followingId: json['following_id'] ?? json['followingId'],
+    followerId: json['follower_id'] ?? json['followerId'],
+    date: json['date'],
+  );
+}
 }
 
 // ------------------------
@@ -119,20 +126,17 @@ class ItemCategory {
   int? categoryId;
   String? categoryName;
 
-  ItemCategory({
-    this.categoryId,
-    this.categoryName,
-  });
+  ItemCategory({this.categoryId, this.categoryName});
 
   factory ItemCategory.fromMap(Map<String, dynamic> map) => ItemCategory(
-        categoryId: map['category_id'],
-        categoryName: map['category_name'],
-      );
+    categoryId: map['category_id'],
+    categoryName: map['category_name'],
+  );
 
   Map<String, dynamic> toMap() => {
-        'category_id': categoryId,
-        'category_name': categoryName,
-      };
+    'category_id': categoryId,
+    'category_name': categoryName,
+  };
 }
 
 // ------------------------
@@ -156,26 +160,26 @@ class ItemModel {
     this.season,
     this.date,
   });
- 
+
   factory ItemModel.fromMap(Map<String, dynamic> map) => ItemModel(
-        itemId: map['item_id'],
-        userId: map['user_id'],
-        imagePath: map['image_path'],
-        itemName: map['item_name'],
-        description: map['description'],
-        season: map['season'],
-        date: map['date'],
-      );
+    itemId: map['item_id'],
+    userId: map['user_id'],
+    imagePath: map['image_path'],
+    itemName: map['item_name'],
+    description: map['description'],
+    season: map['season'],
+    date: map['date'],
+  );
 
   Map<String, dynamic> toMap() => {
-        'item_id': itemId,
-        'user_id': userId,
-        'image_path': imagePath,
-        'item_name': itemName,
-        'description': description,
-        'season': season,
-        'date': date,
-      };
+    'item_id': itemId,
+    'user_id': userId,
+    'image_path': imagePath,
+    'item_name': itemName,
+    'description': description,
+    'season': season,
+    'date': date,
+  };
 
   // ADD THIS copyWith METHOD:
   ItemModel copyWith({
@@ -197,6 +201,18 @@ class ItemModel {
       date: date ?? this.date,
     );
   }
+
+  static ItemModel fromJson(Map<String, dynamic> json) {
+    return ItemModel(
+      itemId: json['item_id'] ?? json['itemId'],
+      userId: json['user_id'] ?? json['userId'],
+      imagePath: json['image_path'] ?? json['imagePath'],
+      itemName: json['item_name'] ?? json['itemName'],
+      description: json['description'],
+      season: json['season'],
+      date: json['date'],
+    );
+  }
 }
 
 // ------------------------
@@ -210,16 +226,16 @@ class OutfitCategory {
   OutfitCategory({this.categoryId, this.userId, this.categoryName});
 
   factory OutfitCategory.fromMap(Map<String, dynamic> map) => OutfitCategory(
-        categoryId: map['category_id'],
-        userId: map['user_id'],
-        categoryName: map['category_name'],
-      );
+    categoryId: map['category_id'],
+    userId: map['user_id'],
+    categoryName: map['category_name'],
+  );
 
   Map<String, dynamic> toMap() => {
-        'category_id': categoryId,
-        'user_id': userId,
-        'category_name': categoryName,
-      };
+    'category_id': categoryId,
+    'user_id': userId,
+    'category_name': categoryName,
+  };
 }
 
 // ------------------------
@@ -243,22 +259,33 @@ class OutfitModel {
   });
 
   factory OutfitModel.fromMap(Map<String, dynamic> map) => OutfitModel(
-        outfitId: map['outfit_id'],
-        userId: map['user_id'],
-        outfitName: map['outfit_name'],
-        description: map['description'],
-        date: map['date'],
-        season: map['season'],
-      );
+    outfitId: map['outfit_id'],
+    userId: map['user_id'],
+    outfitName: map['outfit_name'],
+    description: map['description'],
+    date: map['date'],
+    season: map['season'],
+  );
 
   Map<String, dynamic> toMap() => {
-        'outfit_id': outfitId,
-        'user_id': userId,
-        'outfit_name': outfitName,
-        'description': description,
-        'date': date,
-        'season': season,
-      };
+    'outfit_id': outfitId,
+    'user_id': userId,
+    'outfit_name': outfitName,
+    'description': description,
+    'date': date,
+    'season': season,
+  };
+
+  static OutfitModel fromJson(Map<String, dynamic> json) {
+    return OutfitModel(
+      outfitId: json['outfit_id'] ?? json['outfitId'],
+      userId: json['user_id'] ?? json['userId'],
+      outfitName: json['outfit_name'] ?? json['outfitName'],
+      description: json['description'],
+      season: json['season'],
+      date: json['date'],
+    );
+  }
 }
 
 // ------------------------
@@ -268,20 +295,12 @@ class OutfitItem {
   int outfitId;
   int itemId;
 
-  OutfitItem({
-    required this.outfitId,
-    required this.itemId,
-  });
+  OutfitItem({required this.outfitId, required this.itemId});
 
-  factory OutfitItem.fromMap(Map<String, dynamic> map) => OutfitItem(
-        outfitId: map['outfit_id'],
-        itemId: map['item_id'],
-      );
+  factory OutfitItem.fromMap(Map<String, dynamic> map) =>
+      OutfitItem(outfitId: map['outfit_id'], itemId: map['item_id']);
 
-  Map<String, dynamic> toMap() => {
-        'outfit_id': outfitId,
-        'item_id': itemId,
-      };
+  Map<String, dynamic> toMap() => {'outfit_id': outfitId, 'item_id': itemId};
 }
 
 // ------------------------
@@ -291,20 +310,18 @@ class OutfitCategoryJoin {
   int outfitId;
   int categoryId;
 
-  OutfitCategoryJoin({
-    required this.outfitId,
-    required this.categoryId,
-  });
+  OutfitCategoryJoin({required this.outfitId, required this.categoryId});
 
-  factory OutfitCategoryJoin.fromMap(Map<String, dynamic> map) => OutfitCategoryJoin(
+  factory OutfitCategoryJoin.fromMap(Map<String, dynamic> map) =>
+      OutfitCategoryJoin(
         outfitId: map['outfit_id'],
         categoryId: map['category_id'],
       );
 
   Map<String, dynamic> toMap() => {
-        'outfit_id': outfitId,
-        'category_id': categoryId,
-      };
+    'outfit_id': outfitId,
+    'category_id': categoryId,
+  };
 }
 
 // ------------------------
@@ -365,7 +382,7 @@ class OutfitCategoryJoin {
 class PostModel {
   int? postId;
   int? outfitId;
-  int? userId;      // ← ADD THIS for gallery posts
+  int? userId; // ← ADD THIS for gallery posts
   String? imagePath;
   String? caption;
   String? date;
@@ -373,34 +390,34 @@ class PostModel {
   PostModel({
     this.postId,
     this.outfitId,
-    this.userId,    // ← ADD THIS
+    this.userId, // ← ADD THIS
     this.imagePath,
     this.caption,
     this.date,
   });
 
   factory PostModel.fromMap(Map<String, dynamic> map) => PostModel(
-        postId: map['post_id'],
-        outfitId: map['outfit_id'],
-        userId: map['user_id'],    // ← ADD THIS
-        imagePath: map['image_path'],
-        caption: map['caption'],
-        date: map['date'],
-      );
+    postId: map['post_id'],
+    outfitId: map['outfit_id'],
+    userId: map['user_id'], // ← ADD THIS
+    imagePath: map['image_path'],
+    caption: map['caption'],
+    date: map['date'],
+  );
 
   Map<String, dynamic> toMap() => {
-        'post_id': postId,
-        'outfit_id': outfitId,
-        'user_id': userId,         // ← ADD THIS
-        'image_path': imagePath,
-        'caption': caption,
-        'date': date,
-      };
+    'post_id': postId,
+    'outfit_id': outfitId,
+    'user_id': userId, // ← ADD THIS
+    'image_path': imagePath,
+    'caption': caption,
+    'date': date,
+  };
 
   PostModel copyWith({
     int? postId,
     int? outfitId,
-    int? userId,               // ← ADD THIS
+    int? userId, // ← ADD THIS
     String? imagePath,
     String? caption,
     String? date,
@@ -408,10 +425,21 @@ class PostModel {
     return PostModel(
       postId: postId ?? this.postId,
       outfitId: outfitId ?? this.outfitId,
-      userId: userId ?? this.userId,           // ← ADD THIS
+      userId: userId ?? this.userId, // ← ADD THIS
       imagePath: imagePath ?? this.imagePath,
       caption: caption ?? this.caption,
       date: date ?? this.date,
+    );
+  }
+
+  static PostModel fromJson(Map<String, dynamic> json) {
+    return PostModel(
+      postId: json['post_id'] ?? json['postId'],
+      outfitId: json['outfit_id'] ?? json['outfitId'],
+      userId: json['user_id'] ?? json['userId'],
+      imagePath: json['image_path'] ?? json['imagePath'],
+      caption: json['caption'],
+      date: json['date'],
     );
   }
 }
@@ -430,6 +458,7 @@ class PostWithCounts {
     required this.isLikedByCurrentUser,
   });
 }
+
 // ------------------------
 // COMMENT
 // ------------------------
@@ -449,20 +478,30 @@ class CommentModel {
   });
 
   factory CommentModel.fromMap(Map<String, dynamic> map) => CommentModel(
-        commentId: map['comment_id'],
-        postId: map['post_id'],
-        userId: map['user_id'],
-        content: map['content'],
-        date: map['date'],
-      );
+    commentId: map['comment_id'],
+    postId: map['post_id'],
+    userId: map['user_id'],
+    content: map['content'],
+    date: map['date'],
+  );
 
   Map<String, dynamic> toMap() => {
-        'comment_id': commentId,
-        'post_id': postId,
-        'user_id': userId,
-        'content': content,
-        'date': date,
-      };
+    'comment_id': commentId,
+    'post_id': postId,
+    'user_id': userId,
+    'content': content,
+    'date': date,
+  };
+
+  static CommentModel fromJson(Map<String, dynamic> json) {
+    return CommentModel(
+      commentId: json['comment_id'] ?? json['commentId'],
+      postId: json['post_id'] ?? json['postId'],
+      userId: json['user_id'] ?? json['userId'],
+      content: json['content'],
+      date: json['date'],
+    );
+  }
 }
 
 // ------------------------
@@ -474,26 +513,30 @@ class LikeModel {
   int? userId; // FK → user.user_id
   String? date;
 
-  LikeModel({
-    this.likeId,
-    this.postId,
-    this.userId,
-    this.date,
-  });
+  LikeModel({this.likeId, this.postId, this.userId, this.date});
 
   factory LikeModel.fromMap(Map<String, dynamic> map) => LikeModel(
-        likeId: map['like_id'],
-        postId: map['post_id'],
-        userId: map['user_id'],
-        date: map['date'],
-      );
+    likeId: map['like_id'],
+    postId: map['post_id'],
+    userId: map['user_id'],
+    date: map['date'],
+  );
 
   Map<String, dynamic> toMap() => {
-        'like_id': likeId,
-        'post_id': postId,
-        'user_id': userId,
-        'date': date,
-      };
+    'like_id': likeId,
+    'post_id': postId,
+    'user_id': userId,
+    'date': date,
+  };
+
+  static LikeModel fromJson(Map<String, dynamic> json) {
+    return LikeModel(
+      likeId: json['like_id'] ?? json['likeId'],
+      postId: json['post_id'] ?? json['postId'],
+      userId: json['user_id'] ?? json['userId'],
+      date: json['date'],
+    );
+  }
 }
 
 // ------------------------
@@ -503,20 +546,15 @@ class ItemCategoryJoin {
   int itemId;
   int categoryId;
 
-  ItemCategoryJoin({
-    required this.itemId,
-    required this.categoryId,
-  });
+  ItemCategoryJoin({required this.itemId, required this.categoryId});
 
-  factory ItemCategoryJoin.fromMap(Map<String, dynamic> map) => ItemCategoryJoin(
-        itemId: map['item_id'],
-        categoryId: map['category_id'],
-      );
+  factory ItemCategoryJoin.fromMap(Map<String, dynamic> map) =>
+      ItemCategoryJoin(itemId: map['item_id'], categoryId: map['category_id']);
 
   Map<String, dynamic> toMap() => {
-        'item_id': itemId,
-        'category_id': categoryId,
-      };
+    'item_id': itemId,
+    'category_id': categoryId,
+  };
 }
 
 

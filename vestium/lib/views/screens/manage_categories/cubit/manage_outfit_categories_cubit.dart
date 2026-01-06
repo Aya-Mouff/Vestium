@@ -1,10 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'manage_outfit_categories_state.dart';
 import 'package:vestium/databases/services/current_user_service.dart';
-import '../../../../repo/outfit_category_repo.dart';
-import '../../../../repo/item_category_join_repo.dart';
 import '../../../../databases/services/outfit_category_service.dart';
-import '../../../../databases/db_models.dart';
 
 
 class ManageOutfitCategoriesCubit extends Cubit<ManageOutfitCategoriesState> {

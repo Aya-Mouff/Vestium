@@ -70,6 +70,7 @@ abstract class _$AppRouter extends RootStackRouter {
         child: EditItemDetailsScreen(
           key: args.key,
           itemId: args.itemId,
+          editedImagePath: args.editedImagePath,
         ),
       );
     },
@@ -80,6 +81,7 @@ abstract class _$AppRouter extends RootStackRouter {
         child: EditItemScreen(
           key: args.key,
           imagePath: args.imagePath,
+          itemId: args.itemId,
         ),
       );
     },
@@ -556,12 +558,14 @@ class EditItemDetailsRoute extends PageRouteInfo<EditItemDetailsRouteArgs> {
   EditItemDetailsRoute({
     Key? key,
     required int itemId,
+    String? editedImagePath,
     List<PageRouteInfo>? children,
   }) : super(
           EditItemDetailsRoute.name,
           args: EditItemDetailsRouteArgs(
             key: key,
             itemId: itemId,
+            editedImagePath: editedImagePath,
           ),
           initialChildren: children,
         );
@@ -576,15 +580,18 @@ class EditItemDetailsRouteArgs {
   const EditItemDetailsRouteArgs({
     this.key,
     required this.itemId,
+    this.editedImagePath,
   });
 
   final Key? key;
 
   final int itemId;
 
+  final String? editedImagePath;
+
   @override
   String toString() {
-    return 'EditItemDetailsRouteArgs{key: $key, itemId: $itemId}';
+    return 'EditItemDetailsRouteArgs{key: $key, itemId: $itemId, editedImagePath: $editedImagePath}';
   }
 }
 
@@ -594,12 +601,14 @@ class EditItemRoute extends PageRouteInfo<EditItemRouteArgs> {
   EditItemRoute({
     Key? key,
     required String imagePath,
+    int? itemId,
     List<PageRouteInfo>? children,
   }) : super(
           EditItemRoute.name,
           args: EditItemRouteArgs(
             key: key,
             imagePath: imagePath,
+            itemId: itemId,
           ),
           initialChildren: children,
         );
@@ -614,15 +623,18 @@ class EditItemRouteArgs {
   const EditItemRouteArgs({
     this.key,
     required this.imagePath,
+    this.itemId,
   });
 
   final Key? key;
 
   final String imagePath;
 
+  final int? itemId;
+
   @override
   String toString() {
-    return 'EditItemRouteArgs{key: $key, imagePath: $imagePath}';
+    return 'EditItemRouteArgs{key: $key, imagePath: $imagePath, itemId: $itemId}';
   }
 }
 

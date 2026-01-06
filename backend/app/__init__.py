@@ -104,14 +104,15 @@ def create_app():
     
     # Import models
     from app import models
-    
-    # Register blueprints
+      # Register blueprints
     from app.routes.auth import auth_bp
     from app.routes.users import users_bp
     from app.routes.items import items_bp
     from app.routes.outfits import outfits_bp
     from app.routes.posts import posts_bp
     from app.routes.feed import feed_bp
+    from app.routes.devices import devices_bp
+    from app.routes.notifications import notifications_bp
     
     app.register_blueprint(auth_bp, url_prefix='/api/auth')
     app.register_blueprint(users_bp, url_prefix='/api/users')
@@ -119,7 +120,10 @@ def create_app():
     app.register_blueprint(outfits_bp, url_prefix='/api/outfits')
     app.register_blueprint(posts_bp, url_prefix='/api/posts')
     app.register_blueprint(feed_bp, url_prefix='/api/feed')
+    app.register_blueprint(devices_bp, url_prefix='/api/devices')
+    app.register_blueprint(notifications_bp, url_prefix='/api/notifications')
     
+   
     # Health check endpoint
     @app.route('/api/health')
     def health_check():
@@ -188,6 +192,8 @@ def create_app():
                 'outfits': '/api/outfits',
                 'posts': '/api/posts',
                 'feed': '/api/feed',
+                'devices': '/api/devices',
+                'notifications': '/api/notifications',
                 'sync': '/api/sync',
                 'health': '/api/health'
             }
