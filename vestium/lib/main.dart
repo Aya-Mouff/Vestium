@@ -18,30 +18,50 @@ import 'l10n/app_localizations.dart';
 /// - Sets up database for Windows/Linux
 /// - Creates database tables
 /// - Loads last logged-in user (if any)
-Future<void> initMyApp() async {
-  // Ensures Flutter bindings are initialized before any async operations
-  WidgetsFlutterBinding.ensureInitialized();
+// Future<void> initMyApp() async {
+//   // Ensures Flutter bindings are initialized before any async operations
+//   WidgetsFlutterBinding.ensureInitialized();
 
-  // Initialize Firebase for mobile platforms (Android/iOS)
-  // Skip Firebase on Windows/Linux since it's not fully supported
+//   // Initialize Firebase for mobile platforms (Android/iOS)
+//   // Skip Firebase on Windows/Linux since it's not fully supported
+//   if (Platform.isAndroid || Platform.isIOS) {
+//     await Firebase.initializeApp();
+//   }
+
+//   // Initialize SQLite FFI for desktop platforms (Windows/Linux)
+//   // Mobile platforms (Android/iOS) use native SQLite
+//   if (Platform.isWindows || Platform.isLinux) {
+//     sqfliteFfiInit();
+//     databaseFactory = databaseFactoryFfi;
+//   }
+
+//   // Create/open the database and create all tables if first time
+//   await DBHelper.getDatabase();
+
+//   // Check if a user was previously logged in and load their data
+//   // This allows auto-login when reopening the app
+//   await CurrentUserService.loadLastUserFromDatabase();
+// }
+
+Future initMyApp() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  
+  // Firebase ONLY for mobile
   if (Platform.isAndroid || Platform.isIOS) {
     await Firebase.initializeApp();
   }
-
-  // Initialize SQLite FFI for desktop platforms (Windows/Linux)
-  // Mobile platforms (Android/iOS) use native SQLite
+  
+  // SQLite FFI ONLY for desktop  
   if (Platform.isWindows || Platform.isLinux) {
     sqfliteFfiInit();
     databaseFactory = databaseFactoryFfi;
   }
-
-  // Create/open the database and create all tables if first time
+  
+  // Common database setup for ALL platforms
   await DBHelper.getDatabase();
-
-  // Check if a user was previously logged in and load their data
-  // This allows auto-login when reopening the app
   await CurrentUserService.loadLastUserFromDatabase();
 }
+
 
 /// Entry point of the application
 void main() async {

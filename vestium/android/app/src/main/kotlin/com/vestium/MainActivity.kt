@@ -1,4 +1,4 @@
-package com.example.vestium
+package com.vestium
 
 import io.flutter.embedding.android.FlutterActivity
 

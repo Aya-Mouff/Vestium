@@ -253,10 +253,10 @@ packages:
     dependency: transitive
     description:
       name: code_builder
-      sha256: "11654819532ba94c34de52ff5feb52bd81cba1de00ef2ed622fd50295f9d4243"
+      sha256: "6a6cab2ba4680d6423f34a9b972a4c9a94ebe1b62ecec4e1a1f2cba91fd1319d"
       url: "https://pub.dev"
     source: hosted
-    version: "4.11.0"
+    version: "4.11.1"
   collection:
     dependency: transitive
     description:
@@ -325,10 +325,10 @@ packages:
     dependency: "direct main"
     description:
       name: equatable
-      sha256: "567c64b3cb4cf82397aac55f4f0cbd3ca20d77c6c03bedbc4ceaddc08904aef7"
+      sha256: "3e0141505477fd8ad55d6eb4e7776d3fe8430be8e497ccb1521370c3f21a3e2b"
       url: "https://pub.dev"
     source: hosted
-    version: "2.0.7"
+    version: "2.0.8"
   fake_async:
     dependency: transitive
     description:
@@ -341,10 +341,10 @@ packages:
     dependency: transitive
     description:
       name: ffi
-      sha256: "289279317b4b16eb2bb7e271abccd4bf84ec9bdcbe999e278a94b804f5630418"
+      sha256: d07d37192dbf97461359c1518788f203b0c9102cfd2c35a716b823741219542c
       url: "https://pub.dev"
     source: hosted
-    version: "2.1.4"
+    version: "2.1.5"
   file:
     dependency: transitive
     description:
@@ -482,26 +482,34 @@ packages:
     dependency: "direct main"
     description:
       name: flutter_local_notifications
-      sha256: "401643a6ea9d8451365f2ec11145335bf130560cfde367bdf8f0be6d60f89479"
+      sha256: "19ffb0a8bb7407875555e5e98d7343a633bb73707bae6c6a5f37c90014077875"
       url: "https://pub.dev"
     source: hosted
-    version: "15.1.3"
+    version: "19.5.0"
   flutter_local_notifications_linux:
     dependency: transitive
     description:
       name: flutter_local_notifications_linux
-      sha256: c49bd06165cad9beeb79090b18cd1eb0296f4bf4b23b84426e37dd7c027fc3af
+      sha256: e3c277b2daab8e36ac5a6820536668d07e83851aeeb79c446e525a70710770a5
       url: "https://pub.dev"
     source: hosted
-    version: "4.0.1"
+    version: "6.0.0"
   flutter_local_notifications_platform_interface:
     dependency: transitive
     description:
       name: flutter_local_notifications_platform_interface
-      sha256: "85f8d07fe708c1bdcf45037f2c0109753b26ae077e9d9e899d55971711a4ea66"
+      sha256: "277d25d960c15674ce78ca97f57d0bae2ee401c844b6ac80fcd972a9c99d09fe"
       url: "https://pub.dev"
     source: hosted
-    version: "7.2.0"
+    version: "9.1.0"
+  flutter_local_notifications_windows:
+    dependency: transitive
+    description:
+      name: flutter_local_notifications_windows
+      sha256: "8d658f0d367c48bd420e7cf2d26655e2d1130147bca1eea917e576ca76668aaf"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.3"
   flutter_localizations:
     dependency: "direct main"
     description: flutter
@@ -511,10 +519,10 @@ packages:
     dependency: transitive
     description:
       name: flutter_plugin_android_lifecycle
-      sha256: "306f0596590e077338312f38837f595c04f28d6cdeeac392d3d74df2f0003687"
+      sha256: ee8068e0e1cd16c4a82714119918efdeed33b3ba7772c54b5d094ab53f9b7fd1
       url: "https://pub.dev"
     source: hosted
-    version: "2.0.32"
+    version: "2.0.33"
   flutter_staggered_grid_view:
     dependency: "direct main"
     description:
@@ -1110,10 +1118,10 @@ packages:
     dependency: "direct main"
     description:
       name: sqflite_common_ffi
-      sha256: cc78dab586034b20a84904ff5a8eb63adae587baa1b383d40428e9ee491b30f6
+      sha256: c59fcdc143839a77581f7a7c4de018e53682408903a0a0800b95ef2dc4033eff
       url: "https://pub.dev"
     source: hosted
-    version: "2.4.0+1"
+    version: "2.4.0+2"
   sqflite_darwin:
     dependency: transitive
     description:
@@ -1134,10 +1142,10 @@ packages:
     dependency: transitive
     description:
       name: sqlite3
-      sha256: "0374add4094d34fcf9d22068b6ddb4056782353ad4a5449bc5b71c5f2175f0ec"
+      sha256: "1d2d2afee96acccabf315e169a4d28019fa21d5217ee014840058a7fbc2008c6"
       url: "https://pub.dev"
     source: hosted
-    version: "3.1.1"
+    version: "3.1.2"
   stack_trace:
     dependency: transitive
     description:
@@ -1198,10 +1206,10 @@ packages:
     dependency: transitive
     description:
       name: timezone
-      sha256: "2236ec079a174ce07434e89fcd3fcda430025eb7692244139a9cf54fdcf1fc7d"
+      sha256: dd14a3b83cfd7cb19e7888f1cbc20f258b8d71b54c06f79ac585f14093a287d1
       url: "https://pub.dev"
     source: hosted
-    version: "0.9.4"
+    version: "0.10.1"
   timing:
     dependency: transitive
     description:
