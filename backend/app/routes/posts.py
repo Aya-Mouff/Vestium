@@ -4,6 +4,7 @@ from app import db
 from app.models import Post, Outfit, Like, Comment, User
 from app.services.supabase_service import supabase_service
 from app.services.image_service import ImageService
+from app.services.firebase_service import firebase_service
 import os
 
 posts_bp = Blueprint('posts', __name__)
@@ -85,10 +86,19 @@ def create_post():
         caption = data.get('caption', '').strip()
         outfit_id = data.get('outfit_id')
         
+         # Normalize outfit_id to int or None
+        if outfit_id == '' or outfit_id is None:
+            outfit_id = None
+        else:
+            outfit_id = int(outfit_id) 
+
         # Either outfit_id or image is required
         if not outfit_id and (not image_file or not image_file.filename):
             return jsonify({'success': False, 'error': 'Either outfit_id or image is required'}), 400
         
+        # Ensure outfit variable always exists
+        outfit = None
+
         # If outfit_id provided, verify it belongs to user
         if outfit_id:
             outfit = Outfit.query.get(outfit_id)
@@ -110,12 +120,19 @@ def create_post():
             
             # Cleanup temp file
             ImageService.cleanup_temp_file(temp_path)
-        
+
+
+        # Decide final image_path:
+         # - If new image uploaded: use image_url
+        # - Else if outfit post: use outfit.image_path
+        # - Else: None (should not happen because of earlier validation)
+        image_path = image_url or (outfit.image_path if outfit else None)
+
         # Create post
         post = Post(
             user_id=current_user_id if image_url else None,  # Gallery post has user_id
             outfit_id=outfit_id,
-            image_path=image_url or outfit.image_path if outfit else None,
+            image_path=image_path,
             caption=caption,
             date=db.func.now()
         )
@@ -236,12 +253,15 @@ def like_post(post_id):
         
         # Send notification if liked (and not own post)
         if action == 'liked':
-            from app.services.firebase_service import firebase_service
             post_owner_id = post.user_id if post.user_id else (
                 Outfit.query.get(post.outfit_id).user_id if post.outfit_id else None
             )
             if post_owner_id and post_owner_id != current_user_id:
-                firebase_service.send_like_notification(post_id, current_user_id, post_owner_id)
+                try:
+                    firebase_service.send_like_notification(post_id, current_user_id, post_owner_id)
+                except Exception as notif_error:
+                    # Log notification error but don't fail the like action
+                    print(f"Failed to send like notification: {notif_error}")
         
         return jsonify({
             'success': True,
@@ -315,12 +335,15 @@ def add_comment(post_id):
         db.session.commit()
         
         # Send notification (if not own post)
-        from app.services.firebase_service import firebase_service
         post_owner_id = post.user_id if post.user_id else (
             Outfit.query.get(post.outfit_id).user_id if post.outfit_id else None
         )
         if post_owner_id and post_owner_id != current_user_id:
-            firebase_service.send_comment_notification(post_id, current_user_id, post_owner_id)
+            try:
+                firebase_service.send_comment_notification(post_id, current_user_id, post_owner_id)
+            except Exception as notif_error:
+                # Log notification error but don't fail the comment action
+                print(f"Failed to send comment notification: {notif_error}")
         
         # Get user info for response
         user = User.query.get(current_user_id)

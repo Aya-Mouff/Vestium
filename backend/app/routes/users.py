@@ -2,6 +2,7 @@ from flask import Blueprint, request, jsonify
 from app import db
 from app.models import User, Follow, Post, Item, Outfit
 from flask_jwt_extended import jwt_required, get_jwt_identity
+from app.services.firebase_service import firebase_service
 import os
 from werkzeug.utils import secure_filename
 
@@ -119,6 +120,16 @@ def follow_user(user_id):
         
         db.session.add(follow)
         db.session.commit()
+        
+        # Send follow notification to the user being followed
+        try:
+            firebase_service.send_follow_notification(
+                follower_id=current_user_id,  # Who is following
+                following_id=user_id  # Who is being followed
+            )
+        except Exception as notif_error:
+            # Log notification error but don't fail the follow action
+            print(f"Failed to send follow notification: {notif_error}")
         
         return jsonify({
             'message': f'Now following {user_to_follow.username}'

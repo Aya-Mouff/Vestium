@@ -8,6 +8,7 @@ from flask_jwt_extended import JWTManager
 from datetime import datetime, timedelta
 import os
 from dotenv import load_dotenv
+from app.services.firebase_service import firebase_service
 
 # Initialize extensions
 db = SQLAlchemy()
@@ -103,14 +104,15 @@ def create_app():
     
     # Import models
     from app import models
-    
-    # Register blueprints
+      # Register blueprints
     from app.routes.auth import auth_bp
     from app.routes.users import users_bp
     from app.routes.items import items_bp
     from app.routes.outfits import outfits_bp
     from app.routes.posts import posts_bp
     from app.routes.feed import feed_bp
+    from app.routes.devices import devices_bp
+    from app.routes.notifications import notifications_bp
     
     app.register_blueprint(auth_bp, url_prefix='/api/auth')
     app.register_blueprint(users_bp, url_prefix='/api/users')
@@ -118,7 +120,10 @@ def create_app():
     app.register_blueprint(outfits_bp, url_prefix='/api/outfits')
     app.register_blueprint(posts_bp, url_prefix='/api/posts')
     app.register_blueprint(feed_bp, url_prefix='/api/feed')
+    app.register_blueprint(devices_bp, url_prefix='/api/devices')
+    app.register_blueprint(notifications_bp, url_prefix='/api/notifications')
     
+   
     # Health check endpoint
     @app.route('/api/health')
     def health_check():
@@ -187,9 +192,170 @@ def create_app():
                 'outfits': '/api/outfits',
                 'posts': '/api/posts',
                 'feed': '/api/feed',
+                'devices': '/api/devices',
+                'notifications': '/api/notifications',
                 'sync': '/api/sync',
                 'health': '/api/health'
             }
         }
     
     return app
+
+# # app/__init__.py
+# from flask import Flask
+# from flask_sqlalchemy import SQLAlchemy
+# from flask_migrate import Migrate
+# from flask_cors import CORS
+# from flask_jwt_extended import JWTManager
+# from datetime import datetime, timedelta
+# from dotenv import load_dotenv
+# import os
+
+# from app.config import Config
+# from app.services.firebase_service import firebase_service
+# from app.middleware.offline_middleware import offline_middleware
+
+# db = SQLAlchemy()
+# migrate = Migrate()
+# cors = CORS()
+# jwt = JWTManager()
+
+# load_dotenv()
+
+# def create_app(config_class=Config):
+#     app = Flask(__name__)
+#     app.config.from_object(config_class)
+
+#     # Initialize extensions
+#     db.init_app(app)
+#     migrate.init_app(app, db)
+#     cors.init_app(app, resources={r"/api/*": {"origins": app.config['CORS_ORIGINS']}})
+#     jwt.init_app(app)
+
+#     # Offline middleware
+#     offline_middleware.init_app(app)
+
+#     # Initialize services
+#     def initialize_services_on_startup():
+#         with app.app_context():
+#             print("🚀 Initializing Vestium services...")
+
+#             # Supabase
+#             try:
+#                 from app.services.supabase_service import supabase_service
+#                 if hasattr(supabase_service, "initialize"):
+#                     if supabase_service.initialize():
+#                         print("✅ Supabase service initialized successfully")
+#                     else:
+#                         print("⚠️ Supabase service failed to initialize - check your .env configuration")
+#                 else:
+#                     if hasattr(supabase_service, "supabase") and supabase_service.supabase:
+#                         print("✅ Supabase service initialized successfully")
+#                     else:
+#                         print("⚠️ Supabase service not initialized - check your .env configuration")
+#             except Exception as e:
+#                 print(f"❌ Error initializing Supabase: {e}")
+
+#             # Firebase
+#             try:
+#                 firebase_service.initialize(app)
+#                 if firebase_service.initialized:
+#                     print("✅ Firebase service initialized - push notifications enabled")
+#                 else:
+#                     print("⚠️ Firebase service not initialized - push notifications disabled")
+#             except Exception as e:
+#                 print(f"⚠️ Firebase service error: {e}")
+
+#     initialize_services_on_startup()
+
+#     # Blueprints
+#     from app.routes.sync import sync_bp
+#     from app.routes.auth import auth_bp
+#     from app.routes.users import users_bp
+#     from app.routes.items import items_bp
+#     from app.routes.outfits import outfits_bp
+#     from app.routes.posts import posts_bp
+#     from app.routes.feed import feed_bp
+
+#     app.register_blueprint(sync_bp, url_prefix="/api/sync")
+#     app.register_blueprint(auth_bp, url_prefix="/api/auth")
+#     app.register_blueprint(users_bp, url_prefix="/api/users")
+#     app.register_blueprint(items_bp, url_prefix="/api/items")
+#     app.register_blueprint(outfits_bp, url_prefix="/api/outfits")
+#     app.register_blueprint(posts_bp, url_prefix="/api/posts")
+#     app.register_blueprint(feed_bp, url_prefix="/api/feed")
+
+#     # Import models
+#     from app import models  # noqa: F401
+
+#     # Health & index routes (same as you wrote)
+#     @app.route("/api/health")
+#     def health_check():
+#         from app.models import User
+#         try:
+#             user_count = User.query.count()
+#             supabase_status = False
+#             firebase_status = False
+
+#             try:
+#                 from app.services.supabase_service import supabase_service
+#                 supabase_status = hasattr(supabase_service, "supabase") and supabase_service.supabase is not None
+#             except:
+#                 pass
+
+#             try:
+#                 from app.services.firebase_service import firebase_service
+#                 firebase_status = firebase_service.initialized
+#             except:
+#                 pass
+
+#             return {
+#                 "status": "healthy",
+#                 "service": "Vestium API",
+#                 "version": "1.0.0",
+#                 "database": "connected",
+#                 "database_records": user_count,
+#                 "supabase": "connected" if supabase_status else "disconnected",
+#                 "firebase": "initialized" if firebase_status else "disabled",
+#                 "timestamp": datetime.utcnow().isoformat(),
+#             }
+#         except Exception as e:
+#             return {"status": "unhealthy", "error": str(e)}, 500
+
+#     @app.route("/")
+#     def index():
+#         supabase_status = False
+#         firebase_status = False
+
+#         try:
+#             from app.services.supabase_service import supabase_service
+#             supabase_status = hasattr(supabase_service, "supabase") and supabase_service.supabase is not None
+#         except:
+#             pass
+
+#         try:
+#             from app.services.firebase_service import firebase_service
+#             firebase_status = firebase_service.initialized
+#         except:
+#             pass
+
+#         return {
+#             "message": "Vestium API",
+#             "version": "1.0.0",
+#             "services": {
+#                 "supabase": "connected" if supabase_status else "disconnected",
+#                 "firebase": "initialized" if firebase_status else "disabled",
+#             },
+#             "endpoints": {
+#                 "auth": "/api/auth",
+#                 "users": "/api/users",
+#                 "items": "/api/items",
+#                 "outfits": "/api/outfits",
+#                 "posts": "/api/posts",
+#                 "feed": "/api/feed",
+#                 "sync": "/api/sync",
+#                 "health": "/api/health",
+#             },
+#         }
+
+#     return app
