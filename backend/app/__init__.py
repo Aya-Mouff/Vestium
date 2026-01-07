@@ -8,7 +8,7 @@ from flask_jwt_extended import JWTManager
 from datetime import datetime, timedelta
 import os
 from dotenv import load_dotenv
-from app.services.firebase_service import firebase_service
+#from app.services.firebase_service import firebase_service
 
 # Initialize extensions
 db = SQLAlchemy()
