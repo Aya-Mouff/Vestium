@@ -15,7 +15,8 @@ class AppLocalizationsAr extends AppLocalizations {
   String get splashSubtitle => 'خزانة ملابسك الافتراضية الشخصية.';
 
   @override
-  String get splashDescription => 'نظّم أسلوبك، وأنشئ إطلالات،\nوشارك رحلتك في عالم الموضة.';
+  String get splashDescription =>
+      'نظّم أسلوبك، وأنشئ إطلالات،\nوشارك رحلتك في عالم الموضة.';
 
   @override
   String get splashCheckingAuth => 'جاري التحقق من تسجيل الدخول...';
@@ -95,7 +96,8 @@ class AppLocalizationsAr extends AppLocalizations {
   String get signupPasswordRequired => 'يرجى إدخال كلمة المرور';
 
   @override
-  String get signupPasswordTooShort => 'يجب أن تتكون كلمة المرور من 6 أحرف على الأقل';
+  String get signupPasswordTooShort =>
+      'يجب أن تتكون كلمة المرور من 6 أحرف على الأقل';
 
   @override
   String get signupButton => 'إنشاء حساب';
@@ -157,13 +159,15 @@ class AppLocalizationsAr extends AppLocalizations {
   String get homeRetryButton => 'حاول مرة أخرى';
 
   @override
-  String get homeNoPostsYet => 'لا توجد منشورات حتى الآن. اتبع بعض المستخدمين لرؤية منشوراتهم!';
+  String get homeNoPostsYet =>
+      'لا توجد منشورات حتى الآن. اتبع بعض المستخدمين لرؤية منشوراتهم!';
 
   @override
   String get homeFindUsersButton => 'البحث عن المستخدمين';
 
   @override
-  String get homeSearchTabHint => 'انتقل إلى علامة التبويب البحث للعثور على مستخدمين للمتابعة!';
+  String get homeSearchTabHint =>
+      'انتقل إلى علامة التبويب البحث للعثور على مستخدمين للمتابعة!';
 
   @override
   String get homeNewPosts => 'منشورات جديدة';
@@ -208,7 +212,8 @@ class AppLocalizationsAr extends AppLocalizations {
   String get publicPostLabel => 'منشور عام';
 
   @override
-  String get publicPostDescription => 'سيكون منشورك مرئياً لجميع مستخدمي فيستيوم';
+  String get publicPostDescription =>
+      'سيكون منشورك مرئياً لجميع مستخدمي فيستيوم';
 
   @override
   String get selectOutfitTitle => 'اختر إطلالة';
@@ -315,7 +320,8 @@ class AppLocalizationsAr extends AppLocalizations {
   String get galleryAccessTitle => 'الوصول إلى المعرض';
 
   @override
-  String get galleryAccessDescription => 'يحتاج Vestium إلى الوصول إلى معرضك لالالتقاط الصور لعناصر الملابس وإضافتها إلى خزانة الملابس الافتراضية.';
+  String get galleryAccessDescription =>
+      'يحتاج Vestium إلى الوصول إلى معرضك لالالتقاط الصور لعناصر الملابس وإضافتها إلى خزانة الملابس الافتراضية.';
 
   @override
   String get galleryAccessAllowButton => 'السماح بالوصول إلى المعرض';
@@ -327,13 +333,15 @@ class AppLocalizationsAr extends AppLocalizations {
   String get galleryAccessPrivacyTitle => 'صورك خاصة';
 
   @override
-  String get galleryAccessPrivacyDescription => 'نحن نستخدم الكاميرا فقط لالالتقاط عناصر الملابس. تبقى صورك على جهازك.';
+  String get galleryAccessPrivacyDescription =>
+      'نحن نستخدم الكاميرا فقط لالالتقاط عناصر الملابس. تبقى صورك على جهازك.';
 
   @override
   String get galleryAccessPermissionRequired => 'الإذن مطلوبة';
 
   @override
-  String get galleryAccessPermissionDenied => 'لقد تم رفض الوصول إلى المعرض بشكل دائم. يرجى تفعيله في إعدادات التطبيق.';
+  String get galleryAccessPermissionDenied =>
+      'لقد تم رفض الوصول إلى المعرض بشكل دائم. يرجى تفعيله في إعدادات التطبيق.';
 
   @override
   String get galleryAccessCancel => 'إلغاء';
@@ -345,7 +353,8 @@ class AppLocalizationsAr extends AppLocalizations {
   String get cameraAccessTitle => 'الوصول إلى الكاميرا';
 
   @override
-  String get cameraAccessDescription => 'يحتاج Vestium إلى الوصول إلى كاميرتك للالتقاط الصور لعناصر الملابس وإضافتها إلى خزانة الملابس الافتراضية.';
+  String get cameraAccessDescription =>
+      'يحتاج Vestium إلى الوصول إلى كاميرتك للالتقاط الصور لعناصر الملابس وإضافتها إلى خزانة الملابس الافتراضية.';
 
   @override
   String get cameraAccessAllowButton => 'السماح بالوصول إلى الكاميرا';
@@ -357,7 +366,8 @@ class AppLocalizationsAr extends AppLocalizations {
   String get cameraAccessPrivacyTitle => 'صورك خاصة';
 
   @override
-  String get cameraAccessPrivacyDescription => 'نحن نستخدم الكاميرا فقط لالتقاط عناصر الملابس. تبقى صورك على جهازك.';
+  String get cameraAccessPrivacyDescription =>
+      'نحن نستخدم الكاميرا فقط لالتقاط عناصر الملابس. تبقى صورك على جهازك.';
 
   @override
   String get selectItemTitle => 'اختر عنصراً';
@@ -369,7 +379,8 @@ class AppLocalizationsAr extends AppLocalizations {
   String get selectItemEmptyTitle => 'لا توجد صور حتى الآن';
 
   @override
-  String get selectItemEmptyDescription => 'تصفح معرض الصور أو التقط صورة للبدء.';
+  String get selectItemEmptyDescription =>
+      'تصفح معرض الصور أو التقط صورة للبدء.';
 
   @override
   String get editItemTitle => 'تعديل العنصر';
@@ -463,7 +474,8 @@ class AppLocalizationsAr extends AppLocalizations {
   String get editItemDetailsDeleteConfirmTitle => 'حذف العنصر';
 
   @override
-  String get editItemDetailsDeleteConfirmMessage => 'هل أنت متأكد من رغبتك في حذف هذا العنصر؟';
+  String get editItemDetailsDeleteConfirmMessage =>
+      'هل أنت متأكد من رغبتك في حذف هذا العنصر؟';
 
   @override
   String get editItemDetailsDeleteConfirmCancel => 'إلغاء';
@@ -478,13 +490,15 @@ class AppLocalizationsAr extends AppLocalizations {
   String get editItemDetailsDeleteSuccessMessage => 'تم حذف العنصر بنجاح!';
 
   @override
-  String get editItemDetailsValidationError => 'يرجى إدخال اسم العنصر واختيار فئة واحدة على الأقل';
+  String get editItemDetailsValidationError =>
+      'يرجى إدخال اسم العنصر واختيار فئة واحدة على الأقل';
 
   @override
   String get editItemDetailsBlockedTitle => 'لا يمكن حذف العنصر';
 
   @override
-  String get editItemDetailsBlockedMessage => 'يتم استخدام هذا العنصر في الملابس التالية:';
+  String get editItemDetailsBlockedMessage =>
+      'يتم استخدام هذا العنصر في الملابس التالية:';
 
   @override
   String get editItemDetailsBlockedOK => 'حسناً';
@@ -610,7 +624,8 @@ class AppLocalizationsAr extends AppLocalizations {
   String get settingsLogoutDialogTitle => 'تسجيل الخروج';
 
   @override
-  String get settingsLogoutDialogMessage => 'هل أنت متأكد أنك تريد تسجيل الخروج؟';
+  String get settingsLogoutDialogMessage =>
+      'هل أنت متأكد أنك تريد تسجيل الخروج؟';
 
   @override
   String get settingsLogoutCancel => 'إلغاء';
@@ -680,7 +695,8 @@ class AppLocalizationsAr extends AppLocalizations {
   String get myPostsDeleteDialogTitle => 'حذف المنشور؟';
 
   @override
-  String get myPostsDeleteDialogMessage => 'هل أنت متأكد من رغبتك في حذف هذا المنشور؟\nلا يمكن التراجع عن هذا الإجراء وسيتم\nإزالة المنشور من ملفك الشخصي.';
+  String get myPostsDeleteDialogMessage =>
+      'هل أنت متأكد من رغبتك في حذف هذا المنشور؟\nلا يمكن التراجع عن هذا الإجراء وسيتم\nإزالة المنشور من ملفك الشخصي.';
 
   @override
   String get myPostsDeleteButton => 'حذف';
@@ -731,13 +747,15 @@ class AppLocalizationsAr extends AppLocalizations {
   String get accountManagerChangeEmail => 'تغيير البريد الإلكتروني';
 
   @override
-  String get accountManagerChangeEmailSubtitle => 'تحديث عنوان بريدك الإلكتروني';
+  String get accountManagerChangeEmailSubtitle =>
+      'تحديث عنوان بريدك الإلكتروني';
 
   @override
   String get accountManagerChangePassword => 'تغيير كلمة المرور';
 
   @override
-  String get accountManagerChangePasswordSubtitle => 'تحديث كلمة المرور الخاصة بك';
+  String get accountManagerChangePasswordSubtitle =>
+      'تحديث كلمة المرور الخاصة بك';
 
   @override
   String get accountManagerChangeFullName => 'تغيير الاسم الكامل';
@@ -758,7 +776,8 @@ class AppLocalizationsAr extends AppLocalizations {
   String get accountManagerChangeEmailDialogTitle => 'تغيير البريد الإلكتروني';
 
   @override
-  String get accountManagerChangeEmailDialogDescription => 'أدخل بريدك الإلكتروني الجديد وأكده بكلمة المرور';
+  String get accountManagerChangeEmailDialogDescription =>
+      'أدخل بريدك الإلكتروني الجديد وأكده بكلمة المرور';
 
   @override
   String get accountManagerNewEmail => 'البريد الإلكتروني الجديد';
@@ -779,7 +798,8 @@ class AppLocalizationsAr extends AppLocalizations {
   String get accountManagerChangeFullNameDialogTitle => 'تغيير الاسم الكامل';
 
   @override
-  String get accountManagerChangeFullNameDialogDescription => 'أدخل اسم العرض الجديد';
+  String get accountManagerChangeFullNameDialogDescription =>
+      'أدخل اسم العرض الجديد';
 
   @override
   String get accountManagerFullName => 'الاسم الكامل';
@@ -794,7 +814,8 @@ class AppLocalizationsAr extends AppLocalizations {
   String get accountManagerChangePasswordDialogTitle => 'تغيير كلمة المرور';
 
   @override
-  String get accountManagerChangePasswordDialogDescription => 'أدخل كلمة المرور الحالية وكلمة المرور الجديدة';
+  String get accountManagerChangePasswordDialogDescription =>
+      'أدخل كلمة المرور الحالية وكلمة المرور الجديدة';
 
   @override
   String get accountManagerNewPassword => 'كلمة المرور الجديدة';
@@ -809,7 +830,8 @@ class AppLocalizationsAr extends AppLocalizations {
   String get accountManagerDeleteAccountDialogTitle => 'حذف الحساب';
 
   @override
-  String get accountManagerDeleteAccountDialogDescription => 'هل أنت متأكد أنك تريد حذف حسابك نهائياً؟ لا يمكن التراجع عن هذا الإجراء.';
+  String get accountManagerDeleteAccountDialogDescription =>
+      'هل أنت متأكد أنك تريد حذف حسابك نهائياً؟ لا يمكن التراجع عن هذا الإجراء.';
 
   @override
   String get accountManagerDeleteAccountButton => 'حذف الحساب';
@@ -818,7 +840,8 @@ class AppLocalizationsAr extends AppLocalizations {
   String get accountManagerFinalConfirmation => 'التأكيد النهائي';
 
   @override
-  String get accountManagerFinalConfirmationDescription => 'اكتب DELETE وأدخل كلمة المرور لتأكيد حذف الحساب';
+  String get accountManagerFinalConfirmationDescription =>
+      'اكتب DELETE وأدخل كلمة المرور لتأكيد حذف الحساب';
 
   @override
   String get accountManagerTypeDelete => 'اكتب DELETE للتأكيد';
@@ -888,7 +911,8 @@ class AppLocalizationsAr extends AppLocalizations {
   String get manageCategoriesDelete => 'حذف';
 
   @override
-  String get manageCategoriesInfo => 'تساعدك الفئات في تنظيم عناصر خزانة ملابسك. يمكن أن تنتمي العناصر إلى فئات متعددة.';
+  String get manageCategoriesInfo =>
+      'تساعدك الفئات في تنظيم عناصر خزانة ملابسك. يمكن أن تنتمي العناصر إلى فئات متعددة.';
 
   @override
   String get manageOutfitCategoriesTitle => 'إدارة فئات التنسيقات';
@@ -901,6 +925,64 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get helpCenterFAQTitle => 'الأسئلة المتكررة';
+
+  @override
+  String get helpCenterFAQ1Question =>
+      'كيف يمكنني إضافة عناصر إلى خزانة ملابسي؟';
+
+  @override
+  String get helpCenterFAQ1Answer =>
+      'يمكنك إضافة عناصر إلى خزانة ملابسك من خلال النقر على أيقونة الكاميرا في تبويب الخزانة. التقط صورة لقطعة الملابس الخاصة بك. ثم أدخل التفاصيل مثل الفئة واللون والموسم.';
+
+  @override
+  String get helpCenterFAQ2Question => 'كيف يمكنني إنشاء تنسيق؟';
+
+  @override
+  String get helpCenterFAQ2Answer =>
+      'لإنشاء تنسيق، انتقل إلى قسم التنسيقات واضغط على زر \"إنشاء جديد\". اختر العناصر من خزانة ملابسك ورتبها لإنشاء التنسيق المطلوب.';
+
+  @override
+  String get helpCenterFAQ3Question => 'هل يمكنني تعديل أو حذف عناصر الخزانة؟';
+
+  @override
+  String get helpCenterFAQ3Answer =>
+      'نعم، يمكنك تعديل أو حذف عناصر الخزانة من خلال النقر على العنصر في خزانة ملابسك. اختر خيار التعديل لتغيير التفاصيل أو خيار الحذف لإزالة العنصر.';
+
+  @override
+  String get helpCenterFAQ4Question => 'كيف يمكنني مشاركة تنسيقاتي؟';
+
+  @override
+  String get helpCenterFAQ4Answer =>
+      'لمشاركة تنسيقاتك، افتح التنسيق الذي تريد مشاركته واضغط على زر المشاركة. يمكنك المشاركة عبر البريد الإلكتروني أو وسائل التواصل الاجتماعي أو إنشاء رابط للمشاركة مع الآخرين.';
+
+  @override
+  String get helpCenterFAQ5Question => 'كيف يمكنني إدارة الفئات الخاصة بي؟';
+
+  @override
+  String get helpCenterFAQ5Answer =>
+      'يمكنك إدارة فئاتك في قسم الإعدادات تحت فئات الخزانة. أضف أو عدل أو احذف الفئات لتنظيم عناصرك بالطريقة التي تفضلها.';
+
+  @override
+  String get helpCenterFAQ6Question => 'هل يمكنني جعل ملفي الشخصي خاصاً؟';
+
+  @override
+  String get helpCenterFAQ6Answer =>
+      'نعم، يمكنك جعل ملفك الشخصي خاصاً في إعدادات الحساب. قم بتبديل خيار \"الملف الشخصي الخاص\" للتحكم في من يمكنه رؤية خزانة ملابسك وتنسيقاتك.';
+
+  @override
+  String get helpCenterFAQ7Question =>
+      'كيف يمكنني إعادة تعيين كلمة المرور الخاصة بي؟';
+
+  @override
+  String get helpCenterFAQ7Answer =>
+      'انتقل إلى إعدادات الحساب واختر \"تغيير كلمة المرور\". يمكنك أيضاً استخدام خيار \"نسيت كلمة المرور\" في شاشة تسجيل الدخول لإعادة التعيين عبر البريد الإلكتروني.';
+
+  @override
+  String get helpCenterFAQ8Question => 'كيف يمكنني حذف حسابي؟';
+
+  @override
+  String get helpCenterFAQ8Answer =>
+      'لحذف حسابك، انتقل إلى إعدادات الحساب وانتقل إلى قسم \"المنطقة الخطرة\". اختر \"حذف الحساب\" واتبع خطوات التأكيد. هذا الإجراء دائم.';
 
   @override
   String get notificationsTitle => 'الإشعارات';
@@ -950,7 +1032,8 @@ class AppLocalizationsAr extends AppLocalizations {
   String get saveOutfitTitle => 'حفظ التنسيق';
 
   @override
-  String get saveOutfitNoDataError => 'لم يتم العثور على بيانات التنسيق. يرجى إنشاء تنسيق أولاً.';
+  String get saveOutfitNoDataError =>
+      'لم يتم العثور على بيانات التنسيق. يرجى إنشاء تنسيق أولاً.';
 
   @override
   String get saveOutfitNoDataFound => 'لم يتم العثور على بيانات التنسيق';
@@ -1008,7 +1091,8 @@ class AppLocalizationsAr extends AppLocalizations {
   String get editOutfitNotFound => 'التنسيق غير موجود';
 
   @override
-  String get editOutfitNotFoundMessage => 'ربما تم حذف التنسيق أو أنه غير موجود';
+  String get editOutfitNotFoundMessage =>
+      'ربما تم حذف التنسيق أو أنه غير موجود';
 
   @override
   String get editOutfitNoImage => 'لا توجد صورة للتنسيق';
@@ -1162,7 +1246,8 @@ class AppLocalizationsAr extends AppLocalizations {
   String get outfitDetailsDeleteDialog => 'حذف التنسيق؟';
 
   @override
-  String get outfitDetailsDeleteMessage => 'هل أنت متأكد من حذف هذا التنسيق؟\nلا يمكن التراجع عن هذا الإجراء.';
+  String get outfitDetailsDeleteMessage =>
+      'هل أنت متأكد من حذف هذا التنسيق؟\nلا يمكن التراجع عن هذا الإجراء.';
 
   @override
   String get outfitDetailsDeleteButton => 'حذف';
@@ -1203,10 +1288,17 @@ class AppLocalizationsAr extends AppLocalizations {
   String get outfitDetailsUncategorized => 'غير مصنف';
 
   @override
+  String get createOutfitTitle => 'إنشاء تنسيق';
+
+  @override
+  String get createOutfitSaveTooltip => 'حفظ التنسيق';
+
+  @override
   String get createOutfitCapturing => 'جاري التقاط التنسيق...';
 
   @override
-  String get createOutfitAddAtLeastOne => 'يرجى إضافة عنصر واحد على الأقل إلى التنسيق';
+  String get createOutfitAddAtLeastOne =>
+      'يرجى إضافة عنصر واحد على الأقل إلى التنسيق';
 
   @override
   String get createOutfitSaveSuccess => 'تم حفظ التنسيق بنجاح!';
@@ -1252,7 +1344,8 @@ class AppLocalizationsAr extends AppLocalizations {
   String get createOutfitRemoveItemTitle => 'إزالة العنصر';
 
   @override
-  String get createOutfitRemoveItemMessage => 'هل تريد إزالة هذا العنصر من التنسيق؟';
+  String get createOutfitRemoveItemMessage =>
+      'هل تريد إزالة هذا العنصر من التنسيق؟';
 
   @override
   String get createOutfitCancel => 'إلغاء';
@@ -1275,7 +1368,8 @@ class AppLocalizationsAr extends AppLocalizations {
   String get postsDetailsTitle => 'المنشورات';
 
   @override
-  String get postsDetailsMustLoginToLike => 'يجب عليك تسجيل الدخول للإعجاب بالمنشورات!';
+  String get postsDetailsMustLoginToLike =>
+      'يجب عليك تسجيل الدخول للإعجاب بالمنشورات!';
 
   @override
   String postsDetailsLikesCount(int count) {

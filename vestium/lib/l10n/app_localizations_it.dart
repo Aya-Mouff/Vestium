@@ -15,7 +15,8 @@ class AppLocalizationsIt extends AppLocalizations {
   String get splashSubtitle => 'Il tuo guardaroba virtuale personale.';
 
   @override
-  String get splashDescription => 'Organizza il tuo stile, crea outfit\ne condividi il tuo viaggio di moda.';
+  String get splashDescription =>
+      'Organizza il tuo stile, crea outfit\ne condividi il tuo viaggio di moda.';
 
   @override
   String get splashCheckingAuth => 'Verifica dell\'autenticazione...';
@@ -77,13 +78,16 @@ class AppLocalizationsIt extends AppLocalizations {
   String get signupTitle => 'Crea account';
 
   @override
-  String get signupSubtitle => 'Unisciti a Vestium e inizia il tuo viaggio di stile';
+  String get signupSubtitle =>
+      'Unisciti a Vestium e inizia il tuo viaggio di stile';
 
   @override
-  String get signupFullNameRequired => 'Per favore inserisci il tuo nome completo';
+  String get signupFullNameRequired =>
+      'Per favore inserisci il tuo nome completo';
 
   @override
-  String get signupFullNameTooShort => 'Il nome deve contenere almeno 2 caratteri';
+  String get signupFullNameTooShort =>
+      'Il nome deve contenere almeno 2 caratteri';
 
   @override
   String get signupEmailRequired => 'Per favore inserisci la tua email';
@@ -95,7 +99,8 @@ class AppLocalizationsIt extends AppLocalizations {
   String get signupPasswordRequired => 'Per favore inserisci una password';
 
   @override
-  String get signupPasswordTooShort => 'La password deve contenere almeno 6 caratteri';
+  String get signupPasswordTooShort =>
+      'La password deve contenere almeno 6 caratteri';
 
   @override
   String get signupButton => 'Crea account';
@@ -138,7 +143,8 @@ class AppLocalizationsIt extends AppLocalizations {
   }
 
   @override
-  String get homeLikeRequiresLogin => 'Devi essere connesso per mettere mi piace ai post!';
+  String get homeLikeRequiresLogin =>
+      'Devi essere connesso per mettere mi piace ai post!';
 
   @override
   String homeLikesCount(Object count) {
@@ -157,13 +163,15 @@ class AppLocalizationsIt extends AppLocalizations {
   String get homeRetryButton => 'Riprova';
 
   @override
-  String get homeNoPostsYet => 'Nessun post ancora. Segui alcuni utenti per vedere i loro post!';
+  String get homeNoPostsYet =>
+      'Nessun post ancora. Segui alcuni utenti per vedere i loro post!';
 
   @override
   String get homeFindUsersButton => 'Trova utenti';
 
   @override
-  String get homeSearchTabHint => 'Vai alla scheda ricerca per trovare utenti da seguire!';
+  String get homeSearchTabHint =>
+      'Vai alla scheda ricerca per trovare utenti da seguire!';
 
   @override
   String get homeNewPosts => 'Nuovi post';
@@ -208,7 +216,8 @@ class AppLocalizationsIt extends AppLocalizations {
   String get publicPostLabel => 'Post Pubblico';
 
   @override
-  String get publicPostDescription => 'Il tuo post sarà visibile a tutti gli utenti di Vestium';
+  String get publicPostDescription =>
+      'Il tuo post sarà visibile a tutti gli utenti di Vestium';
 
   @override
   String get selectOutfitTitle => 'Seleziona Outfit';
@@ -226,10 +235,12 @@ class AppLocalizationsIt extends AppLocalizations {
   String get selectOutfitNoOutfits => 'Nessun outfit ancora';
 
   @override
-  String get selectOutfitCreateFirst => 'Crea il tuo primo outfit per vederlo qui.';
+  String get selectOutfitCreateFirst =>
+      'Crea il tuo primo outfit per vederlo qui.';
 
   @override
-  String get galleryEmptyMessage => 'La galleria apparirà una volta gestito l\'accesso.';
+  String get galleryEmptyMessage =>
+      'La galleria apparirà una volta gestito l\'accesso.';
 
   @override
   String get wardrobeMyWardrobe => 'Il Mio Guardaroba';
@@ -246,7 +257,8 @@ class AppLocalizationsIt extends AppLocalizations {
   }
 
   @override
-  String get wardrobeAddItem => 'Tocca il pulsante + per aggiungere il tuo primo articolo';
+  String get wardrobeAddItem =>
+      'Tocca il pulsante + per aggiungere il tuo primo articolo';
 
   @override
   String get wardrobeErrorRetry => 'Riprova';
@@ -315,7 +327,8 @@ class AppLocalizationsIt extends AppLocalizations {
   String get galleryAccessTitle => 'Accesso Galleria';
 
   @override
-  String get galleryAccessDescription => 'Vestium ha bisogno di accedere alla tua galleria per catturare foto dei tuoi capi d\'abbigliamento e aggiungerli al tuo guardaroba virtuale.';
+  String get galleryAccessDescription =>
+      'Vestium ha bisogno di accedere alla tua galleria per catturare foto dei tuoi capi d\'abbigliamento e aggiungerli al tuo guardaroba virtuale.';
 
   @override
   String get galleryAccessAllowButton => 'Consenti Accesso Galleria';
@@ -327,13 +340,15 @@ class AppLocalizationsIt extends AppLocalizations {
   String get galleryAccessPrivacyTitle => 'Le tue foto sono private';
 
   @override
-  String get galleryAccessPrivacyDescription => 'Utilizziamo la fotocamera solo per catturare capi d\'abbigliamento. Le tue foto rimangono sul tuo dispositivo.';
+  String get galleryAccessPrivacyDescription =>
+      'Utilizziamo la fotocamera solo per catturare capi d\'abbigliamento. Le tue foto rimangono sul tuo dispositivo.';
 
   @override
   String get galleryAccessPermissionRequired => 'Permesso Richiesto';
 
   @override
-  String get galleryAccessPermissionDenied => 'L\'accesso alla galleria è stato negato in modo permanente. Abilita nelle impostazioni dell\'app.';
+  String get galleryAccessPermissionDenied =>
+      'L\'accesso alla galleria è stato negato in modo permanente. Abilita nelle impostazioni dell\'app.';
 
   @override
   String get galleryAccessCancel => 'Annulla';
@@ -345,7 +360,8 @@ class AppLocalizationsIt extends AppLocalizations {
   String get cameraAccessTitle => 'Accesso Fotocamera';
 
   @override
-  String get cameraAccessDescription => 'Vestium ha bisogno di accedere alla tua fotocamera per catturare foto dei tuoi capi d\'abbigliamento e aggiungerli al tuo guardaroba virtuale.';
+  String get cameraAccessDescription =>
+      'Vestium ha bisogno di accedere alla tua fotocamera per catturare foto dei tuoi capi d\'abbigliamento e aggiungerli al tuo guardaroba virtuale.';
 
   @override
   String get cameraAccessAllowButton => 'Consenti Accesso Fotocamera';
@@ -357,7 +373,8 @@ class AppLocalizationsIt extends AppLocalizations {
   String get cameraAccessPrivacyTitle => 'Le tue foto sono private';
 
   @override
-  String get cameraAccessPrivacyDescription => 'Utilizziamo la fotocamera solo per catturare capi d\'abbigliamento. Le tue foto rimangono sul tuo dispositivo.';
+  String get cameraAccessPrivacyDescription =>
+      'Utilizziamo la fotocamera solo per catturare capi d\'abbigliamento. Le tue foto rimangono sul tuo dispositivo.';
 
   @override
   String get selectItemTitle => 'Seleziona Articolo';
@@ -369,7 +386,8 @@ class AppLocalizationsIt extends AppLocalizations {
   String get selectItemEmptyTitle => 'Nessuna Foto Ancora';
 
   @override
-  String get selectItemEmptyDescription => 'Visita la tua galleria o scatta una foto per iniziare.';
+  String get selectItemEmptyDescription =>
+      'Visita la tua galleria o scatta una foto per iniziare.';
 
   @override
   String get editItemTitle => 'Modifica articolo';
@@ -396,7 +414,8 @@ class AppLocalizationsIt extends AppLocalizations {
   String get editItemRemoveBgButton => 'Rimuovi BG';
 
   @override
-  String get editItemInstructionText => 'Disegna sull\'immagine per rimuovere lo sfondo';
+  String get editItemInstructionText =>
+      'Disegna sull\'immagine per rimuovere lo sfondo';
 
   @override
   String get editItemEraserSizeLabel => 'Dimensione gomma';
@@ -463,7 +482,8 @@ class AppLocalizationsIt extends AppLocalizations {
   String get editItemDetailsDeleteConfirmTitle => 'Elimina articolo';
 
   @override
-  String get editItemDetailsDeleteConfirmMessage => 'Sei sicuro di voler eliminare questo articolo?';
+  String get editItemDetailsDeleteConfirmMessage =>
+      'Sei sicuro di voler eliminare questo articolo?';
 
   @override
   String get editItemDetailsDeleteConfirmCancel => 'Annulla';
@@ -472,19 +492,23 @@ class AppLocalizationsIt extends AppLocalizations {
   String get editItemDetailsDeleteConfirmDelete => 'Elimina';
 
   @override
-  String get editItemDetailsSuccessMessage => 'Articolo aggiornato con successo!';
+  String get editItemDetailsSuccessMessage =>
+      'Articolo aggiornato con successo!';
 
   @override
-  String get editItemDetailsDeleteSuccessMessage => 'Articolo eliminato con successo!';
+  String get editItemDetailsDeleteSuccessMessage =>
+      'Articolo eliminato con successo!';
 
   @override
-  String get editItemDetailsValidationError => 'Inserisci il nome dell\'articolo e seleziona almeno una categoria';
+  String get editItemDetailsValidationError =>
+      'Inserisci il nome dell\'articolo e seleziona almeno una categoria';
 
   @override
   String get editItemDetailsBlockedTitle => 'Impossibile eliminare l\'articolo';
 
   @override
-  String get editItemDetailsBlockedMessage => 'Questo articolo è utilizzato negli abiti seguenti:';
+  String get editItemDetailsBlockedMessage =>
+      'Questo articolo è utilizzato negli abiti seguenti:';
 
   @override
   String get editItemDetailsBlockedOK => 'OK';
@@ -505,7 +529,8 @@ class AppLocalizationsIt extends AppLocalizations {
   String get itemDetailsDescription => 'Descrizione (opzionale)';
 
   @override
-  String get itemDetailsDescriptionHint => 'Aggiungi note su questo articolo...';
+  String get itemDetailsDescriptionHint =>
+      'Aggiungi note su questo articolo...';
 
   @override
   String get itemDetailsSeason => 'Stagione';
@@ -550,10 +575,12 @@ class AppLocalizationsIt extends AppLocalizations {
   String get itemDetailsAddedSuccess => 'Articolo aggiunto al guardaroba!';
 
   @override
-  String get itemDetailsNameRequired => 'Per favore inserisci il nome dell\'articolo';
+  String get itemDetailsNameRequired =>
+      'Per favore inserisci il nome dell\'articolo';
 
   @override
-  String get itemDetailsCategoryRequired => 'Per favore seleziona almeno una categoria';
+  String get itemDetailsCategoryRequired =>
+      'Per favore seleziona almeno una categoria';
 
   @override
   String get takePicTitle => 'Aggiungi articolo';
@@ -634,7 +661,8 @@ class AppLocalizationsIt extends AppLocalizations {
   String get settingsEditBio => 'Bio';
 
   @override
-  String get settingsEditBioHint => 'Appassionato di moda ✨ | Ispirazione stile';
+  String get settingsEditBioHint =>
+      'Appassionato di moda ✨ | Ispirazione stile';
 
   @override
   String get settingsEditCancel => 'Annulla';
@@ -680,7 +708,8 @@ class AppLocalizationsIt extends AppLocalizations {
   String get myPostsDeleteDialogTitle => 'Eliminare il post?';
 
   @override
-  String get myPostsDeleteDialogMessage => 'Sei sicuro di voler eliminare questo post?\nQuesta azione non può essere annullata e il post\nverrà rimosso dal tuo profilo.';
+  String get myPostsDeleteDialogMessage =>
+      'Sei sicuro di voler eliminare questo post?\nQuesta azione non può essere annullata e il post\nverrà rimosso dal tuo profilo.';
 
   @override
   String get myPostsDeleteButton => 'Elimina';
@@ -695,7 +724,8 @@ class AppLocalizationsIt extends AppLocalizations {
   String get commentsNoComments => 'Nessun commento';
 
   @override
-  String get commentsLoginRequired => 'Devi effettuare l\'accesso per commentare';
+  String get commentsLoginRequired =>
+      'Devi effettuare l\'accesso per commentare';
 
   @override
   String get commentsAddComment => 'Aggiungi un commento...';
@@ -731,7 +761,8 @@ class AppLocalizationsIt extends AppLocalizations {
   String get accountManagerChangeEmail => 'Cambia email';
 
   @override
-  String get accountManagerChangeEmailSubtitle => 'Aggiorna il tuo indirizzo email';
+  String get accountManagerChangeEmailSubtitle =>
+      'Aggiorna il tuo indirizzo email';
 
   @override
   String get accountManagerChangePassword => 'Cambia password';
@@ -743,7 +774,8 @@ class AppLocalizationsIt extends AppLocalizations {
   String get accountManagerChangeFullName => 'Cambia nome completo';
 
   @override
-  String get accountManagerChangeFullNameSubtitle => 'Aggiorna il tuo nome visualizzato';
+  String get accountManagerChangeFullNameSubtitle =>
+      'Aggiorna il tuo nome visualizzato';
 
   @override
   String get accountManagerDangerZone => 'ZONA PERICOLOSA';
@@ -752,13 +784,15 @@ class AppLocalizationsIt extends AppLocalizations {
   String get accountManagerDeleteAccount => 'Elimina account';
 
   @override
-  String get accountManagerDeleteAccountSubtitle => 'Elimina permanentemente il tuo account';
+  String get accountManagerDeleteAccountSubtitle =>
+      'Elimina permanentemente il tuo account';
 
   @override
   String get accountManagerChangeEmailDialogTitle => 'Cambia email';
 
   @override
-  String get accountManagerChangeEmailDialogDescription => 'Inserisci la tua nuova email e conferma con la password';
+  String get accountManagerChangeEmailDialogDescription =>
+      'Inserisci la tua nuova email e conferma con la password';
 
   @override
   String get accountManagerNewEmail => 'Nuova email';
@@ -779,7 +813,8 @@ class AppLocalizationsIt extends AppLocalizations {
   String get accountManagerChangeFullNameDialogTitle => 'Cambia nome completo';
 
   @override
-  String get accountManagerChangeFullNameDialogDescription => 'Inserisci il tuo nuovo nome visualizzato';
+  String get accountManagerChangeFullNameDialogDescription =>
+      'Inserisci il tuo nuovo nome visualizzato';
 
   @override
   String get accountManagerFullName => 'Nome completo';
@@ -794,7 +829,8 @@ class AppLocalizationsIt extends AppLocalizations {
   String get accountManagerChangePasswordDialogTitle => 'Cambia password';
 
   @override
-  String get accountManagerChangePasswordDialogDescription => 'Inserisci la password attuale e la nuova password';
+  String get accountManagerChangePasswordDialogDescription =>
+      'Inserisci la password attuale e la nuova password';
 
   @override
   String get accountManagerNewPassword => 'Nuova password';
@@ -809,7 +845,8 @@ class AppLocalizationsIt extends AppLocalizations {
   String get accountManagerDeleteAccountDialogTitle => 'Elimina account';
 
   @override
-  String get accountManagerDeleteAccountDialogDescription => 'Sei sicuro di voler eliminare permanentemente il tuo account? Questa azione non può essere annullata.';
+  String get accountManagerDeleteAccountDialogDescription =>
+      'Sei sicuro di voler eliminare permanentemente il tuo account? Questa azione non può essere annullata.';
 
   @override
   String get accountManagerDeleteAccountButton => 'Elimina account';
@@ -818,7 +855,8 @@ class AppLocalizationsIt extends AppLocalizations {
   String get accountManagerFinalConfirmation => 'Conferma finale';
 
   @override
-  String get accountManagerFinalConfirmationDescription => 'Digita DELETE e inserisci la password per confermare l\'eliminazione dell\'account';
+  String get accountManagerFinalConfirmationDescription =>
+      'Digita DELETE e inserisci la password per confermare l\'eliminazione dell\'account';
 
   @override
   String get accountManagerTypeDelete => 'Digita DELETE per confermare';
@@ -888,7 +926,8 @@ class AppLocalizationsIt extends AppLocalizations {
   String get manageCategoriesDelete => 'Elimina';
 
   @override
-  String get manageCategoriesInfo => 'Le categorie ti aiutano a organizzare gli articoli del guardaroba. Gli articoli possono appartenere a più categorie.';
+  String get manageCategoriesInfo =>
+      'Le categorie ti aiutano a organizzare gli articoli del guardaroba. Gli articoli possono appartenere a più categorie.';
 
   @override
   String get manageOutfitCategoriesTitle => 'Gestisci categorie outfit';
@@ -901,6 +940,64 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get helpCenterFAQTitle => 'Domande frequenti';
+
+  @override
+  String get helpCenterFAQ1Question =>
+      'Come aggiungo articoli al mio guardaroba?';
+
+  @override
+  String get helpCenterFAQ1Answer =>
+      'Puoi aggiungere articoli al tuo guardaroba toccando l\'icona della fotocamera nella scheda guardaroba. Scatta una foto del tuo capo di abbigliamento. Quindi inserisci dettagli come categoria, colore e stagione.';
+
+  @override
+  String get helpCenterFAQ2Question => 'Come creo un outfit?';
+
+  @override
+  String get helpCenterFAQ2Answer =>
+      'Per creare un outfit, vai alla sezione Outfit e tocca il pulsante \"Crea nuovo\". Seleziona articoli dal tuo guardaroba e organizzali per creare la combinazione di outfit desiderata.';
+
+  @override
+  String get helpCenterFAQ3Question =>
+      'Posso modificare o eliminare articoli del guardaroba?';
+
+  @override
+  String get helpCenterFAQ3Answer =>
+      'Sì, puoi modificare o eliminare articoli del guardaroba toccando l\'articolo nel tuo guardaroba. Seleziona l\'opzione di modifica per modificare i dettagli o l\'opzione di eliminazione per rimuovere l\'articolo.';
+
+  @override
+  String get helpCenterFAQ4Question => 'Come condivido i miei outfit?';
+
+  @override
+  String get helpCenterFAQ4Answer =>
+      'Per condividere i tuoi outfit, apri l\'outfit che vuoi condividere e tocca il pulsante di condivisione. Puoi condividere via email, sui social media o generare un link da condividere con altri.';
+
+  @override
+  String get helpCenterFAQ5Question => 'Come gestisco le mie categorie?';
+
+  @override
+  String get helpCenterFAQ5Answer =>
+      'Puoi gestire le tue categorie nella sezione Impostazioni sotto Categorie guardaroba. Aggiungi, modifica o elimina categorie per organizzare i tuoi articoli come preferisci.';
+
+  @override
+  String get helpCenterFAQ6Question => 'Posso rendere privato il mio profilo?';
+
+  @override
+  String get helpCenterFAQ6Answer =>
+      'Sì, puoi rendere privato il tuo profilo nelle Impostazioni account. Attiva l\'opzione \"Profilo privato\" per controllare chi può vedere il tuo guardaroba e i tuoi outfit.';
+
+  @override
+  String get helpCenterFAQ7Question => 'Come reimposto la mia password?';
+
+  @override
+  String get helpCenterFAQ7Answer =>
+      'Vai alle Impostazioni account e seleziona \"Cambia password\". Puoi anche utilizzare l\'opzione \"Password dimenticata\" nella schermata di accesso per reimpostare via email.';
+
+  @override
+  String get helpCenterFAQ8Question => 'Come elimino il mio account?';
+
+  @override
+  String get helpCenterFAQ8Answer =>
+      'Per eliminare il tuo account, vai alle Impostazioni account e scorri fino alla sezione \"Zona pericolosa\". Seleziona \"Elimina account\" e segui i passaggi di conferma. Questa azione è permanente.';
 
   @override
   String get notificationsTitle => 'Notifiche';
@@ -950,7 +1047,8 @@ class AppLocalizationsIt extends AppLocalizations {
   String get saveOutfitTitle => 'Salva outfit';
 
   @override
-  String get saveOutfitNoDataError => 'Nessun dato outfit trovato. Crea prima un outfit.';
+  String get saveOutfitNoDataError =>
+      'Nessun dato outfit trovato. Crea prima un outfit.';
 
   @override
   String get saveOutfitNoDataFound => 'Nessun dato outfit trovato';
@@ -1008,7 +1106,8 @@ class AppLocalizationsIt extends AppLocalizations {
   String get editOutfitNotFound => 'Outfit non trovato';
 
   @override
-  String get editOutfitNotFoundMessage => 'L\'outfit potrebbe essere stato eliminato o non esiste';
+  String get editOutfitNotFoundMessage =>
+      'L\'outfit potrebbe essere stato eliminato o non esiste';
 
   @override
   String get editOutfitNoImage => 'Nessuna immagine outfit';
@@ -1020,7 +1119,8 @@ class AppLocalizationsIt extends AppLocalizations {
   String get editOutfitDetailsTitle => 'Modifica dettagli outfit';
 
   @override
-  String get editOutfitDetailsSubtitle => 'Aggiorna le informazioni del tuo outfit';
+  String get editOutfitDetailsSubtitle =>
+      'Aggiorna le informazioni del tuo outfit';
 
   @override
   String get editOutfitNameLabel => 'Nome outfit';
@@ -1032,7 +1132,8 @@ class AppLocalizationsIt extends AppLocalizations {
   String get editOutfitDescriptionLabel => 'Descrizione';
 
   @override
-  String get editOutfitDescriptionHint => 'Outfit perfetto per una giornata estiva casual';
+  String get editOutfitDescriptionHint =>
+      'Outfit perfetto per una giornata estiva casual';
 
   @override
   String get editOutfitSeasonLabel => 'Stagione';
@@ -1063,7 +1164,8 @@ class AppLocalizationsIt extends AppLocalizations {
   }
 
   @override
-  String get editOutfitDeleteWarning => 'Questa azione non può essere annullata.';
+  String get editOutfitDeleteWarning =>
+      'Questa azione non può essere annullata.';
 
   @override
   String get editOutfitDeleting => 'Eliminazione outfit...';
@@ -1129,7 +1231,8 @@ class AppLocalizationsIt extends AppLocalizations {
   String get editOutfitGoToPostsButton => 'Vai ai post';
 
   @override
-  String get editOutfitLoginRequired => 'Effettua il login per visualizzare il tuo profilo';
+  String get editOutfitLoginRequired =>
+      'Effettua il login per visualizzare il tuo profilo';
 
   @override
   String get editOutfitImageLoading => 'Caricamento immagine...';
@@ -1156,13 +1259,15 @@ class AppLocalizationsIt extends AppLocalizations {
   String get outfitDetailsTitle => 'Dettagli outfit';
 
   @override
-  String get outfitDetailsError => 'Errore nel caricamento dei dettagli dell\'outfit';
+  String get outfitDetailsError =>
+      'Errore nel caricamento dei dettagli dell\'outfit';
 
   @override
   String get outfitDetailsDeleteDialog => 'Eliminare l\'outfit?';
 
   @override
-  String get outfitDetailsDeleteMessage => 'Sei sicuro di voler eliminare questo outfit?\nQuesta azione non può essere annullata.';
+  String get outfitDetailsDeleteMessage =>
+      'Sei sicuro di voler eliminare questo outfit?\nQuesta azione non può essere annullata.';
 
   @override
   String get outfitDetailsDeleteButton => 'Elimina';
@@ -1171,7 +1276,8 @@ class AppLocalizationsIt extends AppLocalizations {
   String get outfitDetailsCancelButton => 'Annulla';
 
   @override
-  String get outfitDetailsShareComingSoon => 'Funzionalità di condivisione - Prossimamente';
+  String get outfitDetailsShareComingSoon =>
+      'Funzionalità di condivisione - Prossimamente';
 
   @override
   String get outfitDetailsOutfitDeleted => 'Outfit eliminato';
@@ -1203,16 +1309,24 @@ class AppLocalizationsIt extends AppLocalizations {
   String get outfitDetailsUncategorized => 'Non categorizzato';
 
   @override
+  String get createOutfitTitle => 'Crea outfit';
+
+  @override
+  String get createOutfitSaveTooltip => 'Salva outfit';
+
+  @override
   String get createOutfitCapturing => 'Cattura outfit...';
 
   @override
-  String get createOutfitAddAtLeastOne => 'Aggiungi almeno un articolo all\'outfit';
+  String get createOutfitAddAtLeastOne =>
+      'Aggiungi almeno un articolo all\'outfit';
 
   @override
   String get createOutfitSaveSuccess => 'Outfit salvato con successo!';
 
   @override
-  String get createOutfitErrorLoading => 'Errore nel caricamento degli articoli';
+  String get createOutfitErrorLoading =>
+      'Errore nel caricamento degli articoli';
 
   @override
   String get createOutfitTryAgain => 'Riprova';
@@ -1252,7 +1366,8 @@ class AppLocalizationsIt extends AppLocalizations {
   String get createOutfitRemoveItemTitle => 'Rimuovi articolo';
 
   @override
-  String get createOutfitRemoveItemMessage => 'Rimuovere questo articolo dall\'outfit?';
+  String get createOutfitRemoveItemMessage =>
+      'Rimuovere questo articolo dall\'outfit?';
 
   @override
   String get createOutfitCancel => 'Annulla';
@@ -1275,7 +1390,8 @@ class AppLocalizationsIt extends AppLocalizations {
   String get postsDetailsTitle => 'Post';
 
   @override
-  String get postsDetailsMustLoginToLike => 'Devi effettuare il login per mettere mi piace ai post!';
+  String get postsDetailsMustLoginToLike =>
+      'Devi effettuare il login per mettere mi piace ai post!';
 
   @override
   String postsDetailsLikesCount(int count) {

@@ -11,7 +11,11 @@ class HelpCenterScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(create: (_) => HelpCenterCubit()..loadFAQs(), child: const _HelpCenterPage());
+    final loc = AppLocalizations.of(context)!;
+    return BlocProvider(
+      create: (_) => HelpCenterCubit(localizations: loc)..loadFAQs(),
+      child: const _HelpCenterPage(),
+    );
   }
 }
 

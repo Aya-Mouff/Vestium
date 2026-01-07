@@ -64,7 +64,8 @@ import 'app_localizations_it.dart';
 /// be consistent with the languages listed in the AppLocalizations.supportedLocales
 /// property.
 abstract class AppLocalizations {
-  AppLocalizations(String locale) : localeName = intl.Intl.canonicalizedLocale(locale.toString());
+  AppLocalizations(String locale)
+    : localeName = intl.Intl.canonicalizedLocale(locale.toString());
 
   final String localeName;
 
@@ -72,7 +73,8 @@ abstract class AppLocalizations {
     return Localizations.of<AppLocalizations>(context, AppLocalizations);
   }
 
-  static const LocalizationsDelegate<AppLocalizations> delegate = _AppLocalizationsDelegate();
+  static const LocalizationsDelegate<AppLocalizations> delegate =
+      _AppLocalizationsDelegate();
 
   /// A list of this localizations delegate along with the default localizations
   /// delegates.
@@ -84,19 +86,20 @@ abstract class AppLocalizations {
   /// Additional delegates can be added by appending to this list in
   /// MaterialApp. This list does not have to be used at all if a custom list
   /// of delegates is preferred or required.
-  static const List<LocalizationsDelegate<dynamic>> localizationsDelegates = <LocalizationsDelegate<dynamic>>[
-    delegate,
-    GlobalMaterialLocalizations.delegate,
-    GlobalCupertinoLocalizations.delegate,
-    GlobalWidgetsLocalizations.delegate,
-  ];
+  static const List<LocalizationsDelegate<dynamic>> localizationsDelegates =
+      <LocalizationsDelegate<dynamic>>[
+        delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+      ];
 
   /// A list of this localizations delegate's supported locales.
   static const List<Locale> supportedLocales = <Locale>[
     Locale('ar'),
     Locale('en'),
     Locale('fr'),
-    Locale('it')
+    Locale('it'),
   ];
 
   /// No description provided for @appTitle.
@@ -1827,6 +1830,102 @@ abstract class AppLocalizations {
   /// **'Frequently Asked Questions'**
   String get helpCenterFAQTitle;
 
+  /// No description provided for @helpCenterFAQ1Question.
+  ///
+  /// In en, this message translates to:
+  /// **'How do I add items to my wardrobe?'**
+  String get helpCenterFAQ1Question;
+
+  /// No description provided for @helpCenterFAQ1Answer.
+  ///
+  /// In en, this message translates to:
+  /// **'You can add items to your wardrobe by tapping the camera icon in the wardrobe tab. Take a photo of your clothing item. Then in details like category, color, and season.'**
+  String get helpCenterFAQ1Answer;
+
+  /// No description provided for @helpCenterFAQ2Question.
+  ///
+  /// In en, this message translates to:
+  /// **'How do I create an outfit?'**
+  String get helpCenterFAQ2Question;
+
+  /// No description provided for @helpCenterFAQ2Answer.
+  ///
+  /// In en, this message translates to:
+  /// **'To create an outfit, navigate to the Outfits section and tap the \"Create New\" button. Select items from your wardrobe and arrange them to create your desired outfit combination.'**
+  String get helpCenterFAQ2Answer;
+
+  /// No description provided for @helpCenterFAQ3Question.
+  ///
+  /// In en, this message translates to:
+  /// **'Can I edit or delete wardrobe items?'**
+  String get helpCenterFAQ3Question;
+
+  /// No description provided for @helpCenterFAQ3Answer.
+  ///
+  /// In en, this message translates to:
+  /// **'Yes, you can edit or delete wardrobe items by tapping on the item in your wardrobe. Select the edit option to modify details or the delete option to remove the item.'**
+  String get helpCenterFAQ3Answer;
+
+  /// No description provided for @helpCenterFAQ4Question.
+  ///
+  /// In en, this message translates to:
+  /// **'How do I share my outfits?'**
+  String get helpCenterFAQ4Question;
+
+  /// No description provided for @helpCenterFAQ4Answer.
+  ///
+  /// In en, this message translates to:
+  /// **'To share your outfits, open the outfit you want to share and tap the share button. You can share via email, social media, or generate a link to share with others.'**
+  String get helpCenterFAQ4Answer;
+
+  /// No description provided for @helpCenterFAQ5Question.
+  ///
+  /// In en, this message translates to:
+  /// **'How do I manage my categories?'**
+  String get helpCenterFAQ5Question;
+
+  /// No description provided for @helpCenterFAQ5Answer.
+  ///
+  /// In en, this message translates to:
+  /// **'You can manage your categories in the Settings section under Wardrobe Categories. Add, edit, or delete categories to organize your items the way you prefer.'**
+  String get helpCenterFAQ5Answer;
+
+  /// No description provided for @helpCenterFAQ6Question.
+  ///
+  /// In en, this message translates to:
+  /// **'Can I make my profile private?'**
+  String get helpCenterFAQ6Question;
+
+  /// No description provided for @helpCenterFAQ6Answer.
+  ///
+  /// In en, this message translates to:
+  /// **'Yes, you can make your profile private in the Account Settings. Toggle the \"Private Profile\" option to control who can see your wardrobe and outfits.'**
+  String get helpCenterFAQ6Answer;
+
+  /// No description provided for @helpCenterFAQ7Question.
+  ///
+  /// In en, this message translates to:
+  /// **'How do I reset my password?'**
+  String get helpCenterFAQ7Question;
+
+  /// No description provided for @helpCenterFAQ7Answer.
+  ///
+  /// In en, this message translates to:
+  /// **'Go to the Account Settings and select \"Change Password\". You can also use the \"Forgot Password\" option on the login screen to reset via email.'**
+  String get helpCenterFAQ7Answer;
+
+  /// No description provided for @helpCenterFAQ8Question.
+  ///
+  /// In en, this message translates to:
+  /// **'How do I delete my account?'**
+  String get helpCenterFAQ8Question;
+
+  /// No description provided for @helpCenterFAQ8Answer.
+  ///
+  /// In en, this message translates to:
+  /// **'To delete your account, go to Account Settings and scroll to the \"Danger Zone\" section. Select \"Delete Account\" and follow the confirmation steps. This action is permanent.'**
+  String get helpCenterFAQ8Answer;
+
   /// No description provided for @notificationsTitle.
   ///
   /// In en, this message translates to:
@@ -2367,6 +2466,18 @@ abstract class AppLocalizations {
   /// **'Uncategorized'**
   String get outfitDetailsUncategorized;
 
+  /// No description provided for @createOutfitTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Create Outfit'**
+  String get createOutfitTitle;
+
+  /// No description provided for @createOutfitSaveTooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Save Outfit'**
+  String get createOutfitSaveTooltip;
+
   /// No description provided for @createOutfitCapturing.
   ///
   /// In en, this message translates to:
@@ -2524,7 +2635,8 @@ abstract class AppLocalizations {
   String get postsDetailsImageNotFound;
 }
 
-class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
+class _AppLocalizationsDelegate
+    extends LocalizationsDelegate<AppLocalizations> {
   const _AppLocalizationsDelegate();
 
   @override
@@ -2533,27 +2645,30 @@ class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> 
   }
 
   @override
-  bool isSupported(Locale locale) => <String>['ar', 'en', 'fr', 'it'].contains(locale.languageCode);
+  bool isSupported(Locale locale) =>
+      <String>['ar', 'en', 'fr', 'it'].contains(locale.languageCode);
 
   @override
   bool shouldReload(_AppLocalizationsDelegate old) => false;
 }
 
 AppLocalizations lookupAppLocalizations(Locale locale) {
-
-
   // Lookup logic when only language code is specified.
   switch (locale.languageCode) {
-    case 'ar': return AppLocalizationsAr();
-    case 'en': return AppLocalizationsEn();
-    case 'fr': return AppLocalizationsFr();
-    case 'it': return AppLocalizationsIt();
+    case 'ar':
+      return AppLocalizationsAr();
+    case 'en':
+      return AppLocalizationsEn();
+    case 'fr':
+      return AppLocalizationsFr();
+    case 'it':
+      return AppLocalizationsIt();
   }
 
   throw FlutterError(
     'AppLocalizations.delegate failed to load unsupported locale "$locale". This is likely '
     'an issue with the localizations generation tool. Please file an issue '
     'on GitHub with a reproducible sample app and the gen-l10n configuration '
-    'that was used.'
+    'that was used.',
   );
 }

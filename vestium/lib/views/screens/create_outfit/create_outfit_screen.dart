@@ -182,7 +182,8 @@ class _OutfitCreatorScreenState extends State<OutfitCreatorScreen> {
 
       if (state.placedItems.isEmpty) {
         print('⚠️ No items in outfit');
-        _showErrorSnackbar('Please add at least one item to the outfit');
+        final loc = AppLocalizations.of(context)!;
+        _showErrorSnackbar(loc.createOutfitAddAtLeastOne);
         return;
       }
 
@@ -201,16 +202,21 @@ class _OutfitCreatorScreenState extends State<OutfitCreatorScreen> {
       await Future.delayed(const Duration(milliseconds: 50));
 
       // Show loading indicator
+      final loc = AppLocalizations.of(context)!;
       showDialog(
         context: context,
         barrierDismissible: false,
-        builder: (context) => const Center(
+        builder: (context) => Center(
           child: Card(
             child: Padding(
-              padding: EdgeInsets.all(24.0),
+              padding: const EdgeInsets.all(24.0),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
-                children: [CircularProgressIndicator(), SizedBox(height: 16), Text('Capturing outfit...')],
+                children: [
+                  const CircularProgressIndicator(),
+                  const SizedBox(height: 16),
+                  Text(loc.createOutfitCapturing),
+                ],
               ),
             ),
           ),
@@ -267,7 +273,8 @@ class _OutfitCreatorScreenState extends State<OutfitCreatorScreen> {
 
       context.router.push(SaveOutfitRoute()).then((success) {
         if (success == true && mounted) {
-          _showSuccessSnackbar('Outfit saved successfully!');
+          final loc = AppLocalizations.of(context)!;
+          _showSuccessSnackbar(loc.createOutfitSaveSuccess);
           Future.delayed(const Duration(seconds: 1), () {
             if (mounted) {
               context.router.maybePop();
@@ -307,6 +314,8 @@ class _OutfitCreatorScreenState extends State<OutfitCreatorScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
+
     return BlocProvider<CreateOutfitCubit>.value(
       value: _cubit,
       child: Scaffold(
@@ -318,9 +327,9 @@ class _OutfitCreatorScreenState extends State<OutfitCreatorScreen> {
             icon: const Icon(Icons.close, color: Color(0xFF2C2C2C)),
             onPressed: () => context.router.maybePop(),
           ),
-          title: const Text(
-            'Create Outfit',
-            style: TextStyle(
+          title: Text(
+            loc.createOutfitTitle,
+            style: const TextStyle(
               fontFamily: 'CormorantGaramond',
               fontSize: 22,
               fontWeight: FontWeight.w600,
@@ -332,7 +341,7 @@ class _OutfitCreatorScreenState extends State<OutfitCreatorScreen> {
             IconButton(
               icon: const Icon(Icons.save_outlined, color: Color(0xFF2C2C2C)),
               onPressed: _handleSavePressed,
-              tooltip: 'Save Outfit',
+              tooltip: loc.createOutfitSaveTooltip,
             ),
           ],
         ),
@@ -649,6 +658,8 @@ class _OutfitCreatorScreenState extends State<OutfitCreatorScreen> {
   // }
 
   Widget _buildBottomItemsList(CreateOutfitItemsLoaded state, Size canvasSize) {
+    final loc = AppLocalizations.of(context)!;
+
     return Container(
       height: 180,
       decoration: BoxDecoration(
@@ -663,9 +674,9 @@ class _OutfitCreatorScreenState extends State<OutfitCreatorScreen> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text(
-                  'Your Items',
-                  style: TextStyle(
+                Text(
+                  loc.createOutfitYourItems,
+                  style: const TextStyle(
                     fontFamily: 'CormorantGaramond',
                     fontSize: 18,
                     fontWeight: FontWeight.w600,
@@ -676,7 +687,7 @@ class _OutfitCreatorScreenState extends State<OutfitCreatorScreen> {
                   padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                   decoration: BoxDecoration(color: const Color(0xFFF5ECE7), borderRadius: BorderRadius.circular(12)),
                   child: Text(
-                    '${state.availableItems.length} total',
+                    loc.createOutfitTotalCount(state.availableItems.length),
                     style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500, color: Color(0xFF6B5344)),
                   ),
                 ),
@@ -685,8 +696,8 @@ class _OutfitCreatorScreenState extends State<OutfitCreatorScreen> {
           ),
           Expanded(
             child: state.availableItems.isEmpty
-                ? const Center(
-                    child: Text('No items in your wardrobe', style: TextStyle(color: Color(0xFF999999))),
+                ? Center(
+                    child: Text(loc.createOutfitNoItems, style: const TextStyle(color: Color(0xFF999999))),
                   )
                 : ListView.separated(
                     scrollDirection: Axis.horizontal,
