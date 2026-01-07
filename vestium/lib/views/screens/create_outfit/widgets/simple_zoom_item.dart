@@ -1,6 +1,5 @@
 // lib/views/screens/create_outfit/widgets/simple_zoom_item.dart
 import 'package:flutter/material.dart';
-import 'package:vestium/l10n/app_localizations.dart';
 import '../cubit/create_outfit_cubit.dart';
 import '../cubit/create_outfit_state.dart';
 import 'dart:io';
@@ -31,7 +30,7 @@ class _SimpleZoomItemState extends State<SimpleZoomItem> {
   double? _localScale;
   bool _isDragging = false;
   bool _isScaling = false;
-
+  
   Offset _gestureStartPosition = Offset.zero;
   Offset _itemStartPosition = Offset.zero;
   double _scaleStartValue = 1.0;
@@ -64,7 +63,7 @@ class _SimpleZoomItemState extends State<SimpleZoomItem> {
           _itemStartPosition = widget.placedItem.position;
           _scaleStartValue = widget.placedItem.scale;
           widget.cubit.bringItemToFront(widget.placedItem.itemId);
-
+          
           setState(() {
             _isDragging = false;
             _isScaling = false;
@@ -79,32 +78,33 @@ class _SimpleZoomItemState extends State<SimpleZoomItem> {
               _isScaling = true;
               _isDragging = false;
             });
-
+            
             final scaleChange = details.scale - 1.0;
             final dampedScaleChange = scaleChange * 0.5;
             final newScale = (_scaleStartValue * (1.0 + dampedScaleChange)).clamp(0.3, 3.0);
-
+            
             // Only update LOCAL state during gesture
             setState(() {
               _localScale = newScale;
             });
+            
           } else if (details.pointerCount == 1) {
             // DRAGGING (1 finger)
             setState(() {
               _isDragging = true;
               _isScaling = false;
             });
-
+            
             // Calculate total offset from start of gesture
             final totalDeltaX = (details.focalPoint.dx - _gestureStartPosition.dx) / widget.canvasScale;
             final totalDeltaY = (details.focalPoint.dy - _gestureStartPosition.dy) / widget.canvasScale;
-
+            
             // Apply to original position
             final newPosition = Offset(
               (_itemStartPosition.dx + totalDeltaX).clamp(0.0, widget.canvasSize.width - itemWidth),
               (_itemStartPosition.dy + totalDeltaY).clamp(0.0, widget.canvasSize.height - itemHeight),
             );
-
+            
             // Only update LOCAL state during gesture
             setState(() {
               _localPosition = newPosition;
@@ -119,7 +119,7 @@ class _SimpleZoomItemState extends State<SimpleZoomItem> {
           if (_localPosition != null && _localPosition != widget.placedItem.position) {
             widget.cubit.updateItemPosition(widget.placedItem.itemId, _localPosition!);
           }
-
+          
           setState(() {
             _isDragging = false;
             _isScaling = false;
@@ -135,21 +135,31 @@ class _SimpleZoomItemState extends State<SimpleZoomItem> {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
-              color: _isDragging ? const Color(0xFF8B6F47).withValues(alpha: .5) : Colors.transparent,
+              color: _isDragging 
+                ? const Color(0xFF8B6F47).withValues(alpha: .5) 
+                : Colors.transparent,
               width: _isDragging ? 3 : 0,
             ),
-            boxShadow: _isDragging
-                ? [BoxShadow(color: Colors.black.withValues(alpha: .2), blurRadius: 8, offset: const Offset(0, 4))]
-                : null,
+            boxShadow: _isDragging ? [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: .2),
+                blurRadius: 8,
+                offset: const Offset(0, 4),
+              ),
+            ] : null,
           ),
-          child: ClipRRect(borderRadius: BorderRadius.circular(12), child: _buildImage()),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(12),
+            child: _buildImage(),
+          ),
         ),
       ),
     );
   }
 
   Widget _buildImage() {
-    if (widget.placedItem.item.imagePath == null || widget.placedItem.item.imagePath!.isEmpty) {
+    if (widget.placedItem.item.imagePath == null || 
+        widget.placedItem.item.imagePath!.isEmpty) {
       return _buildPlaceholder();
     }
 
@@ -175,7 +185,11 @@ class _SimpleZoomItemState extends State<SimpleZoomItem> {
                 ),
                 child: Text(
                   '${(effectiveScale * 100).toInt()}%',
-                  style: const TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold),
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 10,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
             ),
@@ -189,15 +203,22 @@ class _SimpleZoomItemState extends State<SimpleZoomItem> {
   Widget _buildPlaceholder() {
     return Container(
       color: const Color(0xFFF5ECE7),
-      child: Center(child: Icon(Icons.photo, color: const Color(0xFFA1887F).withValues(alpha: .5), size: 32)),
+      child: Center(
+        child: Icon(
+          Icons.photo,
+          color: const Color(0xFFA1887F).withValues(alpha: .5),
+          size: 32,
+        ),
+      ),
     );
   }
 
   void _showItemOptions(BuildContext context) {
-    final loc = AppLocalizations.of(context)!;
     showModalBottomSheet(
       context: context,
-      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
       builder: (dialogContext) => Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -205,12 +226,15 @@ class _SimpleZoomItemState extends State<SimpleZoomItem> {
           Container(
             width: 40,
             height: 4,
-            decoration: BoxDecoration(color: Colors.grey[300], borderRadius: BorderRadius.circular(2)),
+            decoration: BoxDecoration(
+              color: Colors.grey[300],
+              borderRadius: BorderRadius.circular(2),
+            ),
           ),
           const SizedBox(height: 16),
           ListTile(
             leading: const Icon(Icons.zoom_in, color: Color(0xFF6B5344)),
-            title: Text(loc.createOutfitZoomIn),
+            title: const Text('Zoom In'),
             onTap: () {
               final newScale = (widget.placedItem.scale * 1.1).clamp(0.3, 3.0);
               widget.cubit.updateItemScale(widget.placedItem.itemId, newScale);
@@ -219,7 +243,7 @@ class _SimpleZoomItemState extends State<SimpleZoomItem> {
           ),
           ListTile(
             leading: const Icon(Icons.zoom_out, color: Color(0xFF6B5344)),
-            title: Text(loc.createOutfitZoomOut),
+            title: const Text('Zoom Out'),
             onTap: () {
               final newScale = (widget.placedItem.scale * 0.9).clamp(0.3, 3.0);
               widget.cubit.updateItemScale(widget.placedItem.itemId, newScale);
@@ -228,7 +252,7 @@ class _SimpleZoomItemState extends State<SimpleZoomItem> {
           ),
           ListTile(
             leading: const Icon(Icons.refresh, color: Color(0xFF6B5344)),
-            title: Text(loc.createOutfitResetSize),
+            title: const Text('Reset Size'),
             onTap: () {
               widget.cubit.updateItemScale(widget.placedItem.itemId, 1.0);
               Navigator.pop(dialogContext);
@@ -237,7 +261,7 @@ class _SimpleZoomItemState extends State<SimpleZoomItem> {
           const Divider(),
           ListTile(
             leading: const Icon(Icons.layers, color: Color(0xFF6B5344)),
-            title: Text(loc.createOutfitBringToFront),
+            title: const Text('Bring to Front'),
             onTap: () {
               widget.cubit.bringItemToFront(widget.placedItem.itemId);
               Navigator.pop(dialogContext);
@@ -245,7 +269,7 @@ class _SimpleZoomItemState extends State<SimpleZoomItem> {
           ),
           ListTile(
             leading: const Icon(Icons.layers_outlined, color: Color(0xFF6B5344)),
-            title: Text(loc.createOutfitSendToBack),
+            title: const Text('Send to Back'),
             onTap: () {
               widget.cubit.sendItemToBack(widget.placedItem.itemId);
               Navigator.pop(dialogContext);
@@ -253,8 +277,8 @@ class _SimpleZoomItemState extends State<SimpleZoomItem> {
           ),
           const Divider(),
           ListTile(
-            leading: const Icon(Icons.delete_outline, color: Colors.red),
-            title: Text(loc.createOutfitRemoveFromOutfit, style: const TextStyle(color: Colors.red)),
+            leading: const Icon(Icons.delete, color: Colors.red),
+            title: const Text('Remove Item', style: TextStyle(color: Colors.red)),
             onTap: () {
               widget.cubit.removeItemFromOutfit(widget.placedItem.itemId);
               Navigator.pop(dialogContext);
