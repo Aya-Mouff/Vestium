@@ -80,8 +80,8 @@ class HomeCubit extends Cubit<HomeState> {
       // Get current user
       final currentUserId = CurrentUserService.currentUserId;
       if (currentUserId == null) {
-        emit(HomeError(message: 'User not logged in'));
-        return;
+        // emit(HomeError(message: 'User not logged in'));
+        // return;
       }
       
       // Reset pagination
@@ -90,7 +90,7 @@ class HomeCubit extends Cubit<HomeState> {
       
       // Load posts from database
       final postsWithCounts = await _feedService.getFeedPosts(
-        currentUserId: currentUserId,
+        currentUserId: currentUserId ?? -1,
         limit: _postsPerPage,
         offset: _currentOffset,
       );
@@ -100,12 +100,12 @@ class HomeCubit extends Cubit<HomeState> {
       
       // Check if there are more posts
       _hasMorePosts = await _feedService.hasMorePosts(
-        currentUserId: currentUserId,
+        currentUserId: currentUserId ?? -1,
         currentOffset: _currentOffset,
       );
       
       // Convert to format expected by UI
-      final formattedPosts = await _formatPostsForUI(postsWithCounts, currentUserId);
+      final formattedPosts = await _formatPostsForUI(postsWithCounts, currentUserId ?? -1);
       
       // Combine with buffer posts
       final allPosts = [..._newPostsBuffer, ...formattedPosts];
