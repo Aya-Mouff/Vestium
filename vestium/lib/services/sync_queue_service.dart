@@ -228,6 +228,35 @@ class SyncQueueService {
     );
   }
 
+  // Add these methods to SyncQueueService class in sync_queue_service.dart
+  Future<void> queueCreateOutfitItem(
+    Map<String, dynamic> outfitItemData,
+  ) async {
+    if (_currentUserId == null) return;
+
+    await _queueOperation(
+      userId: _currentUserId!,
+      action: 'create',
+      entityType: 'outfit_item',
+      entityData: outfitItemData,
+      entityId: null, // Composite key
+    );
+  }
+
+  Future<void> queueDeleteOutfitItem(
+    Map<String, dynamic> outfitItemData,
+  ) async {
+    if (_currentUserId == null) return;
+
+    await _queueOperation(
+      userId: _currentUserId!,
+      action: 'delete',
+      entityType: 'outfit_item',
+      entityData: outfitItemData,
+      entityId: null, // Composite key
+    );
+  }
+
   Future<void> queueUpdateItemCategory(
     Map<String, dynamic> categoryData,
   ) async {

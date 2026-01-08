@@ -12,7 +12,7 @@ class ApiService {
   static const String _baseUrl = 'http://10.0.2.2:5000/api'; // Android emulator
   // static const String _baseUrl = 'http://localhost:5000/api'; // iOS simulator
   // static const String _baseUrl = 'http://YOUR_LOCAL_IP:5000/api'; // Physical device
-  
+
   String? _accessToken;
   String? _refreshToken;
   int? _userId;
@@ -35,17 +35,17 @@ class ApiService {
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
-        
+
         // Save tokens
         _accessToken = data['access_token'];
         _refreshToken = data['refresh_token'];
         _userId = data['user']['user_id'];
-        
+
         final prefs = await SharedPreferences.getInstance();
         await prefs.setString('access_token', _accessToken!);
         await prefs.setString('refresh_token', _refreshToken!);
         await prefs.setInt('user_id', _userId!);
-        
+
         return data;
       } else {
         throw Exception('Login failed: ${response.body}');
@@ -78,17 +78,17 @@ class ApiService {
 
       if (response.statusCode == 201) {
         final data = json.decode(response.body);
-        
+
         // Save tokens
         _accessToken = data['access_token'];
         _refreshToken = data['refresh_token'];
         _userId = data['user']['user_id'];
-        
+
         final prefs = await SharedPreferences.getInstance();
         await prefs.setString('access_token', _accessToken!);
         await prefs.setString('refresh_token', _refreshToken!);
         await prefs.setInt('user_id', _userId!);
-        
+
         return data;
       } else {
         throw Exception('Registration failed: ${response.body}');
@@ -99,12 +99,44 @@ class ApiService {
     }
   }
 
-  // ========== SYNC ENDPOINTS (CRITICAL FOR OFFLINE SYNC) ==========
-  
-  Future<Map<String, dynamic>> syncQueueOperation(Map<String, dynamic> data) async {
+  // Add to lib/services/api_service.dart
+  Future<Map<String, dynamic>> updateUserProfile(
+    Map<String, dynamic> profileData,
+  ) async {
     try {
-      print('📤 Syncing queue operation: ${data['action']} for ${data['entity_type']}');
-      
+      final response = await _authenticatedRequest(
+        Uri.parse('$_baseUrl/auth/update-profile'),
+        method: 'PUT',
+        body: profileData,
+      );
+
+      if (response.statusCode == 200) {
+        final result = json.decode(response.body);
+        // Update local user data if needed
+        final updatedUser = result['user'];
+        if (updatedUser != null) {
+          print('✅ Profile updated on server');
+        }
+        return result;
+      } else {
+        throw Exception('Failed to update profile: ${response.body}');
+      }
+    } catch (e) {
+      print('❌ Profile update error: $e');
+      rethrow;
+    }
+  }
+
+  // ========== SYNC ENDPOINTS (CRITICAL FOR OFFLINE SYNC) ==========
+
+  Future<Map<String, dynamic>> syncQueueOperation(
+    Map<String, dynamic> data,
+  ) async {
+    try {
+      print(
+        '📤 Syncing queue operation: ${data['action']} for ${data['entity_type']}',
+      );
+
       final response = await _authenticatedRequest(
         Uri.parse('$_baseUrl/sync/queue'),
         method: 'POST',
@@ -116,27 +148,25 @@ class ApiService {
         print('✅ Queue operation successful: $result');
         return result;
       } else {
-        print('❌ Queue operation failed: ${response.statusCode} - ${response.body}');
+        print(
+          '❌ Queue operation failed: ${response.statusCode} - ${response.body}',
+        );
         return {
-          'success': false, 
+          'success': false,
           'error': 'HTTP ${response.statusCode}: ${response.body}',
-          'status_code': response.statusCode
+          'status_code': response.statusCode,
         };
       }
     } catch (e) {
       print('❌ Queue operation error: $e');
-      return {
-        'success': false, 
-        'error': e.toString(),
-        'exception': true
-      };
+      return {'success': false, 'error': e.toString(), 'exception': true};
     }
   }
 
   Future<Map<String, dynamic>> syncProcess() async {
     try {
       print('🔄 Processing sync queue...');
-      
+
       final response = await _authenticatedRequest(
         Uri.parse('$_baseUrl/sync/process'),
         method: 'POST',
@@ -147,26 +177,24 @@ class ApiService {
         print('✅ Sync process successful: $result');
         return result;
       } else {
-        print('❌ Sync process failed: ${response.statusCode} - ${response.body}');
+        print(
+          '❌ Sync process failed: ${response.statusCode} - ${response.body}',
+        );
         return {
-          'success': false, 
-          'error': 'HTTP ${response.statusCode}: ${response.body}'
+          'success': false,
+          'error': 'HTTP ${response.statusCode}: ${response.body}',
         };
       }
     } catch (e) {
       print('❌ Sync process error: $e');
-      return {
-        'success': false, 
-        'error': e.toString(),
-        'exception': true
-      };
+      return {'success': false, 'error': e.toString(), 'exception': true};
     }
   }
 
   Future<Map<String, dynamic>> syncPull() async {
     try {
       print('📥 Pulling sync data...');
-      
+
       final response = await _authenticatedRequest(
         Uri.parse('$_baseUrl/sync/pull'),
         method: 'POST',
@@ -174,23 +202,25 @@ class ApiService {
 
       if (response.statusCode == 200) {
         final result = json.decode(response.body);
-        print('✅ Sync pull successful, got ${result['data']?.length ?? 0} entities');
+        print(
+          '✅ Sync pull successful, got ${result['data']?.length ?? 0} entities',
+        );
         return result;
       } else {
         print('❌ Sync pull failed: ${response.statusCode} - ${response.body}');
         return {
-          'success': false, 
+          'success': false,
           'error': 'HTTP ${response.statusCode}: ${response.body}',
-          'data': {'items': [], 'outfits': [], 'posts': []}
+          'data': {'items': [], 'outfits': [], 'posts': []},
         };
       }
     } catch (e) {
       print('❌ Sync pull error: $e');
       return {
-        'success': false, 
+        'success': false,
         'error': e.toString(),
         'data': {'items': [], 'outfits': [], 'posts': []},
-        'exception': true
+        'exception': true,
       };
     }
   }
@@ -205,19 +235,17 @@ class ApiService {
       if (response.statusCode == 200) {
         return json.decode(response.body);
       } else {
-        print('❌ Sync status failed: ${response.statusCode} - ${response.body}');
+        print(
+          '❌ Sync status failed: ${response.statusCode} - ${response.body}',
+        );
         return {
-          'success': false, 
-          'error': 'HTTP ${response.statusCode}: ${response.body}'
+          'success': false,
+          'error': 'HTTP ${response.statusCode}: ${response.body}',
         };
       }
     } catch (e) {
       print('❌ Sync status error: $e');
-      return {
-        'success': false, 
-        'error': e.toString(),
-        'exception': true
-      };
+      return {'success': false, 'error': e.toString(), 'exception': true};
     }
   }
 
@@ -250,22 +278,14 @@ class ApiService {
   }) async {
     try {
       // Create multipart request for file upload
-      var request = http.MultipartRequest(
-        'POST',
-        Uri.parse('$_baseUrl/items'),
-      );
-      
+      var request = http.MultipartRequest('POST', Uri.parse('$_baseUrl/items'));
+
       // Add authorization header
       request.headers['Authorization'] = 'Bearer $_accessToken';
-      
+
       // Add image file
-      request.files.add(
-        await http.MultipartFile.fromPath(
-          'image',
-          imagePath,
-        ),
-      );
-      
+      request.files.add(await http.MultipartFile.fromPath('image', imagePath));
+
       // Add fields
       request.fields['name'] = name;
       if (description != null) request.fields['description'] = description;
@@ -273,10 +293,10 @@ class ApiService {
       if (categories != null) {
         request.fields['categories'] = json.encode(categories);
       }
-      
+
       final streamedResponse = await request.send();
       final response = await http.Response.fromStream(streamedResponse);
-      
+
       if (response.statusCode == 201) {
         return json.decode(response.body);
       } else {
@@ -329,9 +349,11 @@ class ApiService {
   }
 
   // ========== ENTITY-SPECIFIC SYNC METHODS ==========
-  
+
   // Item sync methods
-  Future<Map<String, dynamic>> createItemBackend(Map<String, dynamic> data) async {
+  Future<Map<String, dynamic>> createItemBackend(
+    Map<String, dynamic> data,
+  ) async {
     try {
       final response = await _authenticatedRequest(
         Uri.parse('$_baseUrl/items'),
@@ -350,7 +372,10 @@ class ApiService {
     }
   }
 
-  Future<Map<String, dynamic>> updateItemBackend(int itemId, Map<String, dynamic> data) async {
+  Future<Map<String, dynamic>> updateItemBackend(
+    int itemId,
+    Map<String, dynamic> data,
+  ) async {
     try {
       final response = await _authenticatedRequest(
         Uri.parse('$_baseUrl/items/$itemId'),
@@ -388,7 +413,9 @@ class ApiService {
   }
 
   // Outfit sync methods
-  Future<Map<String, dynamic>> createOutfitBackend(Map<String, dynamic> data) async {
+  Future<Map<String, dynamic>> createOutfitBackend(
+    Map<String, dynamic> data,
+  ) async {
     try {
       final response = await _authenticatedRequest(
         Uri.parse('$_baseUrl/outfits'),
@@ -407,7 +434,10 @@ class ApiService {
     }
   }
 
-  Future<Map<String, dynamic>> updateOutfitBackend(int outfitId, Map<String, dynamic> data) async {
+  Future<Map<String, dynamic>> updateOutfitBackend(
+    int outfitId,
+    Map<String, dynamic> data,
+  ) async {
     try {
       final response = await _authenticatedRequest(
         Uri.parse('$_baseUrl/outfits/$outfitId'),
@@ -445,7 +475,9 @@ class ApiService {
   }
 
   // Post sync methods
-  Future<Map<String, dynamic>> createPostBackend(Map<String, dynamic> data) async {
+  Future<Map<String, dynamic>> createPostBackend(
+    Map<String, dynamic> data,
+  ) async {
     try {
       final response = await _authenticatedRequest(
         Uri.parse('$_baseUrl/posts'),
@@ -464,7 +496,10 @@ class ApiService {
     }
   }
 
-  Future<Map<String, dynamic>> updatePostBackend(int postId, Map<String, dynamic> data) async {
+  Future<Map<String, dynamic>> updatePostBackend(
+    int postId,
+    Map<String, dynamic> data,
+  ) async {
     try {
       final response = await _authenticatedRequest(
         Uri.parse('$_baseUrl/posts/$postId'),
@@ -551,9 +586,9 @@ class ApiService {
   // ========== PUBLIC PROPERTIES & METHODS ==========
   bool get isLoggedIn => _accessToken != null;
   int? get userId => _userId;
-  
+
   static String get baseUrl => _baseUrl;
-  
+
   Future<http.Response> authenticatedRequest(
     Uri url, {
     String method = 'GET',
@@ -567,7 +602,7 @@ class ApiService {
     await prefs.remove('access_token');
     await prefs.remove('refresh_token');
     await prefs.remove('user_id');
-    
+
     _accessToken = null;
     _refreshToken = null;
     _userId = null;
@@ -577,20 +612,20 @@ class ApiService {
   Future<bool> refreshToken() async {
     try {
       if (_refreshToken == null) return false;
-      
+
       final response = await http.post(
         Uri.parse('$_baseUrl/auth/refresh'),
         headers: {'Content-Type': 'application/json'},
         body: json.encode({'refresh_token': _refreshToken}),
       );
-      
+
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         _accessToken = data['access_token'];
-        
+
         final prefs = await SharedPreferences.getInstance();
         await prefs.setString('access_token', _accessToken!);
-        
+
         return true;
       }
     } catch (e) {

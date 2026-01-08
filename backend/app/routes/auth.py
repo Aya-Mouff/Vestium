@@ -231,3 +231,61 @@ def change_password():
     except Exception as e:
         db.session.rollback()
         return jsonify({'error': str(e)}), 500
+
+@auth_bp.route('/update-profile', methods=['PUT'])
+@jwt_required()
+def update_profile():
+    try:
+        current_user_id = int(get_jwt_identity())
+        user = User.query.get(current_user_id)
+        
+        if not user:
+            return jsonify({'error': 'User not found'}), 404
+        
+        data = request.get_json() or {}
+        
+        # List of allowed fields to update
+        allowed_fields = ['username', 'full_name', 'bio', 'pfp']
+        
+        # Validate and update each field
+        updated_fields = []
+        for field in allowed_fields:
+            if field in data and data[field] is not None:
+                # Special validation for username
+                if field == 'username':
+                    new_username = data['username'].strip()
+                    if new_username and new_username != user.username:
+                        # Check if username is taken by another user
+                        existing = User.query.filter(
+                            User.username == new_username,
+                            User.user_id != current_user_id
+                        ).first()
+                        if existing:
+                            return jsonify({
+                                'error': f'Username "{new_username}" is already taken'
+                            }), 400
+                        setattr(user, 'username', new_username)
+                        updated_fields.append('username')
+                else:
+                    setattr(user, field, data[field])
+                    updated_fields.append(field)
+        
+        # If no fields were updated
+        if not updated_fields:
+            return jsonify({'error': 'No valid fields to update'}), 400
+        
+        # Update last_updated timestamp if you have that field
+        if hasattr(user, 'last_updated'):
+            user.last_updated = db.func.now()
+        
+        db.session.commit()
+        
+        return jsonify({
+            'message': 'Profile updated successfully',
+            'updated_fields': updated_fields,
+            'user': user.to_dict()
+        }), 200
+        
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': str(e)}), 500
