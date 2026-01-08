@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:auto_route/auto_route.dart';
-import 'package:vestium/l10n/app_localizations.dart';
+//import 'package:vestium/l10n/app_localizations.dart';
 import 'cubit/camera_access_cubit.dart';
 import 'widgets/camera_access_body.dart';
 

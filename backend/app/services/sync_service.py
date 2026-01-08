@@ -341,6 +341,8 @@ class SyncService:
                 return SyncService._handle_item_category(operation, data)
             elif operation.entity_type == 'outfit_category':  # ADD THIS
                 return SyncService._handle_outfit_category(operation, data)
+            elif operation.entity_type == 'outfit_item':
+                return SyncService._handle_outfit_item(operation, data)
             else:
                 return {'success': False, 'error': f'Unknown entity: {operation.entity_type}'}
                 
@@ -401,6 +403,58 @@ class SyncService:
                 return {'success': False, 'error': 'Item not found or unauthorized'}
             
             db.session.delete(item)
+            return {'success': True}
+            
+        return {'success': False, 'error': 'Unknown action'}
+    
+    @staticmethod
+    def _handle_outfit_item(operation: SyncQueue, data: dict) -> dict:
+        """Handle outfit-item relationship operations"""
+        outfit_id = data.get('outfit_id')
+        item_id = data.get('item_id')
+        
+        if not outfit_id or not item_id:
+            return {'success': False, 'error': 'Missing outfit_id or item_id'}
+        
+        if operation.action == 'create':
+            # Check if relationship already exists
+            existing = OutfitItem.query.filter_by(
+                outfit_id=outfit_id,
+                item_id=item_id
+            ).first()
+            
+            if existing:
+                return {'success': True}
+            
+            # Verify both entities exist and belong to user
+            outfit = Outfit.query.get(outfit_id)
+            item = Item.query.get(item_id)
+            
+            if not outfit or not item:
+                return {'success': False, 'error': 'Outfit or item not found'}
+            
+            if outfit.user_id != operation.user_id or item.user_id != operation.user_id:
+                return {'success': False, 'error': 'Unauthorized'}
+            
+            outfit_item = OutfitItem(
+                outfit_id=outfit_id,
+                item_id=item_id
+            )
+            db.session.add(outfit_item)
+            return {'success': True}
+            
+        elif operation.action == 'delete':
+            outfit_item = OutfitItem.query.filter_by(
+                outfit_id=outfit_id,
+                item_id=item_id
+            ).first()
+            
+            if outfit_item:
+                # Verify ownership through outfit
+                outfit = Outfit.query.get(outfit_id)
+                if outfit and outfit.user_id == operation.user_id:
+                    db.session.delete(outfit_item)
+            
             return {'success': True}
             
         return {'success': False, 'error': 'Unknown action'}

@@ -438,6 +438,18 @@ class SyncManager {
     );
   }
 
+  Future<bool> queueOutfitItemOperation({
+    required String action,
+    required Map<String, dynamic> data,
+  }) async {
+    return await _queueGenericOperation(
+      entityType: 'outfit_item',
+      action: action,
+      data: data,
+      entityId: null, 
+    );
+  }
+
   Future<bool> queuePostOperation({
     required String action,
     required Map<String, dynamic> data,
@@ -529,6 +541,14 @@ class SyncManager {
             await _syncQueue.queueDeleteOutfit(entityId!);
           }
           break;
+
+        case 'outfit_item':
+          if (action == 'create') {
+            await _syncQueue.queueCreateOutfitItem(data);
+          } else if (action == 'delete') {
+            await _syncQueue.queueDeleteOutfitItem(data);
+          }
+        break;
 
         case 'post':
           if (action == 'create') {

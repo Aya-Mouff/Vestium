@@ -46,6 +46,7 @@ import 'l10n/app_localizations.dart';
 Future initMyApp() async {
   WidgetsFlutterBinding.ensureInitialized();
   
+  
   // Firebase ONLY for mobile
   if (Platform.isAndroid || Platform.isIOS) {
     await Firebase.initializeApp();

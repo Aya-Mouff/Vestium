@@ -111,12 +111,12 @@ class FollowingFollower {
   };
 
   static FollowingFollower fromJson(Map<String, dynamic> json) {
-  return FollowingFollower(
-    followingId: json['following_id'] ?? json['followingId'],
-    followerId: json['follower_id'] ?? json['followerId'],
-    date: json['date'],
-  );
-}
+    return FollowingFollower(
+      followingId: json['following_id'] ?? json['followingId'],
+      followerId: json['follower_id'] ?? json['followerId'],
+      date: json['date'],
+    );
+  }
 }
 
 // ------------------------
@@ -275,6 +275,24 @@ class OutfitModel {
     'date': date,
     'season': season,
   };
+
+  OutfitModel copyWith({
+    int? outfitId,
+    int? userId,
+    String? outfitName,
+    String? description,
+    String? date,
+    String? season,
+  }) {
+    return OutfitModel(
+      outfitId: outfitId ?? this.outfitId,
+      userId: userId ?? this.userId,
+      outfitName: outfitName ?? this.outfitName,
+      description: description ?? this.description,
+      date: date ?? this.date,
+      season: season ?? this.season,
+    );
+  }
 
   static OutfitModel fromJson(Map<String, dynamic> json) {
     return OutfitModel(
@@ -556,7 +574,6 @@ class ItemCategoryJoin {
     'category_id': categoryId,
   };
 }
-
 
 // lib/models/sync_queue_model.dart
 class SyncQueueModel {
